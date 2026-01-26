@@ -1,103 +1,64 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>静谧时光 | 个人博客</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --bg: #f8f9fa;
-            --text-main: #2d3436;
-            --text-soft: #636e72;
-            --accent: #a29bfe;
-            --card-bg: rgba(255, 255, 255, 0.8);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            background-color: var(--bg);
-            background-image: radial-gradient(#dfe6e9 1px, transparent 1px);
-            background-size: 20px 20px;
-            color: var(--text-main);
-            font-family: 'PingFang SC', 'Noto Serif SC', serif;
-            line-height: 1.6;
-        }
-
-        .container { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
-
-        /* Header Section */
-        header { text-align: center; margin-bottom: 5rem; }
-        header h1 { font-size: 2.5rem; letter-spacing: 2px; margin-bottom: 1rem; }
-        .nav-links { list-style: none; display: flex; justify-content: center; gap: 2rem; }
-        .nav-links a { text-decoration: none; color: var(--text-soft); transition: 0.3s; font-size: 0.9rem; }
-        .nav-links a:hover { color: var(--accent); }
-
-        /* Blog List */
-        .post-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(5px);
-            padding: 2.5rem;
-            border-radius: 16px;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(255,255,255,0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
-
-        .post-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-        }
-
-        .post-meta { font-size: 0.8rem; color: var(--accent); font-weight: bold; text-transform: uppercase; margin-bottom: 0.5rem; }
-        .post-title { font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-main); }
-        .post-excerpt { color: var(--text-soft); font-size: 1rem; }
-
-        /* Footer */
-        footer { text-align: center; margin-top: 5rem; color: var(--text-soft); font-size: 0.8rem; }
-
-        @media (max-width: 600px) {
-            .container { padding: 2rem 1.5rem; }
-            header h1 { font-size: 1.8rem; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>PonyRider的数字花园</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="分享技术、自动化与投资逻辑">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <style>
+    /* 自定义一点点样式，让它更像博客 */
+    :root { --theme-color: #6366f1; }
+    .sidebar { background-color: #f8f9fa; }
+    .markdown-section { max-width: 900px; margin: 0 auto; padding: 2rem; }
+    /* 调整图片阴影 */
+    img { box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 8px; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Thoughts & Life.</h1>
-            <ul class="nav-links">
-                <li><a href="#">文章</a></li>
-                <li><a href="#">关于</a></li>
-                <li><a href="#">联系</a></li>
-            </ul>
-        </header>
+  <div id="app">加载中...</div>
 
-        <main id="blog-container"></main>
+  <script>
+    window.$docsify = {
+      name: '<span>🌱 静谧时光</span>', // 侧边栏顶部的名字
+      repo: 'https://github.com/PonyRider4/Website', // 右上角的小挂件
+      
+      // 核心功能配置
+      loadSidebar: true,    // 开启侧边栏
+      subMaxLevel: 3,       // 侧边栏自动显示目录层级
+      auto2top: true,       // 切换文章自动回到顶部
+      
+      // 全文搜索配置
+      search: {
+        paths: 'auto',
+        placeholder: '🔍 搜索文章...',
+        noData: '😒 找不到相关内容',
+        depth: 6,
+      },
 
-        <footer>
-            <p>© 2026 你的名字. Built with passion.</p>
-        </footer>
-    </div>
+      // 底部版权信息
+      plugins: [
+        function(hook) {
+          var footer = [
+            '<hr/>',
+            '<footer>',
+            '<span>&copy; 2026 PonyRider4.</span>',
+            '<span>Proudly published with Docsify.</span>',
+            '</footer>'
+          ].join('');
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="posts.js"></script>
-
-    <script>
-        const container = document.getElementById('blog-container');
-        // 遍历 posts.js 里的文章数据
-        blogPosts.forEach(post => {
-            const article = document.createElement('article');
-            article.className = 'post-card';
-            article.innerHTML = `
-                <div class="post-meta">${post.date} · ${post.tag}</div>
-                <h2 class="post-title">${post.title}</h2>
-                <div class="post-excerpt">${marked.parse(post.content)}</div>
-            `;
-            container.appendChild(article);
-        });
-    </script>
+          hook.afterEach(function(html) {
+            return html + footer;
+          });
+        }
+      ]
+    }
+  </script>
+  
+  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
 </body>
 </html>
