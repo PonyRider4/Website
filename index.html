@@ -65,42 +65,39 @@
     </style>
 </head>
 <body>
-
     <div class="container">
         <header>
             <h1>Thoughts & Life.</h1>
             <ul class="nav-links">
                 <li><a href="#">文章</a></li>
                 <li><a href="#">关于</a></li>
-                <li><a href="#">摄影</a></li>
                 <li><a href="#">联系</a></li>
             </ul>
         </header>
 
-        <main>
-            <article class="post-card">
-                <div class="post-meta">2026年1月25日 · 技术随笔</div>
-                <h2 class="post-title">如何构建一个富有美感的个人网站</h2>
-                <p class="post-excerpt">美感并不仅仅是色彩的堆砌，更多的是关于留白、排版以及用户在阅读时的心流体验...</p>
-            </article>
-
-            <article class="post-card">
-                <div class="post-meta">2026年1月20日 · 生活感悟</div>
-                <h2 class="post-title">数字游民的第一年：自由与自律</h2>
-                <p class="post-excerpt">当你的办公室变成了全世界的咖啡馆，你才发现最难管理的不是时间，而是内心的焦虑...</p>
-            </article>
-
-            <article class="post-card">
-                <div class="post-meta">2026年1月15日 · 摄影</div>
-                <h2 class="post-title">捕捉光影：在日落前的一小时</h2>
-                <p class="post-excerpt">记录那些被我们忽视的瞬间，光线是如何在建筑表面跳动，又如何消失在远方的地平线。</p>
-            </article>
-        </main>
+        <main id="blog-container"></main>
 
         <footer>
             <p>© 2026 你的名字. Built with passion.</p>
         </footer>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="posts.js"></script>
+
+    <script>
+        const container = document.getElementById('blog-container');
+        // 遍历 posts.js 里的文章数据
+        blogPosts.forEach(post => {
+            const article = document.createElement('article');
+            article.className = 'post-card';
+            article.innerHTML = `
+                <div class="post-meta">${post.date} · ${post.tag}</div>
+                <h2 class="post-title">${post.title}</h2>
+                <div class="post-excerpt">${marked.parse(post.content)}</div>
+            `;
+            container.appendChild(article);
+        });
+    </script>
 </body>
 </html>
