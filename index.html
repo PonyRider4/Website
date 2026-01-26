@@ -3,73 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的个人主页</title>
+    <title>静谧时光 | 个人博客</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #6366f1;
-            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg: #f8f9fa;
+            --text-main: #2d3436;
+            --text-soft: #636e72;
+            --accent: #a29bfe;
+            --card-bg: rgba(255, 255, 255, 0.8);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            margin: 0;
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: var(--bg-gradient);
-            color: white;
-            overflow: hidden;
+            background-color: var(--bg);
+            background-image: radial-gradient(#dfe6e9 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: var(--text-main);
+            font-family: 'PingFang SC', 'Noto Serif SC', serif;
+            line-height: 1.6;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 3rem;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transform: translateY(20px);
-            animation: fadeIn 0.8s forwards;
+        .container { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
+
+        /* Header Section */
+        header { text-align: center; margin-bottom: 5rem; }
+        header h1 { font-size: 2.5rem; letter-spacing: 2px; margin-bottom: 1rem; }
+        .nav-links { list-style: none; display: flex; justify-content: center; gap: 2rem; }
+        .nav-links a { text-decoration: none; color: var(--text-soft); transition: 0.3s; font-size: 0.9rem; }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* Blog List */
+        .post-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(5px);
+            padding: 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
         }
 
-        h1 { margin-bottom: 0.5rem; font-size: 2.5rem; }
-        p { opacity: 0.8; margin-bottom: 2rem; }
-
-        .links { display: flex; gap: 1rem; justify-content: center; }
-
-        .btn {
-            text-decoration: none;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 50px;
-            transition: all 0.3s ease;
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
         }
 
-        .btn:hover {
-            background: white;
-            color: #764ba2;
-            transform: scale(1.05);
-        }
+        .post-meta { font-size: 0.8rem; color: var(--accent); font-weight: bold; text-transform: uppercase; margin-bottom: 0.5rem; }
+        .post-title { font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-main); }
+        .post-excerpt { color: var(--text-soft); font-size: 1rem; }
 
-        @keyframes fadeIn {
-            to { opacity: 1; transform: translateY(0); }
+        /* Footer */
+        footer { text-align: center; margin-top: 5rem; color: var(--text-soft); font-size: 0.8rem; }
+
+        @media (max-width: 600px) {
+            .container { padding: 2rem 1.5rem; }
+            header h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>你好，我是 [你的名字]</h1>
-        <p>终身学习者 / 开发者 / 梦想家</p>
-        
-        <div class="links">
-            <a href="#" class="btn">我的博客</a>
-            <a href="#" class="btn">GitHub</a>
-            <a href="mailto:your@email.com" class="btn">联系我</a>
-        </div>
+    <div class="container">
+        <header>
+            <h1>Thoughts & Life.</h1>
+            <ul class="nav-links">
+                <li><a href="#">文章</a></li>
+                <li><a href="#">关于</a></li>
+                <li><a href="#">摄影</a></li>
+                <li><a href="#">联系</a></li>
+            </ul>
+        </header>
+
+        <main>
+            <article class="post-card">
+                <div class="post-meta">2026年1月25日 · 技术随笔</div>
+                <h2 class="post-title">如何构建一个富有美感的个人网站</h2>
+                <p class="post-excerpt">美感并不仅仅是色彩的堆砌，更多的是关于留白、排版以及用户在阅读时的心流体验...</p>
+            </article>
+
+            <article class="post-card">
+                <div class="post-meta">2026年1月20日 · 生活感悟</div>
+                <h2 class="post-title">数字游民的第一年：自由与自律</h2>
+                <p class="post-excerpt">当你的办公室变成了全世界的咖啡馆，你才发现最难管理的不是时间，而是内心的焦虑...</p>
+            </article>
+
+            <article class="post-card">
+                <div class="post-meta">2026年1月15日 · 摄影</div>
+                <h2 class="post-title">捕捉光影：在日落前的一小时</h2>
+                <p class="post-excerpt">记录那些被我们忽视的瞬间，光线是如何在建筑表面跳动，又如何消失在远方的地平线。</p>
+            </article>
+        </main>
+
+        <footer>
+            <p>© 2026 你的名字. Built with passion.</p>
+        </footer>
     </div>
 
 </body>
