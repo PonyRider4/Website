@@ -8,11 +8,12 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "v7vrpruxba");
     </script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soft Wealth | 舒适的搞钱哲学</title>
     
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -30,58 +31,21 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     
-<style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <style>
+        /* 玻璃拟态 */
         .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); }
         .dark .glass { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); }
+        
+        /* 细节微调 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        
-        /* --- 核心修复区：文章排版样式 --- */
-        /* 针对 H1 (一级标题) */
-        .prose h1 { font-size: 2.25rem; line-height: 2.5rem; margin-bottom: 0.8em; } 
-        /* 针对 H2 (二级标题 ##) */
-        .prose h2 { font-size: 1.75rem; line-height: 2.25rem; margin-bottom: 0.6em; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.3em; } 
-        /* 针对 H3 (三级标题 ###) - 这里是你之前缺少的！*/
-        .prose h3 { font-size: 1.35rem; line-height: 1.75rem; margin-bottom: 0.4em; }
-        /* 针对 H4 (四级标题 ####) */
-        .prose h4 { font-size: 1.15rem; line-height: 1.5rem; margin-bottom: 0.3em; }
-
-        /* 通用标题样式 */
-        .prose h1, .prose h2, .prose h3, .prose h4 { 
-            color: #334155; 
-            font-weight: 800; 
-            margin-top: 1.5em; 
-        }
-        
-        /* 夜间模式标题颜色 */
-        .dark .prose h1, .dark .prose h2, .dark .prose h3, .dark .prose h4 { 
-            color: #e2e8f0; 
-            border-color: #334155; /* H2下划线在夜间也变色 */
-        }
-
-        /* 正文段落 */
-        .prose p { margin-bottom: 1.2em; line-height: 1.8; color: #475569; font-size: 1.05rem; }
-        .dark .prose p { color: #94a3b8; }
-
-        /* 列表 (ul, ol) */
-        .prose ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1.2em; color: #475569; }
-        .prose ol { list-style-type: decimal; padding-left: 1.5em; margin-bottom: 1.2em; color: #475569; }
-        .dark .prose ul, .dark .prose ol { color: #94a3b8; }
-        
-        /* 代码块与引用 */
-        .prose img { border-radius: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 20px auto; max-width: 100%; }
-        .prose blockquote { border-left: 4px solid #6366f1; background: rgba(99, 102, 241, 0.05); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5em; font-style: italic; }
-        .dark .prose blockquote { background: rgba(99, 102, 241, 0.1); color: #cbd5e1; }
-        
-        /* 行内代码 `code` */
-        .prose code { color: #ec4899; background: rgba(236, 72, 153, 0.1); padding: 0.2em 0.4em; border-radius: 0.25rem; font-family: monospace; font-size: 0.9em; }
-        .dark .prose code { background: rgba(236, 72, 153, 0.2); }
-        
-        /* 链接 */
-        .prose a { color: #6366f1; text-decoration: underline; text-underline-offset: 4px; }
-        .prose a:hover { color: #ec4899; }
-
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         [v-cloak] { display: none; }
+        
+        /* 图片样式微调 */
+        .prose img { margin: 2rem auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body class="bg-gray-50 text-slate-800 transition-colors duration-300 dark:bg-slate-900 dark:text-slate-200">
@@ -108,11 +72,11 @@
                     </div>
                 </div>
             </div>
-            <div v-if="currentView === 'detail'" class="h-1 bg-gradient-to-r from-primary to-secondary" :style="{ width: scrollProgress + '%' }"></div>
+            <div v-if="currentView === 'detail'" class="h-1 bg-gradient-to-r from-primary to-secondary transition-all duration-100 ease-out" :style="{ width: scrollProgress + '%' }"></div>
         </nav>
 
         <main>
-            <transition name="fade">
+            <transition name="fade" mode="out-in">
                 
                 <div v-if="currentView === 'list'" key="list" class="animate-fade-in">
                     
@@ -135,85 +99,86 @@
                     </div>
 
                     <div id="content-area" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                        <div class="flex flex-col lg:flex-row gap-12">
+                        
+                        <div v-if="initLoading" class="text-center py-20">
+                            <i class="ri-loader-4-line text-4xl animate-spin text-primary"></i>
+                            <p class="mt-4 text-slate-500">正在解析所有文章数据...</p>
+                        </div>
+
+                        <div v-else class="flex flex-col lg:flex-row gap-12">
                             
                             <div class="flex-1">
-                                <div v-if="initLoading" class="text-center py-20">
-                                    <i class="ri-loader-4-line text-4xl animate-spin text-primary"></i>
-                                    <p class="mt-4 text-slate-500">正在解析所有文章...</p>
+                                <div class="flex flex-wrap gap-2 mb-8">
+                                    <button @click="changeCategory('')" :class="['px-4 py-1.5 rounded-full text-sm font-bold transition border', !filterCategory ? 'bg-slate-800 text-white border-slate-800 dark:bg-white dark:text-slate-900' : 'bg-white text-slate-600 border-gray-200 hover:border-primary hover:text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400']">全部</button>
+                                    <button v-for="cat in categories" :key="cat" @click="changeCategory(cat)" :class="['px-4 py-1.5 rounded-full text-sm font-bold transition border', filterCategory === cat ? 'bg-slate-800 text-white border-slate-800 dark:bg-white dark:text-slate-900' : 'bg-white text-slate-600 border-gray-200 hover:border-primary hover:text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400']">{{ cat }}</button>
                                 </div>
 
-                                <div v-else>
-                                    <div class="flex flex-wrap gap-2 mb-8">
-                                        <button @click="changeCategory('')" :class="['px-4 py-1.5 rounded-full text-sm font-bold transition border', !filterCategory ? 'bg-slate-800 text-white border-slate-800 dark:bg-white dark:text-slate-900' : 'bg-white text-slate-600 border-gray-200 hover:border-primary hover:text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400']">全部</button>
-                                        <button v-for="cat in categories" :key="cat" @click="changeCategory(cat)" :class="['px-4 py-1.5 rounded-full text-sm font-bold transition border', filterCategory === cat ? 'bg-slate-800 text-white border-slate-800 dark:bg-white dark:text-slate-900' : 'bg-white text-slate-600 border-gray-200 hover:border-primary hover:text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400']">{{ cat }}</button>
-                                    </div>
-
-                                    <div v-if="pinnedPosts.length > 0 && !searchQuery && !filterCategory && currentPage === 1" class="mb-12">
-                                        <h3 class="flex items-center gap-2 text-xl font-extrabold mb-6 text-slate-800 dark:text-white">
-                                            <i class="ri-pushpin-2-fill text-secondary"></i> 精选置顶
-                                        </h3>
-                                        <div class="grid grid-cols-1 gap-6">
-                                            <article v-for="post in pinnedPosts" :key="post.file" @click="loadPost(post)" class="group cursor-pointer relative">
-                                                <div class="glass rounded-2xl p-6 shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300 border-l-4 border-secondary flex flex-col md:flex-row gap-6 items-center">
-                                                    <div class="w-full md:w-48 h-32 rounded-xl overflow-hidden flex-shrink-0 bg-gray-200">
-                                                        <img :src="post.image" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition duration-700" onerror="this.src='https://picsum.photos/800/500'">
+                                <div v-if="pinnedPosts.length > 0 && !searchQuery && !filterCategory && currentPage === 1" class="mb-12">
+                                    <h3 class="flex items-center gap-2 text-xl font-extrabold mb-6 text-slate-800 dark:text-white">
+                                        <i class="ri-pushpin-2-fill text-secondary"></i> 精选置顶
+                                    </h3>
+                                    <div class="grid grid-cols-1 gap-6">
+                                        <article v-for="post in pinnedPosts" :key="post.file" @click="loadPost(post)" class="group cursor-pointer relative">
+                                            <div class="glass rounded-2xl p-6 shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300 border-l-4 border-secondary flex flex-col md:flex-row gap-6 items-center">
+                                                <div class="w-full md:w-48 h-32 rounded-xl overflow-hidden flex-shrink-0 bg-gray-200">
+                                                    <img :src="post.image" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition duration-700" onerror="this.src='https://picsum.photos/seed/error/800/500'">
+                                                </div>
+                                                <div class="flex-1 text-center md:text-left">
+                                                    <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
+                                                        <span class="px-2 py-0.5 rounded text-xs font-bold bg-secondary/10 text-secondary">TOP</span>
+                                                        <span class="text-xs text-slate-400">{{ post.date }}</span>
                                                     </div>
-                                                    <div class="flex-1 text-center md:text-left">
-                                                        <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
-                                                            <span class="px-2 py-0.5 rounded text-xs font-bold bg-secondary/10 text-secondary">TOP</span>
-                                                            <span class="text-xs text-slate-400">{{ post.date }}</span>
+                                                    <h3 class="text-xl font-bold mb-2 text-slate-800 dark:text-slate-100 group-hover:text-primary transition">{{ post.title }}</h3>
+                                                    <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2">{{ post.excerpt }}</p>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    </div>
+                                </div>
+
+                                <div id="regular-list-top">
+                                    <h3 class="flex items-center gap-2 text-xl font-extrabold mb-6 text-slate-800 dark:text-white">
+                                        <i class="ri-article-line text-primary"></i> 最新发布
+                                    </h3>
+                                    
+                                    <div v-if="paginatedPosts.length > 0">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                                            <article v-for="post in paginatedPosts" :key="post.file" @click="loadPost(post)" class="group cursor-pointer">
+                                                <div class="glass rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-500 h-full flex flex-col">
+                                                    <div class="h-40 overflow-hidden relative bg-gray-200">
+                                                        <img :src="post.image" loading="lazy" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700" onerror="this.src='https://picsum.photos/seed/error/800/500'">
+                                                        <div class="absolute top-3 right-3">
+                                                            <span class="px-2 py-1 rounded text-xs font-bold bg-white/90 text-slate-800 shadow-sm">{{ post.category }}</span>
                                                         </div>
-                                                        <h3 class="text-xl font-bold mb-2 text-slate-800 dark:text-slate-100 group-hover:text-primary transition">{{ post.title }}</h3>
-                                                        <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2">{{ post.excerpt }}</p>
+                                                    </div>
+                                                    <div class="p-5 flex-1 flex flex-col">
+                                                        <div class="text-xs text-slate-400 mb-2">{{ post.date }}</div>
+                                                        <h3 class="text-lg font-bold mb-2 text-slate-800 dark:text-slate-100 group-hover:text-primary transition line-clamp-2">{{ post.title }}</h3>
+                                                        <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-4 flex-1">{{ post.excerpt }}</p>
                                                     </div>
                                                 </div>
                                             </article>
                                         </div>
+
+                                        <div v-if="totalPages > 1" class="flex flex-wrap justify-center items-center gap-4 py-8">
+                                            <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" class="px-4 py-2 rounded-lg glass font-bold disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition flex items-center gap-1">
+                                                <i class="ri-arrow-left-line"></i> <span class="hidden sm:inline">上一页</span>
+                                            </button>
+                                            <span class="font-bold text-slate-500 dark:text-slate-400">{{ currentPage }} / {{ totalPages }}</span>
+                                            <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages" class="px-4 py-2 rounded-lg glass font-bold disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition flex items-center gap-1">
+                                                <span class="hidden sm:inline">下一页</span> <i class="ri-arrow-right-line"></i>
+                                            </button>
+                                            
+                                            <div class="flex items-center gap-2 ml-2 sm:ml-4 pl-4 border-l border-gray-200 dark:border-slate-700">
+                                                <input v-model.number="jumpInput" @keyup.enter="handleJump" type="number" min="1" :max="totalPages" placeholder="Go" class="w-14 px-2 py-2 rounded-lg glass text-center font-bold outline-none focus:ring-2 ring-primary bg-transparent text-sm appearance-none">
+                                                <button @click="handleJump" class="w-8 h-8 rounded-lg glass flex items-center justify-center text-slate-500 hover:text-primary hover:bg-white dark:hover:bg-slate-700 transition"><i class="ri-share-forward-fill"></i></button>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div id="regular-list-top">
-                                        <h3 class="flex items-center gap-2 text-xl font-extrabold mb-6 text-slate-800 dark:text-white">
-                                            <i class="ri-article-line text-primary"></i> 最新发布
-                                        </h3>
-                                        
-                                        <div v-if="paginatedPosts.length > 0">
-                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                                                <article v-for="post in paginatedPosts" :key="post.file" @click="loadPost(post)" class="group cursor-pointer">
-                                                    <div class="glass rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-500 h-full flex flex-col">
-                                                        <div class="h-40 overflow-hidden relative bg-gray-200">
-                                                            <img :src="post.image" loading="lazy" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700" onerror="this.src='https://picsum.photos/800/500'">
-                                                            <div class="absolute top-3 right-3">
-                                                                <span class="px-2 py-1 rounded text-xs font-bold bg-white/90 text-slate-800 shadow-sm">{{ post.category }}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="p-5 flex-1 flex flex-col">
-                                                            <div class="text-xs text-slate-400 mb-2">{{ post.date }}</div>
-                                                            <h3 class="text-lg font-bold mb-2 text-slate-800 dark:text-slate-100 group-hover:text-primary transition line-clamp-2">{{ post.title }}</h3>
-                                                            <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-4 flex-1">{{ post.excerpt }}</p>
-                                                        </div>
-                                                    </div>
-                                                </article>
-                                            </div>
-
-                                            <div v-if="totalPages > 1" class="flex flex-wrap justify-center items-center gap-4 py-8">
-                                                <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" class="px-4 py-2 rounded-lg glass font-bold disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition flex items-center gap-1">
-                                                    <i class="ri-arrow-left-line"></i> <span class="hidden sm:inline">上一页</span>
-                                                </button>
-                                                <span class="font-bold text-slate-500 dark:text-slate-400">{{ currentPage }} / {{ totalPages }}</span>
-                                                <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages" class="px-4 py-2 rounded-lg glass font-bold disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition flex items-center gap-1">
-                                                    <span class="hidden sm:inline">下一页</span> <i class="ri-arrow-right-line"></i>
-                                                </button>
-                                                <div class="flex items-center gap-2 ml-2 sm:ml-4 pl-4 border-l border-gray-200 dark:border-slate-700">
-                                                    <input v-model.number="jumpInput" @keyup.enter="handleJump" type="number" min="1" :max="totalPages" placeholder="Go" class="w-14 px-2 py-2 rounded-lg glass text-center font-bold outline-none focus:ring-2 ring-primary bg-transparent text-sm appearance-none">
-                                                    <button @click="handleJump" class="w-8 h-8 rounded-lg glass flex items-center justify-center text-slate-500 hover:text-primary hover:bg-white dark:hover:bg-slate-700 transition"><i class="ri-share-forward-fill"></i></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div v-else class="text-center py-20 bg-white/50 dark:bg-slate-800/50 rounded-2xl">
-                                            <div class="text-4xl mb-4">🛸</div>
-                                            <p class="text-slate-500">没有相关内容</p>
-                                        </div>
+                                    <div v-else class="text-center py-20 bg-white/50 dark:bg-slate-800/50 rounded-2xl">
+                                        <div class="text-4xl mb-4">🛸</div>
+                                        <p class="text-slate-500">没有相关内容</p>
                                     </div>
                                 </div>
                             </div>
@@ -255,12 +220,13 @@
                             <h1 class="text-3xl md:text-5xl font-extrabold text-slate-800 dark:text-white mb-6 leading-tight">{{ activePost.title }}</h1>
                             <div class="text-sm text-slate-500 dark:text-slate-400"><i class="ri-calendar-line"></i> {{ activePost.date }}</div>
                         </div>
-                        <div class="prose prose-lg max-w-none dark:prose-invert" v-html="compiledMarkdown"></div>
                         
-
+                        <div class="prose prose-lg max-w-none prose-slate dark:prose-invert prose-img:rounded-xl prose-headings:font-extrabold prose-a:text-primary hover:prose-a:text-secondary transition-all" 
+                             v-html="compiledMarkdown">
                         </div>
                     </article>
                 </div>
+
             </transition>
         </main>
         
@@ -268,8 +234,6 @@
             <p>© 2026 Soft Wealth. All rights reserved.</p>
         </footer>
     </div>
-
-
 
     <script>
         const { createApp, ref, computed, onMounted, onUnmounted, nextTick, watch } = Vue;
@@ -290,7 +254,7 @@
                 const currentPage = ref(1);
                 const jumpInput = ref('');
 
-                // --- 核心：浏览器解析器 ---
+                // --- 核心：Markdown 头部解析器 ---
                 const parseFrontMatter = (text, filename) => {
                     const regex = /^---\s*\n([\s\S]*?)\n---\s*\n/;
                     const match = text.match(regex);
@@ -298,7 +262,7 @@
                         title: filename.replace('.md', ''), 
                         date: '2026-01-01', 
                         category: '默认', 
-                        image: '', 
+                        image: 'https://picsum.photos/seed/default/800/500', 
                         pinned: false 
                     };
                     let body = text;
@@ -316,8 +280,8 @@
                             }
                         });
                     }
-                    // 自动生成简介
-                    const cleanBody = body.replace(/[#*`\[\]()!>]/g, '').replace(/\n/g, ' ');
+                    // 生成简介
+                    const cleanBody = body.replace(/[#*`\[\]()!>]/g, '').replace(/\s+/g, ' ');
                     metadata.excerpt = cleanBody.substring(0, 80) + '...';
                     metadata.file = 'posts/' + filename;
                     metadata.bodyRaw = body; 
@@ -326,11 +290,10 @@
 
                 onMounted(async () => {
                     try {
-                        // 1. 获取文件名列表
+                        // 1. 读取文件名列表
                         const res = await fetch('posts.json');
                         const filenames = await res.json();
-                        
-                        // 2. 并发读取所有文章头部
+                        // 2. 并发读取所有 Markdown
                         const promises = filenames.map(async (filename) => {
                             try {
                                 const mdRes = await fetch(`posts/${filename}`);
@@ -339,11 +302,8 @@
                                 return parseFrontMatter(text, filename);
                             } catch (e) { return null; }
                         });
-                        
                         const results = await Promise.all(promises);
-                        posts.value = results.filter(p => p !== null);
-                        posts.value.sort((a, b) => new Date(b.date) - new Date(a.date));
-
+                        posts.value = results.filter(p => p !== null).sort((a, b) => new Date(b.date) - new Date(a.date));
                     } catch (e) { console.error("Error", e); } 
                     finally { initLoading.value = false; }
 
@@ -417,9 +377,16 @@
                 const loadPost = (post) => {
                     savedScrollPosition.value = window.scrollY;
                     activePost.value = post;
-                    markdownContent.value = post.bodyRaw; // 直接使用解析好的正文
+                    markdownContent.value = post.bodyRaw;
                     currentView.value = 'detail';
                     window.scrollTo(0, 0);
+
+                    // 🔥 激活代码高亮
+                    nextTick(() => {
+                        document.querySelectorAll('pre code').forEach((el) => {
+                            hljs.highlightElement(el);
+                        });
+                    });
                 };
 
                 const goHome = async () => { 
