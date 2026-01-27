@@ -2,61 +2,61 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>PonyRider的视界</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PonyRider 的视界</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
 
   <style>
-    /* 2. 自定义微调：让它更像博客而不是文档 */
+    /* 2. 个性化微调 */
     :root {
-      /* 主色调：把这个颜色改成你喜欢的（比如 #6366f1 紫色, #e74c3c 红色） */
-      --theme-color: #2c3e50; 
-      
-      /* 侧边栏背景 */
-      --sidebar-background: #f8f9fa;
-      --sidebar-border-right: 1px solid #eee;
-      
-      /* 文字排版 */
+      /* 主色调：我看你之前的博客用了淡紫色，这里用高级灰蓝 */
+      --theme-color: #2c3e50;
       --base-font-size: 16px;
-      --heading-h1-font-weight: 700;
-      
-      /* 内容区最大宽度 (太宽了不好读) */
-      --content-max-width: 50em;
+      --sidebar-width: 18rem;
     }
     
-    /* 图片圆角和阴影 */
-    img { border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    /* 让侧边栏更干净 */
+    .sidebar { background-color: #f8f9fa; border-right: 1px solid #eee; }
     
-    /* 侧边栏选中状态的修饰 */
-    .sidebar-nav li.active > a { border-left-color: var(--theme-color); font-weight: bold; background: #fff; }
+    /* 封面图样式优化 */
+    section.cover .cover-main { margin-top: -2rem; }
+    section.cover h1 { font-size: 2.5rem; color: #333; }
+    section.cover p { color: #666; font-size: 1.2rem; }
+    
+    /* 图片加阴影 */
+    .markdown-section img { 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+      border-radius: 8px; 
+    }
   </style>
 </head>
 <body>
-  <div id="app">✨ 正在布置房间...</div>
+  <div id="app" style="padding: 20px;">☕️ 正在冲泡咖啡...</div>
 
   <script>
     window.$docsify = {
       name: 'PonyRider',
-      repo: 'https://github.com/PonyRider4',
+      repo: 'https://github.com/PonyRider4', // 右上角 GitHub 图标
       
-      // 开启封面页（这会让你的博客进门更帅）
+      // ✨ 关键设置：开启封面页 (这是变好看的核心)
       coverpage: true,
       loadSidebar: true,
       auto2top: true,
       
-      // 搜索配置
+      // 搜索功能
       search: {
-        placeholder: '🔍 搜文章...',
-        noData: '没有找到哦',
+        placeholder: '🔍 搜索复盘记录...',
+        noData: '找不到哦',
+        depth: 6
       }
     }
   </script>
   
   <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-themeable@0/dist/js/docsify-themeable.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
 </body>
 </html>
