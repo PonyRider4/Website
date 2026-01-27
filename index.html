@@ -30,16 +30,56 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     
-    <style>
+<style>
         .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); }
         .dark .glass { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .prose h1, .prose h2 { color: #334155; font-weight: 800; margin-top: 1.5em; }
-        .dark .prose h1, .dark .prose h2 { color: #e2e8f0; }
-        .prose p { margin-bottom: 1.2em; line-height: 1.8; color: #475569; }
+        
+        /* --- 核心修复区：文章排版样式 --- */
+        /* 针对 H1 (一级标题) */
+        .prose h1 { font-size: 2.25rem; line-height: 2.5rem; margin-bottom: 0.8em; } 
+        /* 针对 H2 (二级标题 ##) */
+        .prose h2 { font-size: 1.75rem; line-height: 2.25rem; margin-bottom: 0.6em; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.3em; } 
+        /* 针对 H3 (三级标题 ###) - 这里是你之前缺少的！*/
+        .prose h3 { font-size: 1.35rem; line-height: 1.75rem; margin-bottom: 0.4em; }
+        /* 针对 H4 (四级标题 ####) */
+        .prose h4 { font-size: 1.15rem; line-height: 1.5rem; margin-bottom: 0.3em; }
+
+        /* 通用标题样式 */
+        .prose h1, .prose h2, .prose h3, .prose h4 { 
+            color: #334155; 
+            font-weight: 800; 
+            margin-top: 1.5em; 
+        }
+        
+        /* 夜间模式标题颜色 */
+        .dark .prose h1, .dark .prose h2, .dark .prose h3, .dark .prose h4 { 
+            color: #e2e8f0; 
+            border-color: #334155; /* H2下划线在夜间也变色 */
+        }
+
+        /* 正文段落 */
+        .prose p { margin-bottom: 1.2em; line-height: 1.8; color: #475569; font-size: 1.05rem; }
         .dark .prose p { color: #94a3b8; }
-        .prose img { border-radius: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 20px auto; }
-        .prose blockquote { border-left: 4px solid #6366f1; background: rgba(99, 102, 241, 0.05); padding: 1rem; border-radius: 0.5rem; }
+
+        /* 列表 (ul, ol) */
+        .prose ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1.2em; color: #475569; }
+        .prose ol { list-style-type: decimal; padding-left: 1.5em; margin-bottom: 1.2em; color: #475569; }
+        .dark .prose ul, .dark .prose ol { color: #94a3b8; }
+        
+        /* 代码块与引用 */
+        .prose img { border-radius: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin: 20px auto; max-width: 100%; }
+        .prose blockquote { border-left: 4px solid #6366f1; background: rgba(99, 102, 241, 0.05); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5em; font-style: italic; }
+        .dark .prose blockquote { background: rgba(99, 102, 241, 0.1); color: #cbd5e1; }
+        
+        /* 行内代码 `code` */
+        .prose code { color: #ec4899; background: rgba(236, 72, 153, 0.1); padding: 0.2em 0.4em; border-radius: 0.25rem; font-family: monospace; font-size: 0.9em; }
+        .dark .prose code { background: rgba(236, 72, 153, 0.2); }
+        
+        /* 链接 */
+        .prose a { color: #6366f1; text-decoration: underline; text-underline-offset: 4px; }
+        .prose a:hover { color: #ec4899; }
+
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         [v-cloak] { display: none; }
     </style>
