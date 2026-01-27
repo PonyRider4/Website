@@ -2,17 +2,31 @@
     {
         "id": 1,
         "title": "Telegram 机器人开发指南",
-        "excerpt": "如何利用 Python 自动监听群组消息并进行转发...",
+        "excerpt": "如何利用 Python 自动监听群组消息并进行转发，打造你的被动信息流。",
         "date": "2026-01-26",
-        "image": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800",
+        "category": "自动化",  <-- 关键！加上这个分类
+        "readTime": 8,
+        "image": "images/cover1.jpg", 
         "file": "posts/telegram.md"
     },
     {
         "id": 2,
         "title": "A股市场情绪量化",
-        "excerpt": "利用 DeepSeek 分析市场情绪指标的尝试...",
+        "excerpt": "利用 DeepSeek 分析市场情绪指标的尝试，数据不会说谎。",
         "date": "2026-01-25",
-        "image": "https://images.unsplash.com/photo-1611974765270-ca12586343bb?w=800",
+        "category": "量化交易",
+        "readTime": 5,
+        "image": "images/cover2.jpg",
         "file": "posts/stock.md"
+    },
+    {
+        "id": 3,
+        "title": "我的数字游民生活",
+        "excerpt": "在博学楼的一天是如何度过的。",
+        "date": "2026-01-23",
+        "category": "生活随笔",
+        "readTime": 3,
+        "image": "images/cover3.jpg",
+        "file": "posts/life.md"
     }
 ]
