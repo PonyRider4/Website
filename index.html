@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
     <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -39,13 +43,25 @@
         .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); }
         .dark .glass { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); }
         
-        /* 细节微调 */
+        /* 基础微调 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         [v-cloak] { display: none; }
         
-        /* 图片样式微调 */
-        .prose img { margin: 2rem auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        /* 文章图片样式 */
+        .prose img { margin: 2rem auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s; }
+        .prose img:hover { transform: scale(1.02); }
+
+        /* 代码块复制按钮样式 */
+        pre { position: relative; }
+        .copy-btn {
+            position: absolute; top: 8px; right: 8px;
+            font-size: 12px; color: #94a3b8; background: rgba(30, 41, 59, 0.5);
+            padding: 4px 8px; border-radius: 4px; cursor: pointer; transition: all 0.2s;
+            opacity: 0; /* 默认隐藏 */
+        }
+        pre:hover .copy-btn { opacity: 1; } /* 鼠标悬停显示 */
+        .copy-btn:hover { background: #6366f1; color: white; }
     </style>
 </head>
 <body class="bg-gray-50 text-slate-800 transition-colors duration-300 dark:bg-slate-900 dark:text-slate-200">
@@ -233,6 +249,11 @@
         <footer class="py-12 text-center text-slate-400 text-sm bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 mt-12">
             <p>© 2026 Soft Wealth. All rights reserved.</p>
         </footer>
+
+        <div id="lightbox" class="fixed inset-0 z-[100] bg-black/90 hidden flex items-center justify-center cursor-zoom-out backdrop-blur-sm" onclick="this.classList.add('hidden')">
+            <img id="lightbox-img" class="max-w-[90%] max-h-[90%] object-contain rounded-lg shadow-2xl transform transition-transform duration-300 scale-100">
+        </div>
+
     </div>
 
     <script>
@@ -338,14 +359,14 @@
                     });
                 });
 
-                // 🔥 修复：只在首页(无搜索无分类且第一页)隐藏置顶，其他情况(分类筛选时)显示置顶
                 const pinnedPosts = computed(() => filteredList.value.filter(p => p.pinned));
                 const regularPosts = computed(() => {
+                    // 逻辑修复：仅在首页(第一页+无搜索+无分类)时隐藏置顶，其他情况显示所有
                     const showPinnedSection = !searchQuery.value && !filterCategory.value && currentPage.value === 1;
                     if (showPinnedSection) {
-                        return filteredList.value.filter(p => !p.pinned); // 首页去重
+                        return filteredList.value.filter(p => !p.pinned); 
                     } else {
-                        return filteredList.value; // 分类页显示所有
+                        return filteredList.value; 
                     }
                 });
 
@@ -387,11 +408,41 @@
                     markdownContent.value = post.bodyRaw;
                     currentView.value = 'detail';
                     window.scrollTo(0, 0);
+                    
+                    // 2. 🏷️ 动态网页标题
+                    document.title = `${post.title} - Soft Wealth`;
 
-                    // 激活代码高亮
                     nextTick(() => {
+                        // 激活代码高亮
                         document.querySelectorAll('pre code').forEach((el) => {
                             hljs.highlightElement(el);
+                            
+                            // 4. 📋 添加复制代码按钮
+                            const pre = el.parentElement;
+                            pre.style.position = 'relative';
+                            if (pre.querySelector('.copy-btn')) return;
+                            const btn = document.createElement('button');
+                            btn.className = 'copy-btn';
+                            btn.innerText = '复制';
+                            btn.onclick = () => {
+                                navigator.clipboard.writeText(el.innerText).then(() => {
+                                    btn.innerText = '已复制!';
+                                    setTimeout(() => btn.innerText = '复制', 2000);
+                                });
+                            };
+                            pre.appendChild(btn);
+                        });
+
+                        // 3. 🖼️ 图片点击放大
+                        document.querySelectorAll('.prose img').forEach(img => {
+                            img.style.cursor = 'zoom-in';
+                            img.onclick = (e) => {
+                                e.stopPropagation();
+                                const lightbox = document.getElementById('lightbox');
+                                const lightboxImg = document.getElementById('lightbox-img');
+                                lightboxImg.src = img.src;
+                                lightbox.classList.remove('hidden');
+                            };
                         });
                     });
                 };
@@ -399,6 +450,7 @@
                 const goHome = async () => { 
                     currentView.value = 'list'; 
                     searchQuery.value = ''; 
+                    document.title = 'Soft Wealth | 舒适的搞钱哲学'; // 恢复标题
                     await nextTick();
                     window.scrollTo(0, savedScrollPosition.value);
                 };
