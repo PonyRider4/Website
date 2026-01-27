@@ -6,7 +6,7 @@
         "date": "2026-01-26",
         "category": "自动化",  <-- 关键！加上这个分类
         "readTime": 8,
-        "image": "images/cover1.jpg", 
+        "image": "images/1.png", 
         "file": "posts/telegram.md"
     },
     {
