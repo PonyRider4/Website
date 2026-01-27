@@ -1,15 +1,9 @@
 ---
-
 title: 一个顶尖PUA的信念系统
-
 date: 2026-01-27
-
 category: pua
-
-image: https://images.storm.mg/cloud/b6334a9f25a0c72ba829bfafa8ea51fa3fca8d98.webp?url=s3%3A%2F%2Fnew-storm-public-resource%2Fgallery%2F82286%2F20190226-023934\_U7418\_M501760\_2a62.jpg\&g=sm\&h=675\&resize=fill\&w=1200\&format=webp
-
+image: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeOwDzsIuz7SEsNMabtM7htZggpveOUUVO1w&s
 pinned: false
-
 ---
 
 一个顶尖PUA的信念系统必须是\*\*极度自信、甚至带有某种“妄想”色彩的绝对坚定\*\*。
