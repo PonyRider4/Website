@@ -341,7 +341,21 @@
                 });
 
                 const pinnedPosts = computed(() => filteredList.value.filter(p => p.pinned));
-                const regularPosts = computed(() => filteredList.value.filter(p => !p.pinned));
+                const regularPosts = // --- 修改开始：智能显示逻辑 ---
+                const regularPosts = computed(() => {
+                    // 判断当前是否显示了顶部的“置顶海报区”
+                    // 条件：没有搜索 + 没有选分类 + 在第1页
+                    const showPinnedSection = !searchQuery.value && !filterCategory.value && currentPage.value === 1;
+
+                    if (showPinnedSection) {
+                        // 如果顶部已经显示了置顶，下面列表就把它过滤掉（防止重复）
+                        return filteredList.value.filter(p => !p.pinned);
+                    } else {
+                        // 如果是分类、搜索、或者翻页了，下面列表就显示所有文章（包括置顶的）
+                        return filteredList.value;
+                    }
+                });
+                // --- 修改结束 ---
                 const totalPages = computed(() => Math.ceil(regularPosts.value.length / PAGE_SIZE));
                 
                 const paginatedPosts = computed(() => {
