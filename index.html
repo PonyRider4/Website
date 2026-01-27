@@ -137,7 +137,7 @@
                                         <article v-for="post in pinnedPosts" :key="post.id" @click="loadPost(post)" class="group cursor-pointer relative">
                                             <div class="glass rounded-2xl p-6 shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300 border-l-4 border-secondary flex flex-col md:flex-row gap-6 items-center">
                                                 <div class="w-full md:w-48 h-32 rounded-xl overflow-hidden flex-shrink-0">
-                                                    <img :src="post.image" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                                                    <img :src="post.image" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                                                 </div>
                                                 <div class="flex-1 text-center md:text-left">
                                                     <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
@@ -162,7 +162,7 @@
                                             <article v-for="post in paginatedPosts" :key="post.id" @click="loadPost(post)" class="group cursor-pointer">
                                                 <div class="glass rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-500 h-full flex flex-col">
                                                     <div class="h-40 overflow-hidden relative">
-                                                        <img :src="post.image" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                                                        <img :src="post.image" loading="lazy" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
                                                         <div class="absolute top-3 right-3">
                                                             <span class="px-2 py-1 rounded text-xs font-bold bg-white/90 text-slate-800 shadow-sm">{{ post.category }}</span>
                                                         </div>
