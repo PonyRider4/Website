@@ -1,3 +1,33 @@
+既然像 RSS、SEO 这些偏“运维”的功能你暂时不需要，那我们专注于**“视觉体验”**和**“交互细节”**的打磨。
+
+对于一个主要展示**技术/量化/搞钱**内容的博客，还有 **3 个极具性价比的优化**，能让你的网站从“好用”变成“精致”：
+
+1. **⏱️ 阅读时长预估 (Reading Time)**
+* **效果**：在文章标题下显示“📚 预计阅读 5 分钟”。
+* **价值**：这是现代技术博客的标配，让读者心理有个底，体验极佳。
+* **实现**：纯前端 JS 计算字数，零成本。
+
+
+2. **✨ 自定义滚动条 (Custom Scrollbar)**
+* **效果**：把浏览器默认那个灰突突、傻大黑粗的滚动条，换成细长、精致、会变色的滚动条。
+* **价值**：瞬间提升网站的“应用感”和高级感，尤其是在 Windows 上差别巨大。
+
+
+3. **⌨️ ESC 键快速返回**
+* **效果**：看文章时，按下键盘左上角的 `Esc` 键，直接返回首页。
+* **价值**：对于桌面端用户（尤其是程序员/极客），这是一个非常顺手的交互细节。
+
+
+
+---
+
+### 🚀 最终·精致版源代码
+
+这份代码集成了**动态背景**、**阅读时长**、**美化滚动条**、**ESC返回**、**代码复制**等所有功能。
+
+**请直接全选复制，覆盖你的 `index.html`：**
+
+```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -97,7 +127,7 @@
                 <div class="flex justify-between h-16 items-center">
                     <div @click="goHome" class="flex items-center gap-2 cursor-pointer group">
                         <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition">
-                            <span class="text-lg">💸</span>
+                            <i class="ri-flashlight-fill"></i>
                         </div>
                         <span class="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Soft Wealth</span>
                     </div>
@@ -480,3 +510,5 @@
     </script>
 </body>
 </html>
+
+```
