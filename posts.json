@@ -1,22 +1,5 @@
 [
-  {
-    "id": 1,
-    "title": "telegram",
-    "excerpt": "这是自动生成的简介...",
-    "date": "2026-01-27",
-    "category": "默认分类",
-    "image": "images/cover1.jpg",
-    "file": "posts/telegram.md",
-    "pinned": false
-  },
-  {
-    "id": 2,
-    "title": "一个pua该有的信念",
-    "excerpt": "这是自动生成的简介...",
-    "date": "2026-01-27",
-    "category": "默认分类",
-    "image": "images/cover2.jpg",
-    "file": "posts/一个pua该有的信念.md",
-    "pinned": false
-  }
+  "telegram.md",
+  "stock.md",
+  "life.md"
 ]
