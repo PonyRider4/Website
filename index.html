@@ -5,6 +5,12 @@
     <link rel="preconnect" href="https://unpkg.com">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
+    <meta name="description" content="Soft Wealth 是一个专注于 A股量化交易、Python 自动化脚本开发以及数字游民生活方式分享的个人博客。">
+    <meta name="keywords" content="量化交易, Python, A股, 自动化, 数字游民, 独立开发">
+    <meta name="author" content="Soft Wealth">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💸</text></svg>">
+
     <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -24,8 +30,20 @@
             theme: {
                 extend: {
                     colors: { primary: '#6366f1', secondary: '#ec4899', dark: '#0f172a', light: '#f8fafc' },
-                    animation: { 'fade-in': 'fadeIn 0.5s ease-out', 'bounce-slow': 'bounce 3s infinite' },
-                    keyframes: { fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } }
+                    animation: { 
+                        'fade-in': 'fadeIn 0.5s ease-out', 
+                        'bounce-slow': 'bounce 3s infinite',
+                        'blob': 'blob 7s infinite' // 背景动画
+                    },
+                    keyframes: { 
+                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' }
+                        }
+                    }
                 }
             }
         }
@@ -40,8 +58,8 @@
     
     <style>
         /* 玻璃拟态 */
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); }
-        .dark .glass { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); }
+        .dark .glass { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); }
         
         /* 基础微调 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -62,12 +80,22 @@
         }
         pre:hover .copy-btn { opacity: 1; } /* 鼠标悬停显示 */
         .copy-btn:hover { background: #6366f1; color: white; }
+
+        /* 背景动画延迟 */
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
     </style>
 </head>
-<body class="bg-gray-50 text-slate-800 transition-colors duration-300 dark:bg-slate-900 dark:text-slate-200">
+<body class="bg-gray-50 text-slate-800 transition-colors duration-300 dark:bg-slate-900 dark:text-slate-200 overflow-x-hidden font-sans">
 
-    <div id="app" class="min-h-screen relative" v-cloak>
+    <div id="app" class="min-h-screen relative z-0" v-cloak>
         
+        <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+            <div class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/30 dark:bg-primary/20 rounded-full blur-3xl opacity-50 animate-blob mix-blend-multiply dark:mix-blend-screen"></div>
+            <div class="absolute bottom-0 right-0 translate-x-1/3 translate-y-1/3 w-96 h-96 bg-secondary/30 dark:bg-secondary/20 rounded-full blur-3xl opacity-50 animate-blob animation-delay-2000 mix-blend-multiply dark:mix-blend-screen"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-200/30 dark:bg-blue-900/20 rounded-full blur-3xl opacity-40 animate-blob animation-delay-4000 mix-blend-multiply dark:mix-blend-screen"></div>
+        </div>
+
         <nav class="sticky top-0 z-50 glass shadow-sm transition-all duration-300">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16 items-center">
@@ -91,7 +119,7 @@
             <div v-if="currentView === 'detail'" class="h-1 bg-gradient-to-r from-primary to-secondary transition-all duration-100 ease-out" :style="{ width: scrollProgress + '%' }"></div>
         </nav>
 
-        <main>
+        <main class="relative z-10">
             <transition name="fade" mode="out-in">
                 
                 <div v-if="currentView === 'list'" key="list" class="animate-fade-in">
@@ -246,13 +274,17 @@
             </transition>
         </main>
         
-        <footer class="py-12 text-center text-slate-400 text-sm bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 mt-12">
+        <footer class="py-12 text-center text-slate-400 text-sm bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 mt-12 relative z-10">
             <p>© 2026 Soft Wealth. All rights reserved.</p>
         </footer>
 
         <div id="lightbox" class="fixed inset-0 z-[100] bg-black/90 hidden flex items-center justify-center cursor-zoom-out backdrop-blur-sm" onclick="this.classList.add('hidden')">
             <img id="lightbox-img" class="max-w-[90%] max-h-[90%] object-contain rounded-lg shadow-2xl transform transition-transform duration-300 scale-100">
         </div>
+
+        <button id="backToTop" class="fixed bottom-8 right-8 bg-slate-800 text-white w-12 h-12 rounded-full shadow-lg translate-y-20 opacity-0 transition-all duration-300 z-40 flex items-center justify-center hover:bg-primary cursor-pointer hover:scale-110" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+            <i class="ri-arrow-up-line text-xl"></i>
+        </button>
 
     </div>
 
@@ -339,6 +371,16 @@
                     const scrollTop = window.scrollY;
                     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
                     scrollProgress.value = (scrollTop / docHeight) * 100;
+                    
+                    // 控制回到顶部按钮
+                    const btn = document.getElementById('backToTop');
+                    if (btn) {
+                        if (scrollTop > 300) {
+                            btn.classList.remove('translate-y-20', 'opacity-0');
+                        } else {
+                            btn.classList.add('translate-y-20', 'opacity-0');
+                        }
+                    }
                 };
 
                 const toggleDark = () => {
@@ -409,7 +451,7 @@
                     currentView.value = 'detail';
                     window.scrollTo(0, 0);
                     
-                    // 2. 🏷️ 动态网页标题
+                    // 动态网页标题
                     document.title = `${post.title} - Soft Wealth`;
 
                     nextTick(() => {
@@ -417,7 +459,7 @@
                         document.querySelectorAll('pre code').forEach((el) => {
                             hljs.highlightElement(el);
                             
-                            // 4. 📋 添加复制代码按钮
+                            // 添加复制代码按钮
                             const pre = el.parentElement;
                             pre.style.position = 'relative';
                             if (pre.querySelector('.copy-btn')) return;
@@ -433,7 +475,7 @@
                             pre.appendChild(btn);
                         });
 
-                        // 3. 🖼️ 图片点击放大
+                        // 图片点击放大
                         document.querySelectorAll('.prose img').forEach(img => {
                             img.style.cursor = 'zoom-in';
                             img.onclick = (e) => {
