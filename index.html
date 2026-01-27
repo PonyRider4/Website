@@ -1,44 +1,38 @@
 <!DOCTYPE html>
-<html lang="zh-CN" class="dark">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dark Wealth | 深空搞钱指南</title>
+    <title>Felix's Wiki | 搞钱实操库</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
-                    colors: {
-                        // 深空灰新拟态基色
-                        main: '#292D3E', 
-                        // 字体颜色
-                        text: {
-                            main: '#A6ACCD', // 浅灰文本
-                            bright: '#FFFFFF', // 高亮标题
-                        },
-                        // 强调色 (赛博蓝)
-                        accent: '#4D7CFF',
-                    },
                     fontFamily: {
-                        sans: ['"Nunito"', 'sans-serif'],
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Helvetica', '"Apple Color Emoji"', 'Arial', 'sans-serif', '"Segoe UI Emoji"', '"Segoe UI Symbol"'],
+                        serif: ['Lyon-Text', 'Georgia', 'KaiTi', 'serif'],
+                        mono: ['"SFMono-Regular"', 'Consolas', '"Liberation Mono"', 'Menlo', 'Courier', 'monospace'],
                     },
-                    borderRadius: {
-                        'xl': '1rem',
-                        '2xl': '1.5rem',
-                        '3xl': '2rem',
+                    colors: {
+                        notion: {
+                            bg: '#FFFFFF', // 主背景
+                            sidebar: '#F7F7F5', // 侧边栏
+                            text: '#37352F', // 正文黑
+                            gray: '#9B9A97', // 辅助灰
+                            hover: '#EFEEF5', // 悬停
+                            border: '#E9E9E7', // 边框
+                            
+                            // Notion 经典色块
+                            'yellow-bg': 'rgba(251, 243, 219, 1)',
+                            'blue-bg': 'rgba(231, 243, 248, 1)',
+                            'red-bg': 'rgba(253, 235, 236, 1)',
+                            'green-bg': 'rgba(237, 243, 236, 1)',
+                        }
                     },
                     boxShadow: {
-                        // 核心：深色凸起投影 (Light: Top-Left, Dark: Bottom-Right)
-                        'neu-out': '8px 8px 16px #1c1f2a, -8px -8px 16px #363b52',
-                        'neu-out-lg': '12px 12px 24px #1c1f2a, -12px -12px 24px #363b52',
-                        'neu-out-sm': '4px 4px 8px #1c1f2a, -4px -4px 8px #363b52',
-                        
-                        // 核心：深色凹陷投影 (Inset)
-                        'neu-in': 'inset 6px 6px 12px #1c1f2a, inset -6px -6px 12px #363b52',
-                        'neu-in-sm': 'inset 3px 3px 6px #1c1f2a, inset -3px -3px 6px #363b52',
+                        'card': '0 1px 2px rgba(0, 0, 0, 0.05)',
                     }
                 }
             }
@@ -48,223 +42,229 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <style>
-        body { 
-            background-color: #292D3E; 
-            color: #A6ACCD; 
-            font-family: 'Nunito', sans-serif; 
-            -webkit-font-smoothing: antialiased;
-        }
+        body { background-color: #FFFFFF; color: #37352F; }
+        
+        /* 侧边栏显隐动画 */
+        .sidebar-enter-active, .sidebar-leave-active { transition: transform 0.3s ease; }
+        .sidebar-enter-from, .sidebar-leave-to { transform: translateX(-100%); }
 
-        /* 按钮交互 */
-        .btn-neu {
-            transition: all 0.2s ease;
-            box-shadow: 8px 8px 16px #1c1f2a, -8px -8px 16px #363b52;
-            color: #4D7CFF;
-            background: #292D3E;
-        }
-        .btn-neu:active, .btn-neu.active {
-            box-shadow: inset 6px 6px 12px #1c1f2a, inset -6px -6px 12px #363b52;
-            color: #4D7CFF;
-            transform: translateY(1px);
-        }
+        /* Notion 风格排版 */
+        .prose h1 { font-weight: 700; margin-top: 2em; margin-bottom: 0.5em; font-size: 1.875em; letter-spacing: -0.01em; }
+        .prose h2 { font-weight: 600; margin-top: 1.4em; margin-bottom: 0.1em; font-size: 1.5em; letter-spacing: -0.01em; border-bottom: 1px solid #E9E9E7; padding-bottom: 0.3em; }
+        .prose h3 { font-weight: 600; margin-top: 1em; margin-bottom: 0.1em; font-size: 1.25em; }
+        .prose p { margin-top: 0.25em; margin-bottom: 0.75em; line-height: 1.6; }
+        .prose ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1em; }
+        .prose blockquote { border-left: 3px solid #37352F; padding-left: 1em; margin: 1em 0; font-size: 1.1em; font-style: italic; }
+        .prose code { color: #EB5757; background: rgba(135,131,120,0.15); padding: 0.2em 0.4em; border-radius: 3px; font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.85em; }
+        .prose pre { background: #F7F7F5; padding: 1.5em; border-radius: 4px; overflow-x: auto; margin: 1em 0; }
+        .prose pre code { background: transparent; color: #37352F; padding: 0; }
+        .prose img { border-radius: 2px; margin: 1.5em 0; }
 
-        /* 标签切换 */
-        .tab-neu {
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border-radius: 9999px;
-            font-weight: 700;
-            color: #676E95;
+        /* Notion Callout 组件样式 */
+        .notion-callout {
+            display: flex; gap: 12px;
+            padding: 16px 16px 16px 12px;
+            border-radius: 4px;
+            margin: 1em 0;
+            background-color: rgba(235, 236, 237, 0.3); /* 默认灰 */
         }
-        .tab-neu:hover { color: #4D7CFF; }
-        .tab-neu.active {
-            box-shadow: inset 4px 4px 8px #1c1f2a, inset -4px -4px 8px #363b52;
-            color: #4D7CFF;
-            background: #292D3E;
-        }
-
-        /* 图片样式 (带边框) */
-        .img-neu {
-            border-radius: 1rem;
-            border: 4px solid #292D3E;
-            box-shadow: 8px 8px 16px #1c1f2a, -8px -8px 16px #363b52;
-        }
-
-        /* Markdown 深色适配 */
-        .prose h1, .prose h2, .prose h3 { color: #FFFFFF; font-weight: 800; margin-top: 1.5em; margin-bottom: 0.5em; }
-        .prose p { margin-bottom: 1.2em; line-height: 1.7; color: #A6ACCD; }
-        .prose strong { color: #4D7CFF; }
-        .prose a { color: #4D7CFF; }
-        .prose code { color: #4D7CFF; background: transparent; box-shadow: inset 3px 3px 6px #1c1f2a, inset -3px -3px 6px #363b52; padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 0.9em; }
-        .prose pre { border-radius: 1rem; padding: 1.5rem; background: #292D3E; box-shadow: inset 6px 6px 12px #1c1f2a, inset -6px -6px 12px #363b52; overflow-x: auto; margin: 1.5em 0; }
-        .prose blockquote { border-left: none; padding: 1.5rem; margin: 1.5em 0; border-radius: 1rem; background: #292D3E; box-shadow: 6px 6px 12px #1c1f2a, -6px -6px 12px #363b52; color: #4D7CFF; font-style: italic; }
+        .bg-yellow { background-color: rgba(251, 243, 219, 1); }
+        .bg-blue { background-color: rgba(231, 243, 248, 1); }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center py-8 px-4 md:px-0">
+<body class="text-notion-text font-sans antialiased">
 
-    <div id="app" class="w-full max-w-5xl">
+    <div id="app" class="flex min-h-screen">
         
-        <nav class="flex justify-between items-center px-8 py-4 rounded-3xl shadow-neu-out mb-12 bg-main">
-            <div @click="currentView='list'" class="flex items-center gap-3 cursor-pointer group select-none">
-                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-accent text-2xl shadow-neu-in transition-all duration-300">
-                    <i class="ri-radar-fill"></i>
+        <aside :class="['fixed md:static inset-y-0 left-0 z-50 w-64 bg-notion-sidebar border-r border-notion-border transform transition-transform duration-200 ease-in-out flex flex-col', sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0']">
+            
+            <div class="p-4 flex items-center gap-3 hover:bg-notion-border/50 cursor-pointer transition m-2 rounded-md">
+                <div class="w-5 h-5 rounded bg-orange-400 flex items-center justify-center text-white text-xs font-bold">F</div>
+                <div class="text-sm font-medium truncate">Felix's Workspace</div>
+                <div class="flex-grow"></div>
+                <div class="text-xs border border-notion-border rounded px-1 text-notion-gray">Free</div>
+            </div>
+
+            <nav class="flex-grow px-2 overflow-y-auto">
+                <div class="mb-4">
+                    <div class="text-xs font-semibold text-notion-gray px-3 py-2">FAVORITES</div>
+                    <a @click="currentView='list'; filterCategory=''" class="flex items-center gap-2 px-3 py-1.5 text-sm text-notion-text hover:bg-notion-border/50 rounded cursor-pointer">
+                        <span>🏡</span> 主页 · 概览
+                    </a>
+                    <a @click="showContact=true" class="flex items-center gap-2 px-3 py-1.5 text-sm text-notion-text hover:bg-notion-border/50 rounded cursor-pointer">
+                        <span>📇</span> 联系名片
+                    </a>
                 </div>
+
                 <div>
-                    <h1 class="font-extrabold text-lg text-text-bright tracking-tight leading-none">Dark Wealth</h1>
-                    <p class="text-xs text-text-main font-bold tracking-widest uppercase">博学楼实验室</p>
+                    <div class="text-xs font-semibold text-notion-gray px-3 py-2">PRIVATE</div>
+                    <a v-for="cat in categories" :key="cat" @click="currentView='list'; filterCategory=cat" 
+                       :class="{'bg-notion-border/50': filterCategory === cat}"
+                       class="flex items-center gap-2 px-3 py-1.5 text-sm text-notion-text hover:bg-notion-border/50 rounded cursor-pointer group">
+                        <span class="text-notion-gray group-hover:text-notion-text">📄</span>
+                        <span class="truncate">{{ cat }}</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="p-4 border-t border-notion-border text-sm text-notion-gray">
+                <div class="flex items-center gap-2 cursor-pointer hover:text-notion-text">
+                    <i class="ri-add-line"></i> New Page
                 </div>
             </div>
+        </aside>
 
-            <div>
-                <button @click="showContact=true" class="btn-neu px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2">
-                    <i class="ri-link-m"></i> 联系方式
-                </button>
-            </div>
-        </nav>
+        <div v-if="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 bg-black/20 z-40 md:hidden"></div>
 
-        <main>
-            <transition name="fade" mode="out-in">
+        <main class="flex-1 min-w-0 flex flex-col h-screen overflow-y-auto relative">
+            
+            <header class="sticky top-0 bg-white/95 backdrop-blur-sm z-30 h-11 flex items-center px-4 justify-between border-b border-transparent hover:border-notion-border transition">
+                <div class="flex items-center gap-2 text-sm text-notion-text truncate">
+                    <button @click="sidebarOpen = !sidebarOpen" class="md:hidden mr-2 text-notion-gray hover:text-notion-text"><i class="ri-menu-line"></i></button>
+                    <span v-if="currentView === 'detail'" @click="currentView='list'" class="hover:underline cursor-pointer opacity-70">🏡 Felix's Wiki</span>
+                    <span v-if="currentView === 'detail'" class="text-notion-gray">/</span>
+                    <span class="truncate flex items-center gap-1">
+                        <span v-if="currentView==='list'">🏡 Felix's Wiki</span>
+                        <span v-else>{{ activePost.emoji }} {{ activePost.title }}</span>
+                    </span>
+                </div>
+                <div class="flex items-center gap-4 text-notion-text">
+                    <span class="text-xs text-notion-gray">Edited just now</span>
+                    <i class="ri-more-line cursor-pointer hover:bg-notion-border rounded p-1"></i>
+                </div>
+            </header>
 
-                <div v-if="currentView === 'list'" key="list">
+            <div class="flex-grow w-full max-w-[900px] mx-auto px-12 md:px-24 py-12 transition-all">
+                
+                <div class="group relative h-48 -mt-12 -mx-24 mb-10 overflow-hidden bg-gray-100">
+                    <img v-if="currentView==='list'" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover">
+                    <img v-else :src="activePost.image" class="w-full h-full object-cover">
+                    <div class="absolute bottom-2 right-4 opacity-0 group-hover:opacity-100 transition">
+                        <button class="bg-white/80 hover:bg-white text-xs px-2 py-1 rounded shadow-sm">Change cover</button>
+                    </div>
+                </div>
+
+                <transition name="fade" mode="out-in">
                     
-                    <div class="p-8 md:p-12 rounded-3xl shadow-neu-out mb-12 select-none bg-main text-center md:text-left">
-                        <h2 class="text-3xl font-extrabold text-text-bright mb-4">从代码到现金流。</h2>
-                        <p class="text-text-main mb-8 leading-relaxed max-w-2xl text-lg">
-                            这里不谈空洞的理论。我分享在博学楼跑通的<b class="text-accent">自动化套利脚本</b>、<b class="text-accent">量化交易策略</b>以及<b class="text-accent">被动收入体系</b>构建指南。
-                        </p>
-                        <div class="flex gap-4 justify-center md:justify-start">
-                            <button class="btn-neu active px-8 py-3 rounded-xl font-bold flex items-center gap-2">
-                                <i class="ri-vip-diamond-line"></i> 订阅项目实操
-                            </button>
+                    <div v-if="currentView === 'list'" key="list">
+                        <div class="text-7xl -mt-20 mb-4 relative z-10 hover:scale-110 transition cursor-pointer w-fit">🏡</div>
+                        
+                        <h1 class="text-4xl font-bold mb-8 pb-4 border-b border-notion-border">搞钱实操库</h1>
+                        
+                        <div class="notion-callout bg-notion-yellow-bg mb-8">
+                            <div class="text-xl">💡</div>
+                            <div class="text-sm leading-6">
+                                欢迎来到我的数字花园。这里没有废话，只有经过博学楼实验室验证的<strong>SOP（标准作业程序）</strong>、量化回测数据和商业思考笔记。<br>
+                                <span class="text-notion-gray text-xs">Tips: 点击下方卡片查看完整笔记。</span>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="flex justify-center mb-12">
-                        <div class="p-2 rounded-full shadow-neu-in flex gap-2 bg-main">
-                            <button @click="filterCategory=''" :class="['px-6 py-2 rounded-full text-sm font-bold transition-all duration-300', !filterCategory ? 'shadow-neu-out bg-main text-accent' : 'text-text-main hover:text-text-bright']">
-                                全部项目
-                            </button>
-                            <button v-for="cat in categories" :key="cat" @click="filterCategory=cat" 
-                                :class="['px-6 py-2 rounded-full text-sm font-bold transition-all duration-300', filterCategory===cat ? 'shadow-neu-out bg-main text-accent' : 'text-text-main hover:text-text-bright']">
-                                {{ cat }}
-                            </button>
+                        <div class="flex items-center gap-4 text-sm mb-4 border-b border-notion-border pb-2">
+                            <span class="font-semibold text-notion-text border-b-2 border-black pb-2 -mb-2.5">Gallery View</span>
+                            <span class="text-notion-gray hover:text-notion-text cursor-pointer">Board View</span>
+                            <span class="text-notion-gray hover:text-notion-text cursor-pointer">Table View</span>
+                            <div class="flex-grow"></div>
+                            <span class="text-notion-gray hover:text-notion-text cursor-pointer"><i class="ri-search-line"></i> Search</span>
                         </div>
-                    </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <article v-for="post in filteredPosts" :key="post.id" @click="viewPost(post)" 
-                            class="p-6 rounded-3xl shadow-neu-out cursor-pointer hover:shadow-neu-out-lg transition-all duration-300 transform hover:-translate-y-1 group bg-main">
-                            
-                            <div class="h-52 rounded-2xl shadow-neu-in mb-6 overflow-hidden relative border-4 border-main">
-                                <img :src="post.image" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition duration-700">
-                                <div class="absolute top-3 right-3">
-                                    <span class="px-3 py-1 rounded-full bg-main/90 backdrop-blur shadow-neu-out text-xs font-extrabold text-accent">
-                                        {{ post.category }}
-                                    </span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div v-for="post in filteredPosts" :key="post.id" @click="viewPost(post)" 
+                                class="group border border-notion-border rounded overflow-hidden hover:bg-notion-hover cursor-pointer transition shadow-sm hover:shadow-md bg-white">
+                                <div class="h-32 overflow-hidden bg-gray-50 border-b border-notion-border">
+                                    <img :src="post.image" class="w-full h-full object-cover opacity-90 group-hover:opacity-100">
+                                </div>
+                                <div class="p-3">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-xl">{{ post.emoji }}</span>
+                                        <span class="font-semibold text-sm truncate">{{ post.title }}</span>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <div class="flex items-center gap-2 text-xs">
+                                            <span class="w-16 text-notion-gray truncate flex items-center gap-1"><i class="ri-price-tag-3-line"></i> Category</span>
+                                            <span class="bg-notion-blue-bg px-1.5 py-0.5 rounded text-notion-text">{{ post.category }}</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 text-xs">
+                                            <span class="w-16 text-notion-gray truncate flex items-center gap-1"><i class="ri-calendar-line"></i> Date</span>
+                                            <span class="text-notion-text">{{ post.date }}</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 text-xs">
+                                            <span class="w-16 text-notion-gray truncate flex items-center gap-1"><i class="ri-checkbox-circle-line"></i> Status</span>
+                                            <span class="bg-notion-green-bg px-1.5 py-0.5 rounded text-notion-text">Done</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <h3 class="text-xl font-extrabold text-text-bright mb-3 group-hover:text-accent transition leading-snug">{{ post.title }}</h3>
-                            <p class="text-sm text-text-main line-clamp-2 mb-6 leading-relaxed">{{ post.excerpt }}</p>
-                            
-                            <div class="flex justify-between items-center pt-4 border-t border-main shadow-neu-in-sm rounded-full px-4">
-                                <span class="text-xs font-bold text-text-main">{{ post.date }}</span>
-                                <div class="text-accent font-bold text-sm flex items-center gap-1">
-                                    查看复盘 <i class="ri-arrow-right-line"></i>
+                            <div class="border border-notion-border border-dashed rounded flex items-center justify-center p-8 text-notion-gray text-sm hover:bg-notion-hover cursor-pointer">
+                                + New
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-else key="detail">
+                        <div class="text-7xl -mt-20 mb-4 relative z-10 hover:scale-110 transition cursor-pointer w-fit">{{ activePost.emoji }}</div>
+                        
+                        <h1 class="text-4xl font-bold mb-6 text-notion-text">{{ activePost.title }}</h1>
+                        
+                        <div class="text-sm mb-8 space-y-2 text-notion-text">
+                            <div class="flex items-center">
+                                <div class="w-32 text-notion-gray flex items-center gap-2"><i class="ri-user-smile-line"></i> Creator</div>
+                                <div class="flex items-center gap-2">
+                                    <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix" class="w-5 h-5 rounded-full">
+                                    <span>Felix</span>
                                 </div>
                             </div>
-                        </article>
-                    </div>
-
-                </div>
-
-                <div v-else key="detail" class="max-w-3xl mx-auto">
-                    <div class="flex justify-between items-center mb-8">
-                        <button @click="currentView='list'" class="btn-neu w-12 h-12 rounded-full flex items-center justify-center text-text-main hover:text-accent transition">
-                            <i class="ri-arrow-left-line text-xl"></i>
-                        </button>
-                        <div class="flex gap-4">
-                            <button class="btn-neu w-12 h-12 rounded-full flex items-center justify-center text-accent transition">
-                                <i class="ri-share-forward-line text-xl"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <article class="p-8 md:p-12 rounded-[2.5rem] shadow-neu-out bg-main">
-                        <div class="text-center mb-10">
-                            <span class="px-4 py-1 rounded-full shadow-neu-in text-accent text-xs font-bold uppercase tracking-wider mb-4 inline-block">
-                                {{ activePost.category }}
-                            </span>
-                            <h1 class="text-3xl md:text-4xl font-extrabold text-text-bright leading-tight mb-6">
-                                {{ activePost.title }}
-                            </h1>
-                            <div class="flex justify-center items-center gap-6 text-sm font-bold text-text-main">
-                                <span class="flex items-center gap-1"><i class="ri-calendar-line"></i> {{ activePost.date }}</span>
-                                <span class="flex items-center gap-1"><i class="ri-time-line"></i> {{ activePost.readTime }} min read</span>
+                            <div class="flex items-center">
+                                <div class="w-32 text-notion-gray flex items-center gap-2"><i class="ri-price-tag-3-line"></i> Tags</div>
+                                <span class="bg-notion-blue-bg px-1.5 py-0.5 rounded mr-2">{{ activePost.category }}</span>
+                                <span class="bg-notion-red-bg px-1.5 py-0.5 rounded">High Value</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-32 text-notion-gray flex items-center gap-2"><i class="ri-link"></i> URL</div>
+                                <span class="underline decoration-notion-border cursor-pointer">Empty</span>
                             </div>
                         </div>
 
-                        <div class="rounded-3xl shadow-neu-in p-2 mb-12 bg-main border-2 border-main">
-                            <img :src="activePost.image" class="w-full h-auto rounded-2xl opacity-90">
+                        <hr class="border-notion-border mb-8">
+
+                        <div class="prose max-w-none text-notion-text" v-html="compiledMarkdown"></div>
+
+                        <div class="mt-12 pt-8 border-t border-notion-border">
+                            <div class="flex items-center gap-3 text-sm text-notion-gray hover:text-notion-text cursor-pointer">
+                                <i class="ri-discuss-line"></i> Add a comment...
+                            </div>
                         </div>
+                    </div>
 
-                        <div class="prose prose-lg max-w-none" v-html="compiledMarkdown"></div>
-
-                        <div class="mt-16 pt-10 border-t border-main shadow-neu-in-sm rounded-3xl p-8 text-center">
-                            <h3 class="text-xl font-extrabold text-text-bright mb-2">获取核心源码</h3>
-                            <p class="text-sm text-text-main mb-8">解锁博学楼实验室的完整 Python 脚本与策略配置。</p>
-                            <button class="btn-neu px-8 py-4 rounded-2xl font-bold text-accent w-full md:w-auto">
-                                <i class="ri-lock-unlock-line mr-2"></i> 立即解锁 (¥99)
-                            </button>
-                        </div>
-                    </article>
-                </div>
-
-            </transition>
+                </transition>
+            </div>
         </main>
 
-        <footer class="mt-20 text-center text-sm font-bold text-text-main pb-8">
-            <p>© 2026 Dark Wealth Blog. Shanxi, Jinzhong.</p>
-        </footer>
-
-        <div v-if="showContact" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-main/90 backdrop-blur-sm" @click.self="showContact=false">
-            <div class="w-full max-w-sm p-8 rounded-[2.5rem] shadow-neu-out bg-main transform transition-all scale-100 relative">
-                <button @click="showContact=false" class="btn-neu absolute top-6 right-6 w-10 h-10 rounded-full flex items-center justify-center text-text-main hover:text-red-500 transition">
-                    <i class="ri-close-line text-xl"></i>
-                </button>
-                
-                <div class="flex flex-col items-center mt-4">
-                    <div class="w-20 h-20 rounded-2xl shadow-neu-in flex items-center justify-center text-accent text-4xl mb-6 border-4 border-main">
-                        <i class="ri-radar-fill"></i>
+        <div v-if="showContact" class="fixed inset-0 z-[100] flex items-center justify-center p-4" @click.self="showContact=false">
+            <div class="bg-white rounded shadow-xl border border-notion-border w-full max-w-sm overflow-hidden animate-fade-in-up">
+                <div class="h-24 bg-notion-sidebar"></div>
+                <div class="px-6 pb-6 -mt-10">
+                    <div class="w-20 h-20 bg-white rounded shadow-sm p-1 mb-4 flex items-center justify-center text-4xl">
+                        🧑🏻‍💻
                     </div>
-                    <h2 class="text-2xl font-extrabold text-text-bright">Admin / 博主</h2>
-                    <p class="text-accent font-bold text-sm mb-8 tracking-wider uppercase">Quantitative Trader</p>
-
-                    <div class="w-full space-y-5">
-                        <a href="#" class="flex items-center gap-4 p-4 rounded-2xl shadow-neu-out btn-neu group">
-                            <div class="text-text-bright group-hover:text-accent transition"><i class="ri-twitter-x-fill text-xl"></i></div>
-                            <div>
-                                <p class="text-xs font-bold text-text-main uppercase">X (Twitter)</p>
-                                <p class="text-sm font-bold text-text-bright">@Felix_Quant</p>
-                            </div>
-                        </a>
-                        <a href="#" class="flex items-center gap-4 p-4 rounded-2xl shadow-neu-out btn-neu group">
-                            <div class="text-text-bright group-hover:text-accent transition"><i class="ri-telegram-fill text-xl"></i></div>
-                            <div>
-                                <p class="text-xs font-bold text-text-main uppercase">Telegram</p>
-                                <p class="text-sm font-bold text-text-bright">t.me/Felix_Channel</p>
-                            </div>
-                        </a>
-                         <div class="flex items-center gap-4 p-4 rounded-2xl shadow-neu-in opacity-80">
-                            <div class="text-text-main"><i class="ri-map-pin-line text-xl"></i></div>
-                            <div>
-                                <p class="text-xs font-bold text-text-main uppercase">Location</p>
-                                <p class="text-sm font-bold text-text-main">博学楼 3F, Shanxi</p>
-                            </div>
+                    <h2 class="text-xl font-bold mb-1">Felix</h2>
+                    <p class="text-sm text-notion-gray mb-4">Solo Entrepreneur · Jinzhong</p>
+                    
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center gap-3 p-2 hover:bg-notion-hover rounded cursor-pointer">
+                            <i class="ri-mail-line text-notion-gray"></i>
+                            <span>business@felix.wiki</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-2 hover:bg-notion-hover rounded cursor-pointer">
+                            <i class="ri-map-pin-line text-notion-gray"></i>
+                            <span>Boswell Building 3F</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-2 hover:bg-notion-hover rounded cursor-pointer">
+                            <i class="ri-wechat-line text-notion-gray"></i>
+                            <span>Felix_MoneyMaker</span>
                         </div>
                     </div>
                 </div>
@@ -279,61 +279,85 @@
         createApp({
             setup() {
                 const currentView = ref('list');
+                const sidebarOpen = ref(false);
                 const showContact = ref(false);
                 const filterCategory = ref('');
                 const activePost = ref(null);
 
-                // 内容：强调“赚钱实操”
+                // 内容：高度结构化的“笔记”风格
                 const posts = ref([
                     {
                         id: 1,
-                        title: "被动收入实操：YTB2BILI 自动化流量矩阵复盘",
-                        excerpt: "别再手动搬运了。我在博学楼部署的这套 Python 脚本，如何实现 24h 无人值守的跨平台内容分发与变现。",
-                        date: "Jan 26",
-                        category: "自动化套利",
-                        readTime: 12,
-                        image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80", // 钞票/数据
+                        emoji: "🤖",
+                        title: "SOP: YTB2BILI 自动化搬运流程",
+                        date: "Jan 26, 2026",
+                        category: "Automation",
+                        image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80",
                         content: `
-### 赚钱的底层逻辑
+<div class="notion-callout bg-blue">
+    <div>ℹ️</div>
+    <div><strong>简介：</strong> 这是一套部署在 Linux 服务器上的自动化脚本，用于实现视频内容的跨平台分发。</div>
+</div>
 
-信息的搬运本质上是**跨平台的套利**。但如果纯靠人工，你只是在打一份低端工。
+## 1. 准备工作 (Checklist)
+- [x] 购买海外 VPS (推荐配置 2C4G)
+- [x] 注册 YouTube API Key
+- [x] 获取 Bilibili SESSDATA (Cookie)
+- [ ] 部署 Python 3.10 环境
 
-> **核心目标**：建立一套不依赖你个人时间的资产系统。
-
-### 自动化流程 (SOP)
-1. **监听源头**: 脚本自动监控 YouTube 目标频道。
-2. **云端处理**: 利用 VPS 进行下载、去重、剪辑。
-3. **自动发布**: 通过 API 模拟上传到 B站，并挂载商品。
+## 2. 核心脚本逻辑
+所有的搬运逻辑都封装在 \`main.py\` 中。
 
 \`\`\`python
-# 让服务器替你赚钱
-while True:
-    if new_content_found():
-        download_and_process()
-        upload_to_bilibili()
-        print("💰 资产+1")
-    sleep(3600)
+# 伪代码示例
+import schedule
+
+def job():
+    print("开始扫描新视频...")
+    # 1. Check RSS
+    # 2. Download via yt-dlp
+    # 3. Upload via API
+
+schedule.every(1).hours.do(job)
 \`\`\`
+
+## 3. 收益复盘
+> "流水线一旦建立，剩下的就是等待复利。"
+
+上个月 B站 收益数据如下：
+- **播放量**: 120,000+
+- **收益**: ¥342.50 (创作激励) + ¥1200 (橱窗)
                         `
                     },
                     {
                         id: 2,
-                        title: "A股量化笔记：基于打板情绪的短线策略",
-                        excerpt: "数据不会骗人。利用 Tushare 抓取每日涨停数据，建立一套可复制的短线情绪监测系统。",
-                        date: "Jan 25",
-                        category: "量化交易",
-                        readTime: 8,
-                        image: "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?auto=format&fit=crop&w=800&q=80",
-                        content: "..."
+                        emoji: "📈",
+                        title: "Note: A股情绪周期量化模型",
+                        date: "Jan 25, 2026",
+                        category: "Quant",
+                        image: "https://images.unsplash.com/photo-1611974765270-ca12586343bb?auto=format&fit=crop&w=800&q=80",
+                        content: `
+## 策略核心
+我们不预测股价，我们**跟随情绪**。
+
+<div class="notion-callout bg-red">
+    <div>⚠️</div>
+    <div><strong>风险提示：</strong> 本策略仅适用于短线打板，请严格控制仓位。</div>
+</div>
+
+## 监控指标
+1. **涨停家数**: 反映市场热度。
+2. **连板高度**: 反映资金接力意愿。
+3. **炸板率**: 反映市场分歧。
+                        `
                     },
                     {
                         id: 3,
-                        title: "博学楼工作室：年产出百万的硬件配置清单",
-                        excerpt: "工欲善其事。我的网络、服务器与多屏交易环境搭建指南。",
-                        date: "Jan 23",
-                        category: "效率基建",
-                        readTime: 5,
-                        image: "https://images.unsplash.com/photo-1510511459019-5dda7724fd82?auto=format&fit=crop&w=800&q=80",
+                        emoji: "🖥️",
+                        title: "Setup: 博学楼工作室配置清单",
+                        date: "Jan 23, 2026",
+                        category: "Lifestyle",
+                        image: "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=800&q=80",
                         content: "..."
                     }
                 ]);
@@ -353,16 +377,11 @@ while True:
                 };
 
                 return {
-                    currentView, showContact, filterCategory, activePost,
+                    currentView, sidebarOpen, showContact, filterCategory, activePost,
                     posts, categories, filteredPosts, compiledMarkdown, viewPost
                 };
             }
         }).mount('#app');
     </script>
-    
-    <style>
-        .fade-enter-active, .fade-leave-active { transition: opacity 0.4s ease; }
-        .fade-enter-from, .fade-leave-to { opacity: 0; }
-    </style>
 </body>
 </html>
