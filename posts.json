@@ -5,7 +5,7 @@
     "excerpt": "如何利用 Python 自动监听群组消息并进行转发，打造你的被动信息流。",
     "date": "2026-01-26",
     "category": "自动化",
-    "image": "images/cover1.jpg",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_hoXa0w5AMOcKDqhQF5S-_p1VBjL7Ip-TIA&s",
     "file": "posts/telegram.md",
     "pinned": true
   },
