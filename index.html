@@ -290,10 +290,8 @@
 
                 onMounted(async () => {
                     try {
-                        // 1. 读取文件名列表
                         const res = await fetch('posts.json');
                         const filenames = await res.json();
-                        // 2. 并发读取所有 Markdown
                         const promises = filenames.map(async (filename) => {
                             try {
                                 const mdRes = await fetch(`posts/${filename}`);
@@ -340,8 +338,17 @@
                     });
                 });
 
+                // 🔥 修复：只在首页(无搜索无分类且第一页)隐藏置顶，其他情况(分类筛选时)显示置顶
                 const pinnedPosts = computed(() => filteredList.value.filter(p => p.pinned));
-                const regularPosts = computed(() => filteredList.value.filter(p => !p.pinned));
+                const regularPosts = computed(() => {
+                    const showPinnedSection = !searchQuery.value && !filterCategory.value && currentPage.value === 1;
+                    if (showPinnedSection) {
+                        return filteredList.value.filter(p => !p.pinned); // 首页去重
+                    } else {
+                        return filteredList.value; // 分类页显示所有
+                    }
+                });
+
                 const totalPages = computed(() => Math.ceil(regularPosts.value.length / PAGE_SIZE));
                 
                 const paginatedPosts = computed(() => {
@@ -381,7 +388,7 @@
                     currentView.value = 'detail';
                     window.scrollTo(0, 0);
 
-                    // 🔥 激活代码高亮
+                    // 激活代码高亮
                     nextTick(() => {
                         document.querySelectorAll('pre code').forEach((el) => {
                             hljs.highlightElement(el);
