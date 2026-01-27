@@ -8,12 +8,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class', // 启用手动夜间模式
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: { 
-                        primary: '#6366f1', // 靛蓝
-                        secondary: '#ec4899', // 粉红
+                        primary: '#6366f1', 
+                        secondary: '#ec4899', 
                         dark: '#0f172a', 
                         light: '#f8fafc' 
                     },
@@ -43,7 +43,6 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     
     <style>
-        /* 玻璃拟态核心样式 */
         .glass {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
@@ -54,12 +53,9 @@
             background: rgba(30, 41, 59, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        /* 隐藏滚动条但允许滚动 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Markdown 样式美化 */
         .prose h1, .prose h2, .prose h3 { color: #334155; font-weight: 800; margin-top: 1.5em; }
         .dark .prose h1, .dark .prose h2, .dark .prose h3 { color: #e2e8f0; }
         .prose p { margin-bottom: 1.2em; line-height: 1.8; color: #475569; }
@@ -77,7 +73,6 @@
         <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
             <div class="absolute top-0 left-1/4 w-96 h-96 bg-primary/30 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
             <div class="absolute top-0 right-1/4 w-96 h-96 bg-secondary/30 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
-            <div class="absolute -bottom-32 left-1/3 w-96 h-96 bg-pink-300/30 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000"></div>
         </div>
 
         <nav class="sticky top-0 z-50 glass shadow-sm transition-all duration-300">
@@ -95,7 +90,6 @@
                             <i class="ri-search-line text-gray-400"></i>
                             <input v-model="searchQuery" type="text" placeholder="搜索文章..." class="bg-transparent border-none outline-none text-sm ml-2 w-32 focus:w-48 transition-all text-slate-700 dark:text-slate-200">
                         </div>
-
                         <button @click="toggleDark" class="w-10 h-10 rounded-full glass flex items-center justify-center text-slate-600 dark:text-yellow-400 hover:scale-110 transition shadow-sm">
                             <i :class="isDark ? 'ri-sun-line' : 'ri-moon-line'"></i>
                         </button>
@@ -110,8 +104,8 @@
                 
                 <div v-if="currentView === 'list'" key="list" class="animate-fade-in">
                     
-                    <div class="flex flex-col md:flex-row gap-8 mb-12 items-center">
-                        <div class="flex-1 text-center md:text-left">
+                    <div class="flex flex-col md:flex-row gap-8 mb-12 items-start">
+                        <div class="flex-1 text-center md:text-left pt-4">
                             <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
                                 探索 <span class="text-primary">自动化</span> 与 <span class="text-secondary">市场</span> 的边界
                             </h1>
@@ -127,24 +121,36 @@
                                 </button>
                             </div>
                         </div>
+
                         <div class="w-full md:w-80 glass rounded-2xl p-6 shadow-xl transform rotate-1 hover:rotate-0 transition duration-500">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-blue-400 to-purple-500 p-1">
-                                    <img src="images/avatar.jpg" class="w-full h-full rounded-full object-cover border-2 border-white dark:border-slate-800" onerror="this.src='https://api.dicebear.com/7.x/notionists/svg?seed=Pony'">
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-lg">PonyRider</h3>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400">Full Stack Developer</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-slate-600 dark:text-slate-300 mb-4">
-                                📍 坐标博学楼<br>
-                                🤖 擅长 Python 自动化<br>
-                                📈 A股量化交易探索中
+                            <h3 class="font-bold text-xl mb-4 text-slate-800 dark:text-white flex items-center gap-2">
+                                <i class="ri-chat-smile-2-line text-primary"></i> 保持联系
+                            </h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300 mb-6">
+                                有问题、合作意向，或者只是想聊聊量化交易？欢迎通过以下方式找到我。
                             </p>
-                            <div class="flex gap-2">
-                                <a href="#" class="flex-1 py-2 rounded-lg bg-slate-900 text-white text-center text-sm font-bold hover:bg-slate-700 dark:bg-white dark:text-slate-900 transition">Github</a>
-                                <a href="#" class="flex-1 py-2 rounded-lg border border-gray-200 text-slate-600 text-center text-sm font-bold hover:bg-gray-50 dark:border-slate-700 dark:text-slate-300 transition">Bilibili</a>
+                            
+                            <div class="flex flex-col gap-3">
+                                <a href="mailto:your_email@example.com" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-700 transition border border-transparent hover:border-primary/30 group">
+                                    <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-500 flex items-center justify-center group-hover:scale-110 transition">
+                                        <i class="ri-mail-send-line"></i>
+                                    </div>
+                                    <span class="text-sm font-bold text-slate-600 dark:text-slate-300">发送邮件</span>
+                                </a>
+
+                                <a href="https://x.com/YourHandle" target="_blank" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-700 transition border border-transparent hover:border-primary/30 group">
+                                    <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 flex items-center justify-center group-hover:scale-110 transition">
+                                        <i class="ri-twitter-x-line"></i>
+                                    </div>
+                                    <span class="text-sm font-bold text-slate-600 dark:text-slate-300">X (Twitter)</span>
+                                </a>
+
+                                <a href="https://t.me/YourHandle" target="_blank" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-700 transition border border-transparent hover:border-primary/30 group">
+                                    <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-400 flex items-center justify-center group-hover:scale-110 transition">
+                                        <i class="ri-telegram-line"></i>
+                                    </div>
+                                    <span class="text-sm font-bold text-slate-600 dark:text-slate-300">Telegram</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -194,7 +200,6 @@
 
                     <article class="glass rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
                         <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-bl-full -z-10"></div>
-
                         <div class="text-center mb-10 border-b border-gray-100 dark:border-slate-700 pb-10">
                             <span class="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-4">
                                 {{ activePost.category }}
@@ -212,7 +217,6 @@
                             <i class="ri-loader-4-line text-4xl animate-spin text-primary mb-4"></i>
                             <p class="text-slate-500">正在从 Github 搬运文章...</p>
                         </div>
-                        
                         <div v-else class="prose prose-lg max-w-none dark:prose-invert" v-html="compiledMarkdown"></div>
 
                         <div class="mt-16 pt-8 border-t border-gray-100 dark:border-slate-700 text-center">
@@ -225,7 +229,7 @@
         </main>
         
         <footer class="py-8 text-center text-slate-400 text-sm glass mt-12">
-            <p>Designed with ❤️ by PonyRider</p>
+            <p>Designed with ❤️ by Soft Wealth</p>
         </footer>
 
     </div>
@@ -245,21 +249,16 @@
                 const isDark = ref(false);
                 const scrollProgress = ref(0);
 
-                // 初始化
                 onMounted(async () => {
-                    // 1. 加载文章列表
                     try {
                         const response = await fetch('posts.json');
                         posts.value = await response.json();
                     } catch (e) { console.error("Missing posts.json"); }
 
-                    // 2. 检查系统夜间模式
                     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                         isDark.value = true;
                         document.documentElement.classList.add('dark');
                     }
-
-                    // 3. 监听滚动 (用于进度条)
                     window.addEventListener('scroll', updateProgress);
                 });
 
@@ -267,21 +266,18 @@
                     window.removeEventListener('scroll', updateProgress);
                 });
 
-                // 更新阅读进度条
                 const updateProgress = () => {
                     const scrollTop = window.scrollY;
                     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
                     scrollProgress.value = (scrollTop / docHeight) * 100;
                 };
 
-                // 切换夜间模式
                 const toggleDark = () => {
                     isDark.value = !isDark.value;
                     if (isDark.value) document.documentElement.classList.add('dark');
                     else document.documentElement.classList.remove('dark');
                 };
 
-                // 核心：过滤文章 (同时支持搜索和分类)
                 const filteredPosts = computed(() => {
                     return posts.value.filter(post => {
                         const matchSearch = post.title.toLowerCase().includes(searchQuery.value.toLowerCase()) || 
@@ -291,17 +287,15 @@
                     });
                 });
 
-                // 提取所有分类
                 const categories = computed(() => [...new Set(posts.value.map(p => p.category))]);
                 const compiledMarkdown = computed(() => marked.parse(markdownContent.value));
 
-                // 加载文章逻辑
                 const loadPost = async (post) => {
                     activePost.value = post;
                     currentView.value = 'detail';
                     loading.value = true;
                     markdownContent.value = '';
-                    window.scrollTo(0, 0); // 回到顶部
+                    window.scrollTo(0, 0);
                     
                     try {
                         const res = await fetch(post.file);
