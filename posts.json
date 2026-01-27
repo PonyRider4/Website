@@ -1,20 +1,5 @@
 [
-  {
-    "title": "一个顶尖PUA的信念系统",
-    "date": "2026-01-27",
-    "category": "pua",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeOwDzsIuz7SEsNMabtM7htZggpveOUUVO1w&s",
-    "pinned": false,
-    "excerpt": "一个顶尖PUA的信念系统必须是极度自信、甚至带有某种“妄想”色彩的绝对坚定。  以下是用最有感染力的语言提炼出的、一个PUA必须刻在骨子里的核心信念：   1....",
-    "file": "posts/一个pua该有的信念.md"
-  },
-  {
-    "title": "Telegram 机器人开发实战",
-    "date": "2026-01-27",
-    "category": "自动化",
-    "image": "https://picsum.photos/seed/1/800/500",
-    "pinned": true,
-    "excerpt": "孩子们h里写正文...里写正文...里写正文...里写正文...里写正文...里写正文...里写正文...里写正文...里写正文...里写正文......",
-    "file": "posts/telegram.md"
-  }
+  "telegram.md",
+  "一个顶尖PUA的信念系统.md",
+  "life.md"
 ]
