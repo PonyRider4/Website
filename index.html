@@ -37,7 +37,6 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     
     <style>
-        /* 玻璃拟态 */
         .glass {
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px);
@@ -48,11 +47,7 @@
             background: rgba(15, 23, 42, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
-        /* 隐藏滚动条 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        
-        /* 文章详情样式 */
         .prose h1, .prose h2 { color: #334155; font-weight: 800; margin-top: 1.5em; }
         .dark .prose h1, .dark .prose h2 { color: #e2e8f0; }
         .prose p { margin-bottom: 1.2em; line-height: 1.8; color: #475569; }
@@ -89,14 +84,13 @@
         </nav>
 
         <main>
-            <transition name="fade" mode="out-in">
+            <transition name="fade">
                 
                 <div v-if="currentView === 'list'" key="list" class="animate-fade-in">
                     
                     <div class="relative w-full h-[400px] flex items-center justify-center bg-cover bg-center overflow-hidden" 
                          style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop');">
                         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]"></div>
-                        
                         <div class="relative z-10 text-center px-4 max-w-4xl">
                             <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 drop-shadow-lg tracking-tight">
                                 探索 <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">自动化</span> 的边界
@@ -116,13 +110,12 @@
                         <div class="flex flex-col lg:flex-row gap-12">
                             
                             <div class="flex-1">
-                                
                                 <div class="flex flex-wrap gap-2 mb-8">
-                                    <button @click="filterCategory = ''" :class="['px-4 py-1.5 rounded-full text-sm font-bold transition border', !filterCategory ? 'bg-slate-800 text-white border-slate-800 dark:bg-white dark:text-slate-900' : 'bg-white text-slate-600 border-gray-200 hover:border-primary hover:text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400']">全部</button>
-                                    <button v-for="cat in categories" :key="cat" @click="filterCategory = cat" :class="['px-4 py-1.5 rounded-full text-sm font-bold transition border', filterCategory === cat ? 'bg-slate-800 text-white border-slate-800 dark:bg-white dark:text-slate-900' : 'bg-white text-slate-600 border-gray-200 hover:border-primary hover:text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400']">{{ cat }}</button>
+                                    <button @click="changeCategory('')" :class="['px-4 py-1.5 rounded-full text-sm font-bold transition border', !filterCategory ? 'bg-slate-800 text-white border-slate-800 dark:bg-white dark:text-slate-900' : 'bg-white text-slate-600 border-gray-200 hover:border-primary hover:text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400']">全部</button>
+                                    <button v-for="cat in categories" :key="cat" @click="changeCategory(cat)" :class="['px-4 py-1.5 rounded-full text-sm font-bold transition border', filterCategory === cat ? 'bg-slate-800 text-white border-slate-800 dark:bg-white dark:text-slate-900' : 'bg-white text-slate-600 border-gray-200 hover:border-primary hover:text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400']">{{ cat }}</button>
                                 </div>
 
-                                <div v-if="pinnedPosts.length > 0 && !searchQuery && !filterCategory" class="mb-12">
+                                <div v-if="pinnedPosts.length > 0 && !searchQuery && !filterCategory && currentPage === 1" class="mb-12">
                                     <h3 class="flex items-center gap-2 text-xl font-extrabold mb-6 text-slate-800 dark:text-white">
                                         <i class="ri-pushpin-2-fill text-secondary"></i> 精选置顶
                                     </h3>
@@ -145,38 +138,56 @@
                                     </div>
                                 </div>
 
-                                <div>
+                                <div id="regular-list-top">
                                     <h3 class="flex items-center gap-2 text-xl font-extrabold mb-6 text-slate-800 dark:text-white">
                                         <i class="ri-article-line text-primary"></i> 最新发布
                                     </h3>
-                                    <div v-if="regularPosts.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <article v-for="post in regularPosts" :key="post.id" @click="loadPost(post)" class="group cursor-pointer">
-                                            <div class="glass rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-500 h-full flex flex-col">
-                                                <div class="h-40 overflow-hidden relative">
-                                                    <img :src="post.image" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                                                    <div class="absolute top-3 right-3">
-                                                        <span class="px-2 py-1 rounded text-xs font-bold bg-white/90 text-slate-800 shadow-sm">{{ post.category }}</span>
+                                    
+                                    <div v-if="paginatedPosts.length > 0">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                                            <article v-for="post in paginatedPosts" :key="post.id" @click="loadPost(post)" class="group cursor-pointer">
+                                                <div class="glass rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-2 transition duration-500 h-full flex flex-col">
+                                                    <div class="h-40 overflow-hidden relative">
+                                                        <img :src="post.image" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                                                        <div class="absolute top-3 right-3">
+                                                            <span class="px-2 py-1 rounded text-xs font-bold bg-white/90 text-slate-800 shadow-sm">{{ post.category }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="p-5 flex-1 flex flex-col">
+                                                        <div class="text-xs text-slate-400 mb-2">{{ post.date }}</div>
+                                                        <h3 class="text-lg font-bold mb-2 text-slate-800 dark:text-slate-100 group-hover:text-primary transition line-clamp-2">{{ post.title }}</h3>
+                                                        <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-4 flex-1">{{ post.excerpt }}</p>
                                                     </div>
                                                 </div>
-                                                <div class="p-5 flex-1 flex flex-col">
-                                                    <div class="text-xs text-slate-400 mb-2">{{ post.date }}</div>
-                                                    <h3 class="text-lg font-bold mb-2 text-slate-800 dark:text-slate-100 group-hover:text-primary transition line-clamp-2">{{ post.title }}</h3>
-                                                    <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-4 flex-1">{{ post.excerpt }}</p>
-                                                </div>
-                                            </div>
-                                        </article>
+                                            </article>
+                                        </div>
+
+                                        <div v-if="totalPages > 1" class="flex justify-center items-center gap-4 py-4">
+                                            <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" 
+                                                class="px-4 py-2 rounded-lg glass font-bold disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition">
+                                                <i class="ri-arrow-left-line"></i> 上一页
+                                            </button>
+                                            
+                                            <span class="font-bold text-slate-500 dark:text-slate-400">
+                                                {{ currentPage }} / {{ totalPages }}
+                                            </span>
+
+                                            <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages"
+                                                class="px-4 py-2 rounded-lg glass font-bold disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition">
+                                                下一页 <i class="ri-arrow-right-line"></i>
+                                            </button>
+                                        </div>
                                     </div>
+
                                     <div v-else class="text-center py-20 bg-white/50 dark:bg-slate-800/50 rounded-2xl">
                                         <div class="text-4xl mb-4">🛸</div>
                                         <p class="text-slate-500">没有相关内容</p>
                                     </div>
                                 </div>
-
                             </div>
 
                             <div class="w-full lg:w-80 flex-shrink-0">
                                 <div class="sticky top-24 space-y-8">
-                                    
                                     <div class="glass rounded-2xl p-6 shadow-lg">
                                         <h3 class="font-bold text-lg mb-4 text-slate-800 dark:text-white flex items-center gap-2">
                                             <i class="ri-contacts-book-2-fill text-primary"></i> 合作联系
@@ -196,20 +207,16 @@
                                             </a>
                                         </div>
                                     </div>
-
                                     <div class="glass rounded-2xl p-6 shadow-sm border border-secondary/20 bg-secondary/5">
                                         <h3 class="font-bold text-sm mb-2 text-secondary uppercase tracking-wide">News</h3>
                                         <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                                             新的自动化交易课程正在录制中，预计下周上线 B 站。
                                         </p>
                                     </div>
-
                                 </div>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
 
                 <div v-else key="detail" class="animate-fade-in max-w-4xl mx-auto px-4 py-8">
@@ -228,7 +235,6 @@
                         <div v-else class="prose prose-lg max-w-none dark:prose-invert" v-html="compiledMarkdown"></div>
                     </article>
                 </div>
-
             </transition>
         </main>
         
@@ -239,10 +245,13 @@
     </div>
 
     <script>
-        const { createApp, ref, computed, onMounted, onUnmounted } = Vue;
+        const { createApp, ref, computed, onMounted, onUnmounted, nextTick, watch } = Vue;
 
         createApp({
             setup() {
+                // --- 配置区 ---
+                const PAGE_SIZE = 12; // 👈 这里修改每页显示的“几十个”数量，比如 12, 24, 30
+
                 const currentView = ref('list');
                 const posts = ref([]);
                 const activePost = ref(null);
@@ -252,6 +261,10 @@
                 const filterCategory = ref('');
                 const isDark = ref(false);
                 const scrollProgress = ref(0);
+                const savedScrollPosition = ref(0);
+                
+                // 翻页状态
+                const currentPage = ref(1);
 
                 onMounted(async () => {
                     try {
@@ -283,7 +296,9 @@
                     document.getElementById('content-area').scrollIntoView({ behavior: 'smooth' });
                 };
 
-                // 核心逻辑：区分置顶文章和普通文章
+                // --- 核心列表逻辑 ---
+
+                // 1. 先进行搜索和分类过滤
                 const filteredList = computed(() => {
                     return posts.value.filter(post => {
                         const matchSearch = post.title.toLowerCase().includes(searchQuery.value.toLowerCase());
@@ -292,15 +307,44 @@
                     });
                 });
 
-                // 置顶文章：必须 pinned: true
+                // 2. 提取置顶文章 (只在第一页显示，且无搜索/筛选时)
                 const pinnedPosts = computed(() => filteredList.value.filter(p => p.pinned));
-                // 普通文章：pinned 不为 true
+                
+                // 3. 提取普通文章 (所有文章 - 置顶的，或者如果有搜索/筛选，则显示全部符合条件的)
                 const regularPosts = computed(() => filteredList.value.filter(p => !p.pinned));
+
+                // 4. 对普通文章进行分页
+                const totalPages = computed(() => Math.ceil(regularPosts.value.length / PAGE_SIZE));
+                
+                const paginatedPosts = computed(() => {
+                    const start = (currentPage.value - 1) * PAGE_SIZE;
+                    const end = start + PAGE_SIZE;
+                    return regularPosts.value.slice(start, end);
+                });
+
+                // 翻页操作
+                const changePage = (page) => {
+                    if (page >= 1 && page <= totalPages.value) {
+                        currentPage.value = page;
+                        // 翻页后，自动滚动到文章列表顶部，体验更好
+                        document.getElementById('regular-list-top').scrollIntoView({ behavior: 'smooth' });
+                    }
+                };
+                
+                // 切换分类时，重置页码
+                const changeCategory = (cat) => {
+                    filterCategory.value = cat;
+                    currentPage.value = 1;
+                };
+                
+                // 监听搜索，重置页码
+                watch(searchQuery, () => { currentPage.value = 1; });
 
                 const categories = computed(() => [...new Set(posts.value.map(p => p.category))]);
                 const compiledMarkdown = computed(() => marked.parse(markdownContent.value));
 
                 const loadPost = async (post) => {
+                    savedScrollPosition.value = window.scrollY;
                     activePost.value = post;
                     currentView.value = 'detail';
                     loading.value = true;
@@ -314,11 +358,19 @@
                     finally { loading.value = false; }
                 };
 
-                const goHome = () => { currentView.value = 'list'; searchQuery.value = ''; filterCategory.value = ''; };
+                const goHome = async () => { 
+                    currentView.value = 'list'; 
+                    searchQuery.value = ''; 
+                    // filterCategory.value = ''; // 保持之前的分类状态，还是重置？通常保持体验更好，这里我选择不重置分类
+                    
+                    await nextTick();
+                    window.scrollTo(0, savedScrollPosition.value);
+                };
 
                 return { 
-                    currentView, pinnedPosts, regularPosts, activePost, loadPost, compiledMarkdown, loading, 
-                    searchQuery, filterCategory, categories, goHome, isDark, toggleDark, scrollProgress, scrollToContent
+                    currentView, pinnedPosts, regularPosts, paginatedPosts, activePost, loadPost, compiledMarkdown, loading, 
+                    searchQuery, filterCategory, categories, goHome, isDark, toggleDark, scrollProgress, scrollToContent,
+                    currentPage, totalPages, changePage, changeCategory
                 };
             }
         }).mount('#app');
