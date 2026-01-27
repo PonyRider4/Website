@@ -2,21 +2,21 @@
   {
     "id": 1,
     "title": "Telegram 机器人开发指南",
-    "excerpt": "如何利用 Python 自动监听群组消息...",
+    "excerpt": "如何利用 Python 自动监听群组消息并进行转发，打造你的被动信息流。",
     "date": "2026-01-26",
     "category": "自动化",
     "image": "images/cover1.jpg",
     "file": "posts/telegram.md",
-    "pinned": true  <--- 加上这行，它就会自动变成“精选置顶”！
+    "pinned": true
   },
   {
     "id": 2,
     "title": "A股市场情绪量化",
-    "excerpt": "利用 DeepSeek 分析市场情绪...",
+    "excerpt": "利用 DeepSeek 分析市场情绪指标的尝试，数据不会说谎。",
     "date": "2026-01-25",
     "category": "量化交易",
     "image": "images/cover2.jpg",
     "file": "posts/stock.md",
-    "pinned": false <--- 或者不写这行，就是普通文章
+    "pinned": false
   }
 ]
