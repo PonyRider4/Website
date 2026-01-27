@@ -2,61 +2,118 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>PonyRider 的视界</title>
+  <title>PonyRider Space</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
 
   <style>
-    /* 2. 个性化微调 */
-    :root {
-      /* 主色调：我看你之前的博客用了淡紫色，这里用高级灰蓝 */
-      --theme-color: #2c3e50;
-      --base-font-size: 16px;
-      --sidebar-width: 18rem;
+    /* --- 核心美化区 --- */
+    
+    /* 1. 全局背景：高级灰渐变 + 噪点纹理 */
+    body {
+      background-color: #f5f7fa;
+      background-image: 
+        radial-gradient(#e2e8f0 1px, transparent 1px),
+        radial-gradient(#e2e8f0 1px, transparent 1px);
+      background-size: 20px 20px;
+      background-position: 0 0, 10px 10px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      color: #2c3e50;
+    }
+
+    /* 2. 侧边栏：磨砂玻璃效果 */
+    .sidebar {
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-right: 1px solid rgba(0,0,0,0.05);
+      width: 280px;
     }
     
-    /* 让侧边栏更干净 */
-    .sidebar { background-color: #f8f9fa; border-right: 1px solid #eee; }
+    /* 侧边栏文字优化 */
+    .sidebar-nav li { margin: 6px 0; }
+    .sidebar-nav a { 
+      font-weight: 500; 
+      color: #505d6b; 
+      border-radius: 6px; 
+      padding: 5px 10px; 
+      transition: 0.2s;
+    }
+    .sidebar-nav li.active > a {
+      background: #eef2f7;
+      color: #4facfe;
+      border-right: none;
+    }
+
+    /* 3. 文章内容区：悬浮白卡片 */
+    .content {
+      padding-top: 20px;
+    }
+    .markdown-section {
+      background: #ffffff;
+      max-width: 850px;
+      margin: 40px auto; /* 居中显示 */
+      padding: 60px;
+      border-radius: 16px; /* 圆角 */
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08); /* 投影 */
+    }
+
+    /* 4. 标题美化 */
+    .markdown-section h1 {
+      font-size: 2.2rem;
+      border-bottom: none;
+      margin-bottom: 2rem;
+      background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+      background-repeat: no-repeat;
+      background-size: 100% 0.4em;
+      background-position: 0 88%;
+      display: inline-block;
+    }
+
+    /* 5. 代码块：Mac 终端风格 */
+    .markdown-section pre {
+      background: #282c34;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
     
-    /* 封面图样式优化 */
-    section.cover .cover-main { margin-top: -2rem; }
-    section.cover h1 { font-size: 2.5rem; color: #333; }
-    section.cover p { color: #666; font-size: 1.2rem; }
-    
-    /* 图片加阴影 */
-    .markdown-section img { 
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-      border-radius: 8px; 
+    /* 6. 移动端适配 */
+    @media (max-width: 600px) {
+      .markdown-section {
+        margin: 0;
+        padding: 20px;
+        border-radius: 0;
+        box-shadow: none;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="app" style="padding: 20px;">☕️ 正在冲泡咖啡...</div>
+  <div id="app">加载中...</div>
 
   <script>
     window.$docsify = {
       name: 'PonyRider',
-      repo: 'https://github.com/PonyRider4', // 右上角 GitHub 图标
-      
-      // ✨ 关键设置：开启封面页 (这是变好看的核心)
-      coverpage: true,
+      repo: 'https://github.com/PonyRider4',
       loadSidebar: true,
       auto2top: true,
+      // 封面设置
+      coverpage: true,
       
-      // 搜索功能
+      // 搜索设置
       search: {
-        placeholder: '🔍 搜索复盘记录...',
-        noData: '找不到哦',
-        depth: 6
+        placeholder: '🔍 搜索笔记...',
+        noData: '无结果',
       }
     }
   </script>
   
   <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-themeable@0/dist/js/docsify-themeable.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
 </body>
 </html>
