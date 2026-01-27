@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "title": "Telegram 机器人开发指南",
+        "excerpt": "如何利用 Python 自动监听群组消息并进行转发...",
+        "date": "2026-01-26",
+        "image": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800",
+        "file": "posts/telegram.md"
+    },
+    {
+        "id": 2,
+        "title": "A股市场情绪量化",
+        "excerpt": "利用 DeepSeek 分析市场情绪指标的尝试...",
+        "date": "2026-01-25",
+        "image": "https://images.unsplash.com/photo-1611974765270-ca12586343bb?w=800",
+        "file": "posts/stock.md"
+    }
+]
