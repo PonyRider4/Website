@@ -1,64 +1,368 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <title>PonyRider的数字花园</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="description" content="分享技术、自动化与投资逻辑">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
-  <style>
-    /* 自定义一点点样式，让它更像博客 */
-    :root { --theme-color: #6366f1; }
-    .sidebar { background-color: #f8f9fa; }
-    .markdown-section { max-width: 900px; margin: 0 auto; padding: 2rem; }
-    /* 调整图片阴影 */
-    img { box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 8px; }
-  </style>
-</head>
-<body>
-  <div id="app">加载中...</div>
-
-  <script>
-    window.$docsify = {
-      name: '<span>🌱 静谧时光</span>', // 侧边栏顶部的名字
-      repo: 'https://github.com/PonyRider4/Website', // 右上角的小挂件
-      
-      // 核心功能配置
-      loadSidebar: true,    // 开启侧边栏
-      subMaxLevel: 3,       // 侧边栏自动显示目录层级
-      auto2top: true,       // 切换文章自动回到顶部
-      
-      // 全文搜索配置
-      search: {
-        paths: 'auto',
-        placeholder: '🔍 搜索文章...',
-        noData: '😒 找不到相关内容',
-        depth: 6,
-      },
-
-      // 底部版权信息
-      plugins: [
-        function(hook) {
-          var footer = [
-            '<hr/>',
-            '<footer>',
-            '<span>&copy; 2026 PonyRider4.</span>',
-            '<span>Proudly published with Docsify.</span>',
-            '</footer>'
-          ].join('');
-
-          hook.afterEach(function(html) {
-            return html + footer;
-          });
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Wealth | 深空搞钱指南</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        // 深空灰新拟态基色
+                        main: '#292D3E', 
+                        // 字体颜色
+                        text: {
+                            main: '#A6ACCD', // 浅灰文本
+                            bright: '#FFFFFF', // 高亮标题
+                        },
+                        // 强调色 (赛博蓝)
+                        accent: '#4D7CFF',
+                    },
+                    fontFamily: {
+                        sans: ['"Nunito"', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'xl': '1rem',
+                        '2xl': '1.5rem',
+                        '3xl': '2rem',
+                    },
+                    boxShadow: {
+                        // 核心：深色凸起投影 (Light: Top-Left, Dark: Bottom-Right)
+                        'neu-out': '8px 8px 16px #1c1f2a, -8px -8px 16px #363b52',
+                        'neu-out-lg': '12px 12px 24px #1c1f2a, -12px -12px 24px #363b52',
+                        'neu-out-sm': '4px 4px 8px #1c1f2a, -4px -4px 8px #363b52',
+                        
+                        // 核心：深色凹陷投影 (Inset)
+                        'neu-in': 'inset 6px 6px 12px #1c1f2a, inset -6px -6px 12px #363b52',
+                        'neu-in-sm': 'inset 3px 3px 6px #1c1f2a, inset -3px -3px 6px #363b52',
+                    }
+                }
+            }
         }
-      ]
-    }
-  </script>
-  
-  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+    </script>
+    
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <style>
+        body { 
+            background-color: #292D3E; 
+            color: #A6ACCD; 
+            font-family: 'Nunito', sans-serif; 
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 按钮交互 */
+        .btn-neu {
+            transition: all 0.2s ease;
+            box-shadow: 8px 8px 16px #1c1f2a, -8px -8px 16px #363b52;
+            color: #4D7CFF;
+            background: #292D3E;
+        }
+        .btn-neu:active, .btn-neu.active {
+            box-shadow: inset 6px 6px 12px #1c1f2a, inset -6px -6px 12px #363b52;
+            color: #4D7CFF;
+            transform: translateY(1px);
+        }
+
+        /* 标签切换 */
+        .tab-neu {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-radius: 9999px;
+            font-weight: 700;
+            color: #676E95;
+        }
+        .tab-neu:hover { color: #4D7CFF; }
+        .tab-neu.active {
+            box-shadow: inset 4px 4px 8px #1c1f2a, inset -4px -4px 8px #363b52;
+            color: #4D7CFF;
+            background: #292D3E;
+        }
+
+        /* 图片样式 (带边框) */
+        .img-neu {
+            border-radius: 1rem;
+            border: 4px solid #292D3E;
+            box-shadow: 8px 8px 16px #1c1f2a, -8px -8px 16px #363b52;
+        }
+
+        /* Markdown 深色适配 */
+        .prose h1, .prose h2, .prose h3 { color: #FFFFFF; font-weight: 800; margin-top: 1.5em; margin-bottom: 0.5em; }
+        .prose p { margin-bottom: 1.2em; line-height: 1.7; color: #A6ACCD; }
+        .prose strong { color: #4D7CFF; }
+        .prose a { color: #4D7CFF; }
+        .prose code { color: #4D7CFF; background: transparent; box-shadow: inset 3px 3px 6px #1c1f2a, inset -3px -3px 6px #363b52; padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 0.9em; }
+        .prose pre { border-radius: 1rem; padding: 1.5rem; background: #292D3E; box-shadow: inset 6px 6px 12px #1c1f2a, inset -6px -6px 12px #363b52; overflow-x: auto; margin: 1.5em 0; }
+        .prose blockquote { border-left: none; padding: 1.5rem; margin: 1.5em 0; border-radius: 1rem; background: #292D3E; box-shadow: 6px 6px 12px #1c1f2a, -6px -6px 12px #363b52; color: #4D7CFF; font-style: italic; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-8 px-4 md:px-0">
+
+    <div id="app" class="w-full max-w-5xl">
+        
+        <nav class="flex justify-between items-center px-8 py-4 rounded-3xl shadow-neu-out mb-12 bg-main">
+            <div @click="currentView='list'" class="flex items-center gap-3 cursor-pointer group select-none">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-accent text-2xl shadow-neu-in transition-all duration-300">
+                    <i class="ri-radar-fill"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg text-text-bright tracking-tight leading-none">Dark Wealth</h1>
+                    <p class="text-xs text-text-main font-bold tracking-widest uppercase">博学楼实验室</p>
+                </div>
+            </div>
+
+            <div>
+                <button @click="showContact=true" class="btn-neu px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2">
+                    <i class="ri-link-m"></i> 联系方式
+                </button>
+            </div>
+        </nav>
+
+        <main>
+            <transition name="fade" mode="out-in">
+
+                <div v-if="currentView === 'list'" key="list">
+                    
+                    <div class="p-8 md:p-12 rounded-3xl shadow-neu-out mb-12 select-none bg-main text-center md:text-left">
+                        <h2 class="text-3xl font-extrabold text-text-bright mb-4">从代码到现金流。</h2>
+                        <p class="text-text-main mb-8 leading-relaxed max-w-2xl text-lg">
+                            这里不谈空洞的理论。我分享在博学楼跑通的<b class="text-accent">自动化套利脚本</b>、<b class="text-accent">量化交易策略</b>以及<b class="text-accent">被动收入体系</b>构建指南。
+                        </p>
+                        <div class="flex gap-4 justify-center md:justify-start">
+                            <button class="btn-neu active px-8 py-3 rounded-xl font-bold flex items-center gap-2">
+                                <i class="ri-vip-diamond-line"></i> 订阅项目实操
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center mb-12">
+                        <div class="p-2 rounded-full shadow-neu-in flex gap-2 bg-main">
+                            <button @click="filterCategory=''" :class="['px-6 py-2 rounded-full text-sm font-bold transition-all duration-300', !filterCategory ? 'shadow-neu-out bg-main text-accent' : 'text-text-main hover:text-text-bright']">
+                                全部项目
+                            </button>
+                            <button v-for="cat in categories" :key="cat" @click="filterCategory=cat" 
+                                :class="['px-6 py-2 rounded-full text-sm font-bold transition-all duration-300', filterCategory===cat ? 'shadow-neu-out bg-main text-accent' : 'text-text-main hover:text-text-bright']">
+                                {{ cat }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <article v-for="post in filteredPosts" :key="post.id" @click="viewPost(post)" 
+                            class="p-6 rounded-3xl shadow-neu-out cursor-pointer hover:shadow-neu-out-lg transition-all duration-300 transform hover:-translate-y-1 group bg-main">
+                            
+                            <div class="h-52 rounded-2xl shadow-neu-in mb-6 overflow-hidden relative border-4 border-main">
+                                <img :src="post.image" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition duration-700">
+                                <div class="absolute top-3 right-3">
+                                    <span class="px-3 py-1 rounded-full bg-main/90 backdrop-blur shadow-neu-out text-xs font-extrabold text-accent">
+                                        {{ post.category }}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <h3 class="text-xl font-extrabold text-text-bright mb-3 group-hover:text-accent transition leading-snug">{{ post.title }}</h3>
+                            <p class="text-sm text-text-main line-clamp-2 mb-6 leading-relaxed">{{ post.excerpt }}</p>
+                            
+                            <div class="flex justify-between items-center pt-4 border-t border-main shadow-neu-in-sm rounded-full px-4">
+                                <span class="text-xs font-bold text-text-main">{{ post.date }}</span>
+                                <div class="text-accent font-bold text-sm flex items-center gap-1">
+                                    查看复盘 <i class="ri-arrow-right-line"></i>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                </div>
+
+                <div v-else key="detail" class="max-w-3xl mx-auto">
+                    <div class="flex justify-between items-center mb-8">
+                        <button @click="currentView='list'" class="btn-neu w-12 h-12 rounded-full flex items-center justify-center text-text-main hover:text-accent transition">
+                            <i class="ri-arrow-left-line text-xl"></i>
+                        </button>
+                        <div class="flex gap-4">
+                            <button class="btn-neu w-12 h-12 rounded-full flex items-center justify-center text-accent transition">
+                                <i class="ri-share-forward-line text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <article class="p-8 md:p-12 rounded-[2.5rem] shadow-neu-out bg-main">
+                        <div class="text-center mb-10">
+                            <span class="px-4 py-1 rounded-full shadow-neu-in text-accent text-xs font-bold uppercase tracking-wider mb-4 inline-block">
+                                {{ activePost.category }}
+                            </span>
+                            <h1 class="text-3xl md:text-4xl font-extrabold text-text-bright leading-tight mb-6">
+                                {{ activePost.title }}
+                            </h1>
+                            <div class="flex justify-center items-center gap-6 text-sm font-bold text-text-main">
+                                <span class="flex items-center gap-1"><i class="ri-calendar-line"></i> {{ activePost.date }}</span>
+                                <span class="flex items-center gap-1"><i class="ri-time-line"></i> {{ activePost.readTime }} min read</span>
+                            </div>
+                        </div>
+
+                        <div class="rounded-3xl shadow-neu-in p-2 mb-12 bg-main border-2 border-main">
+                            <img :src="activePost.image" class="w-full h-auto rounded-2xl opacity-90">
+                        </div>
+
+                        <div class="prose prose-lg max-w-none" v-html="compiledMarkdown"></div>
+
+                        <div class="mt-16 pt-10 border-t border-main shadow-neu-in-sm rounded-3xl p-8 text-center">
+                            <h3 class="text-xl font-extrabold text-text-bright mb-2">获取核心源码</h3>
+                            <p class="text-sm text-text-main mb-8">解锁博学楼实验室的完整 Python 脚本与策略配置。</p>
+                            <button class="btn-neu px-8 py-4 rounded-2xl font-bold text-accent w-full md:w-auto">
+                                <i class="ri-lock-unlock-line mr-2"></i> 立即解锁 (¥99)
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+            </transition>
+        </main>
+
+        <footer class="mt-20 text-center text-sm font-bold text-text-main pb-8">
+            <p>© 2026 Dark Wealth Blog. Shanxi, Jinzhong.</p>
+        </footer>
+
+        <div v-if="showContact" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-main/90 backdrop-blur-sm" @click.self="showContact=false">
+            <div class="w-full max-w-sm p-8 rounded-[2.5rem] shadow-neu-out bg-main transform transition-all scale-100 relative">
+                <button @click="showContact=false" class="btn-neu absolute top-6 right-6 w-10 h-10 rounded-full flex items-center justify-center text-text-main hover:text-red-500 transition">
+                    <i class="ri-close-line text-xl"></i>
+                </button>
+                
+                <div class="flex flex-col items-center mt-4">
+                    <div class="w-20 h-20 rounded-2xl shadow-neu-in flex items-center justify-center text-accent text-4xl mb-6 border-4 border-main">
+                        <i class="ri-radar-fill"></i>
+                    </div>
+                    <h2 class="text-2xl font-extrabold text-text-bright">Admin / 博主</h2>
+                    <p class="text-accent font-bold text-sm mb-8 tracking-wider uppercase">Quantitative Trader</p>
+
+                    <div class="w-full space-y-5">
+                        <a href="#" class="flex items-center gap-4 p-4 rounded-2xl shadow-neu-out btn-neu group">
+                            <div class="text-text-bright group-hover:text-accent transition"><i class="ri-twitter-x-fill text-xl"></i></div>
+                            <div>
+                                <p class="text-xs font-bold text-text-main uppercase">X (Twitter)</p>
+                                <p class="text-sm font-bold text-text-bright">@Felix_Quant</p>
+                            </div>
+                        </a>
+                        <a href="#" class="flex items-center gap-4 p-4 rounded-2xl shadow-neu-out btn-neu group">
+                            <div class="text-text-bright group-hover:text-accent transition"><i class="ri-telegram-fill text-xl"></i></div>
+                            <div>
+                                <p class="text-xs font-bold text-text-main uppercase">Telegram</p>
+                                <p class="text-sm font-bold text-text-bright">t.me/Felix_Channel</p>
+                            </div>
+                        </a>
+                         <div class="flex items-center gap-4 p-4 rounded-2xl shadow-neu-in opacity-80">
+                            <div class="text-text-main"><i class="ri-map-pin-line text-xl"></i></div>
+                            <div>
+                                <p class="text-xs font-bold text-text-main uppercase">Location</p>
+                                <p class="text-sm font-bold text-text-main">博学楼 3F, Shanxi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const { createApp, ref, computed } = Vue;
+
+        createApp({
+            setup() {
+                const currentView = ref('list');
+                const showContact = ref(false);
+                const filterCategory = ref('');
+                const activePost = ref(null);
+
+                // 内容：强调“赚钱实操”
+                const posts = ref([
+                    {
+                        id: 1,
+                        title: "被动收入实操：YTB2BILI 自动化流量矩阵复盘",
+                        excerpt: "别再手动搬运了。我在博学楼部署的这套 Python 脚本，如何实现 24h 无人值守的跨平台内容分发与变现。",
+                        date: "Jan 26",
+                        category: "自动化套利",
+                        readTime: 12,
+                        image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80", // 钞票/数据
+                        content: `
+### 赚钱的底层逻辑
+
+信息的搬运本质上是**跨平台的套利**。但如果纯靠人工，你只是在打一份低端工。
+
+> **核心目标**：建立一套不依赖你个人时间的资产系统。
+
+### 自动化流程 (SOP)
+1. **监听源头**: 脚本自动监控 YouTube 目标频道。
+2. **云端处理**: 利用 VPS 进行下载、去重、剪辑。
+3. **自动发布**: 通过 API 模拟上传到 B站，并挂载商品。
+
+\`\`\`python
+# 让服务器替你赚钱
+while True:
+    if new_content_found():
+        download_and_process()
+        upload_to_bilibili()
+        print("💰 资产+1")
+    sleep(3600)
+\`\`\`
+                        `
+                    },
+                    {
+                        id: 2,
+                        title: "A股量化笔记：基于打板情绪的短线策略",
+                        excerpt: "数据不会骗人。利用 Tushare 抓取每日涨停数据，建立一套可复制的短线情绪监测系统。",
+                        date: "Jan 25",
+                        category: "量化交易",
+                        readTime: 8,
+                        image: "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?auto=format&fit=crop&w=800&q=80",
+                        content: "..."
+                    },
+                    {
+                        id: 3,
+                        title: "博学楼工作室：年产出百万的硬件配置清单",
+                        excerpt: "工欲善其事。我的网络、服务器与多屏交易环境搭建指南。",
+                        date: "Jan 23",
+                        category: "效率基建",
+                        readTime: 5,
+                        image: "https://images.unsplash.com/photo-1510511459019-5dda7724fd82?auto=format&fit=crop&w=800&q=80",
+                        content: "..."
+                    }
+                ]);
+
+                const categories = computed(() => [...new Set(posts.value.map(p => p.category))]);
+                
+                const filteredPosts = computed(() => {
+                    return filterCategory.value ? posts.value.filter(p => p.category === filterCategory.value) : posts.value;
+                });
+
+                const compiledMarkdown = computed(() => activePost.value ? marked.parse(activePost.value.content) : '');
+
+                const viewPost = (post) => {
+                    activePost.value = post;
+                    currentView.value = 'detail';
+                    window.scrollTo(0, 0);
+                };
+
+                return {
+                    currentView, showContact, filterCategory, activePost,
+                    posts, categories, filteredPosts, compiledMarkdown, viewPost
+                };
+            }
+        }).mount('#app');
+    </script>
+    
+    <style>
+        .fade-enter-active, .fade-leave-active { transition: opacity 0.4s ease; }
+        .fade-enter-from, .fade-leave-to { opacity: 0; }
+    </style>
 </body>
 </html>
