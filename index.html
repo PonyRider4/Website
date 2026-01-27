@@ -2,131 +2,102 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>PonyRider Space</title>
+  <title>PonyRider Gallery</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
-  
+
   <style>
-    /* --- 核心美化：iOS 玻璃拟态风格 --- */
-
-    /* 1. 全局动态背景 */
+    /* --- 画廊模式专属 CSS --- */
+    
     body {
-      /* 这是一个高级的极光渐变背景 */
-      background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-      background-image: 
-        radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-        radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-        radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
-      /* 如果喜欢浅色清爽的，把上面那段删掉，用下面这个：
-      background-color: #f5f7fa; 
-      */
-      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
-      color: #2c3e50;
+      background-color: #f4f4f4;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
-    /* 2. 侧边栏：磨砂玻璃特效 */
-    .sidebar {
-      background-color: rgba(255, 255, 255, 0.6); /* 半透明白 */
-      backdrop-filter: blur(20px); /* 核心：高斯模糊 */
-      -webkit-backdrop-filter: blur(20px); /* 兼容 Safari */
-      border-right: 1px solid rgba(255,255,255,0.4);
-      width: 280px;
-      z-index: 10;
-    }
-    
-    /* 侧边栏选中项 */
-    .sidebar-nav li.active > a {
-      border-left: none;
-      background: rgba(66, 185, 131, 0.1);
-      color: #42b983;
-      border-radius: 8px;
-      font-weight: 600;
+    /* 侧边栏保持干净 */
+    .sidebar { background-color: white; border-right: 1px solid #eee; }
+
+    /* 核心：把无序列表 <ul> 变成网格布局 */
+    /* 只针对主内容区的列表，不影响侧边栏 */
+    .markdown-section > ul {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* 自动适应屏幕宽度的网格 */
+      gap: 30px; /* 卡片间距 */
+      padding: 0;
+      list-style: none; /* 去掉前面的小圆点 */
     }
 
-    /* 3. 主内容区：悬浮白卡片 */
-    main {
-      height: 100%; /* 确保高度铺满 */
-    }
-    
-    .content {
-      padding-top: 40px; /* 给顶部留点呼吸感 */
-    }
-
-    .markdown-section {
-      background: rgba(255, 255, 255, 0.95); /* 卡片背景 */
-      max-width: 900px; /* 限制卡片宽度 */
-      margin: 0 auto 60px auto; /* 居中显示 */
-      padding: 60px 80px; /* 内部留白 */
-      border-radius: 24px; /* 大圆角 */
-      box-shadow: 
-        0 20px 40px -10px rgba(0,0,0,0.1), /* 大投影 */
-        0 0 0 1px rgba(255,255,255,0.5) inset; /* 内部高光描边 */
-    }
-
-    /* 4. 细节打磨 */
-    
-    /* 标题渐变色 */
-    h1 {
-      background: linear-gradient(120deg, #42b983, #35495e);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 800;
-      letter-spacing: -1px;
-    }
-
-    /* 图片美化 */
-    .markdown-section img {
+    /* 卡片样式 */
+    .markdown-section > ul > li {
+      background: white;
       border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-      transition: transform 0.3s ease;
-    }
-    .markdown-section img:hover {
-      transform: scale(1.02); /* 鼠标悬停微微放大 */
-    }
-
-    /* 引用块美化 */
-    .markdown-section blockquote {
-      background: #f8f9fa;
-      border-radius: 8px;
-      border-left: 4px solid #42b983;
-      color: #555;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* 5. 手机端适配：去掉卡片，全屏显示 */
-    @media (max-width: 768px) {
-      .markdown-section {
-        margin: 0;
-        border-radius: 0;
-        padding: 30px 20px;
-        box-shadow: none;
-        background: #fff;
-      }
-      .sidebar {
-        background-color: #fff; /* 手机端侧边栏不透明，防止看不清 */
-      }
+    /* 鼠标悬停特效 */
+    .markdown-section > ul > li:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
     }
+
+    /* 图片样式：强制填满卡片上半部分 */
+    .markdown-section > ul > li img {
+      width: 100%;
+      height: 180px; /* 固定高度，整齐划一 */
+      object-fit: cover; /* 裁剪图片，保证不变形 */
+      border-radius: 0; /* 去掉默认圆角 */
+      margin: 0; /* 去掉默认边距 */
+      display: block;
+    }
+
+    /* 链接文字样式：作为标题 */
+    .markdown-section > ul > li > a {
+      display: block;
+      padding: 20px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #333;
+      text-decoration: none;
+      flex-grow: 1; /* 撑满剩余空间 */
+    }
+    
+    /* 描述文字（如果有的话） */
+    .markdown-section > ul > li > p {
+      padding: 0 20px 20px 20px;
+      margin: 0;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    /* 手机端调整 */
+    @media (max-width: 600px) {
+      .markdown-section > ul { grid-template-columns: 1fr; } /* 手机上单列显示 */
+    }
+    
+    /* 文章内部的图片不要被切 */
+    .markdown-section p img { height: auto; object-fit: contain; }
   </style>
 </head>
 <body>
-  <div id="app">✨ 正在加载 PonyRider 的空间...</div>
+  <div id="app">🎨 画廊正在搭建...</div>
 
   <script>
     window.$docsify = {
-      name: 'PonyRider', // 左上角名字
-      repo: 'https://github.com/PonyRider4', // 右上角 GitHub
-      
-      // 功能开关
+      name: 'PonyRider',
+      repo: 'https://github.com/PonyRider4',
       loadSidebar: true,
-      coverpage: true,  // 强烈建议开启封面
       auto2top: true,
+      coverpage: true,
       
-      // 搜索配置
       search: {
-        placeholder: '🔍 搜索...',
-        noData: '没有结果',
-        depth: 6
+        placeholder: '🔍 搜索作品...',
+        noData: '无结果',
       }
     }
   </script>
@@ -134,6 +105,5 @@
   <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
 </body>
 </html>
