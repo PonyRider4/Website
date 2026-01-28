@@ -5,23 +5,18 @@
     <link rel="preconnect" href="https://unpkg.com">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-web/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💸</text></svg>">
     
     <meta name="description" content="Soft Wealth 是一个专注于 A股量化交易、Python 自动化脚本开发以及数字游民生活方式分享的个人博客。">
     <meta property="og:title" content="Soft Wealth | 舒适的搞钱哲学">
-    <meta property="og:description" content="分享 A股量化交易、Python 脚本开发及数字游民的实战经验。">
     <meta property="og:type" content="website">
-
-    <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "v7vrpruxba");
-    </script>
-    
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soft Wealth | 舒适的搞钱哲学</title>
     
@@ -31,14 +26,54 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['"Noto Serif SC"', 'serif'] },
+                    fontFamily: {
+                        // 优先使用文楷，英文使用 Inter
+                        sans: ['Inter', '"LXGW WenKai Screen"', 'sans-serif'],
+                        serif: ['"LXGW WenKai Screen"', 'serif'],
+                    },
                     colors: { primary: '#6366f1', secondary: '#ec4899', dark: '#0f172a', light: '#f8fafc' },
                     animation: { 'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)', 'blob': 'blob 10s infinite', 'cursor': 'cursor .75s step-end infinite' },
                     keyframes: { 
                         fadeInUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
                         blob: { '0%': { transform: 'translate(0px, 0px) scale(1)' }, '33%': { transform: 'translate(30px, -50px) scale(1.1)' }, '66%': { transform: 'translate(-20px, 20px) scale(0.9)' }, '100%': { transform: 'translate(0px, 0px) scale(1)' } },
                         cursor: { '0%, 100%': { borderColor: 'transparent' }, '50%': { borderColor: 'currentColor' } }
-                    }
+                    },
+                    typography: (theme) => ({
+                        DEFAULT: {
+                            css: {
+                                color: '#334155', // slate-700
+                                fontFamily: '"LXGW WenKai Screen", sans-serif',
+                                lineHeight: '1.8', // 增加行高，阅读更舒适
+                                'h1, h2, h3, h4': { color: '#1e293b', fontWeight: '700', letterSpacing: '-0.025em' },
+                                blockquote: { 
+                                    borderLeftColor: '#6366f1', 
+                                    backgroundColor: 'rgba(99, 102, 241, 0.05)', 
+                                    fontStyle: 'normal', 
+                                    padding: '1rem',
+                                    borderRadius: '0.5rem',
+                                    quotes: 'none'
+                                },
+                                code: { color: '#ec4899', backgroundColor: 'rgba(236, 72, 153, 0.1)', padding: '0.2em 0.4em', borderRadius: '0.25rem', fontWeight: '600' },
+                                'code::before': { content: '""' },
+                                'code::after': { content: '""' },
+                                // 优化表格样式
+                                table: { width: '100%', marginTop: '2em', marginBottom: '2em', borderRadius: '0.5rem', overflow: 'hidden' },
+                                'thead th': { backgroundColor: '#f1f5f9', padding: '0.75rem', color: '#475569' },
+                                'tbody td': { padding: '0.75rem', borderTop: '1px solid #e2e8f0' },
+                                'tbody tr:nth-child(even)': { backgroundColor: '#f8fafc' },
+                            }
+                        },
+                        dark: {
+                            css: {
+                                color: '#94a3b8',
+                                'h1, h2, h3, h4': { color: '#f8fafc' },
+                                'thead th': { backgroundColor: '#1e293b', color: '#cbd5e1' },
+                                'tbody td': { borderTopColor: '#334155' },
+                                'tbody tr:nth-child(even)': { backgroundColor: '#1e293b' },
+                                blockquote: { backgroundColor: 'rgba(99, 102, 241, 0.1)' },
+                            }
+                        }
+                    })
                 }
             }
         }
@@ -51,56 +86,64 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     
     <style>
+        /* 基础样式优化 */
+        body { font-feature-settings: "ss01", "ss02", "cv01", "cv02"; -webkit-font-smoothing: antialiased; }
+        
         .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05); }
         .dark .glass { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); }
-        .card-hover { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.3); border-color: rgba(99, 102, 241, 0.4); }
-        .dark .card-hover:hover { box-shadow: 0 20px 40px -15px rgba(236, 72, 153, 0.3); border-color: rgba(236, 72, 153, 0.4); }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(99, 102, 241, 0.25); }
+        
+        /* 滚动条 */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
         .dark ::-webkit-scrollbar-thumb { background-color: #334155; }
-        ::-webkit-scrollbar-thumb:hover { background-color: #6366f1; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        
         [v-cloak] { display: none; }
         
-        /* 1. 胶片噪点纹理 */
-        .noise-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
-        .dark .noise-bg { opacity: 0.08; }
-
-        /* 2. Mac 终端风格代码块 */
-        pre { padding-top: 3.5rem !important; position: relative; border-radius: 0.75rem; overflow: hidden; background: #282c34 !important; }
+        /* Obsidian 风格 Callout 样式 */
+        .callout { margin: 1.5rem 0; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid; display: flex; flex-direction: column; }
+        .callout-title { font-weight: 700; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .callout-info { background: rgba(59, 130, 246, 0.1); border-left-color: #3b82f6; }
+        .callout-info .callout-title { color: #2563eb; }
+        .callout-warning { background: rgba(245, 158, 11, 0.1); border-left-color: #f59e0b; }
+        .callout-warning .callout-title { color: #d97706; }
+        .callout-tip { background: rgba(16, 185, 129, 0.1); border-left-color: #10b981; }
+        .callout-tip .callout-title { color: #059669; }
+        
+        /* 图片与代码块优化 */
+        .prose img { margin: 2rem auto; border-radius: 0.75rem; box-shadow: 0 8px 20px rgba(0,0,0,0.1); cursor: zoom-in; }
+        pre { background: #282c34 !important; border-radius: 0.75rem; padding-top: 3rem !important; position: relative; }
+        /* Mac 窗口圆点 */
         pre::before { content: ''; position: absolute; top: 1rem; left: 1rem; width: 0.75rem; height: 0.75rem; background: #ff5f56; border-radius: 50%; box-shadow: 1.25rem 0 0 #ffbd2e, 2.5rem 0 0 #27c93f; }
         
-        .prose img { margin: 2.5rem auto; border-radius: 1rem; box-shadow: 0 15px 40px -10px rgba(0,0,0,0.15); transition: transform 0.3s ease; cursor: zoom-in; }
-        .prose img:hover { transform: scale(1.02); }
-        .copy-btn { position: absolute; top: 0.75rem; right: 1rem; font-size: 12px; color: #abb2bf; background: rgba(255, 255, 255, 0.1); padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.1); }
-        .copy-btn:hover { background: #6366f1; color: white; border-color: #6366f1; }
-        .animation-delay-2000 { animation-delay: 2s; }
-        .animation-delay-4000 { animation-delay: 4s; }
-        .toc-active { color: #6366f1; border-left: 3px solid #6366f1; padding-left: 12px; font-weight: 600; background: linear-gradient(90deg, rgba(99,102,241,0.1) 0%, rgba(0,0,0,0) 100%); }
-        .typewriter { border-right: 3px solid; animation: cursor .75s step-end infinite; }
+        /* 目录优化 */
+        .toc-item { transition: all 0.2s; border-left: 2px solid transparent; padding: 4px 0 4px 16px; margin-left: 2px; position: relative; }
+        .toc-item:hover { color: #6366f1; }
+        .toc-active { border-left-color: #6366f1; color: #6366f1; font-weight: 600; background: linear-gradient(90deg, rgba(99,102,241,0.05), transparent); }
+        .toc-h3 { padding-left: 32px; font-size: 0.9em; opacity: 0.8; }
+        
+        /* 任务列表 Checkbox 样式 */
+        .prose input[type="checkbox"] { margin-right: 0.5em; accent-color: #6366f1; transform: scale(1.1); }
     </style>
 </head>
-<body class="bg-gray-50 text-slate-800 transition-colors duration-300 dark:bg-slate-900 dark:text-slate-200 overflow-x-hidden font-sans selection:bg-primary/30 selection:text-primary-900">
+<body class="bg-gray-50 text-slate-700 transition-colors duration-300 dark:bg-slate-900 dark:text-slate-300 overflow-x-hidden font-sans antialiased">
 
     <div id="app" class="min-h-screen relative z-0 flex flex-col" v-cloak>
         
-        <div class="noise-bg"></div>
-
         <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-            <div class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/20 dark:bg-primary/10 rounded-full blur-[100px] opacity-60 animate-blob mix-blend-multiply dark:mix-blend-screen"></div>
-            <div class="absolute bottom-0 right-0 translate-x-1/3 translate-y-1/3 w-[500px] h-[500px] bg-secondary/20 dark:bg-secondary/10 rounded-full blur-[100px] opacity-60 animate-blob animation-delay-2000 mix-blend-multiply dark:mix-blend-screen"></div>
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-200/20 dark:bg-blue-900/10 rounded-full blur-[100px] opacity-50 animate-blob animation-delay-4000 mix-blend-multiply dark:mix-blend-screen"></div>
+            <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-primary/20 dark:bg-primary/10 rounded-full blur-[120px] opacity-50 animate-blob"></div>
+            <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-secondary/20 dark:bg-secondary/10 rounded-full blur-[120px] opacity-50 animate-blob animation-delay-2000"></div>
         </div>
 
-        <div v-if="showBanner" class="bg-gradient-to-r from-primary to-secondary text-white text-xs sm:text-sm py-2 px-4 relative z-[60] shadow-lg">
+        <div v-if="showBanner" class="bg-gradient-to-r from-primary to-secondary text-white text-xs py-2 px-4 relative z-[60] shadow-sm">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
-                <div class="flex-1 text-center font-bold tracking-wide flex items-center justify-center gap-2">
-                    <span class="animate-pulse">🚀</span> 新的《Python量化入门课》正在更新中，点击关注 B 站动态！
+                <div class="flex-1 text-center font-bold tracking-wide">
+                    🚀 新的《Python量化入门课》正在更新中，关注 B 站不迷路！
                 </div>
-                <button @click="closeBanner" class="ml-4 opacity-80 hover:opacity-100 hover:rotate-90 transition"><i class="ri-close-line text-lg"></i></button>
+                <button @click="closeBanner" class="ml-4 opacity-80 hover:opacity-100"><i class="ri-close-line text-lg"></i></button>
             </div>
         </div>
 
@@ -108,144 +151,117 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16 items-center">
                     <div @click="goHome" class="flex items-center gap-2 cursor-pointer group shrink-0">
-                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white shadow-lg group-hover:scale-110 group-hover:rotate-6 transition duration-300">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white shadow-md group-hover:rotate-6 transition duration-300">
                             <span class="text-xl">💸</span>
                         </div>
-                        <span class="font-extrabold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary hidden sm:block">Soft Wealth</span>
+                        <span class="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary hidden sm:block">Soft Wealth</span>
                         <span class="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary sm:hidden">SW</span>
                     </div>
-                    <div class="flex items-center gap-2 sm:gap-4 flex-1 justify-end">
-                        <div class="flex items-center bg-white/50 dark:bg-slate-800/50 rounded-full px-3 py-1.5 border border-gray-200 dark:border-slate-700 focus-within:border-primary/50 focus-within:ring-2 ring-primary/20 transition w-32 focus-within:w-48 sm:w-auto">
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center bg-white/50 dark:bg-slate-800/50 rounded-full px-3 py-1.5 border border-gray-200 dark:border-slate-700 focus-within:ring-2 ring-primary/30 transition w-32 focus-within:w-48 sm:w-auto">
                             <i class="ri-search-line text-gray-400"></i>
                             <input v-model="searchQuery" type="text" placeholder="搜索..." class="bg-transparent border-none outline-none text-sm ml-2 w-full transition-all text-slate-700 dark:text-slate-200 placeholder:text-slate-400">
                         </div>
-                        <button @click="toggleDark" class="w-10 h-10 rounded-full glass flex items-center justify-center text-slate-600 dark:text-yellow-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition shadow-sm shrink-0 border border-transparent hover:border-slate-200 dark:hover:border-slate-700">
+                        <button @click="toggleDark" class="w-9 h-9 rounded-full glass flex items-center justify-center text-slate-600 dark:text-yellow-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
                             <i :class="isDark ? 'ri-sun-line' : 'ri-moon-line'"></i>
                         </button>
                     </div>
                 </div>
             </div>
-            <div v-if="currentView === 'detail'" class="h-0.5 bg-gradient-to-r from-primary to-secondary transition-all duration-100 ease-out shadow-[0_0_10px_rgba(99,102,241,0.5)]" :style="{ width: scrollProgress + '%' }"></div>
+            <div v-if="currentView === 'detail'" class="h-0.5 bg-gradient-to-r from-primary to-secondary transition-all duration-100 ease-out" :style="{ width: scrollProgress + '%' }"></div>
         </nav>
 
         <main class="relative z-10 flex-grow">
             <transition name="fade" mode="out-in">
                 
                 <div v-if="currentView === 'list'" key="list" class="animate-fade-in-up">
-                    <div class="relative w-full h-[450px] flex items-center justify-center bg-cover bg-center overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=2340&auto=format&fit=crop');">
-                        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-[3px]"></div>
+                    <div class="relative w-full h-[400px] flex items-center justify-center bg-cover bg-center overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=2340&auto=format&fit=crop');">
+                        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]"></div>
                         <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-50 dark:from-slate-900 to-transparent"></div>
                         <div class="relative z-10 text-center px-4 max-w-4xl mt-[-20px]">
-                            <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 drop-shadow-2xl tracking-tight leading-tight">
-                                探索 <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-secondary">{{ displayedText }}</span><span class="typewriter text-white ml-1"></span>
+                            <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 drop-shadow-lg tracking-tight">
+                                探索 <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-300 to-secondary">{{ displayedText }}</span><span class="typewriter text-white ml-1"></span>
                             </h1>
-                            <p class="text-lg md:text-xl text-gray-100 mb-8 max-w-2xl mx-auto leading-relaxed font-light">在这里，我分享关于 A股量化交易、Python 脚本以及数字游民的实战复盘。</p>
-                            <div class="flex justify-center gap-4">
-                                <button @click="scrollToContent" class="px-8 py-3 rounded-full bg-white/90 text-slate-900 font-bold hover:bg-white hover:scale-105 transition shadow-[0_0_20px_rgba(255,255,255,0.3)] flex items-center gap-2 backdrop-blur-sm">
-                                    开始阅读 <i class="ri-arrow-down-line animate-bounce-slow"></i>
-                                </button>
-                            </div>
+                            <p class="text-lg text-gray-200 mb-8 max-w-xl mx-auto leading-relaxed">分享 A股量化交易、Python 脚本以及数字游民的实战复盘。</p>
+                            <button @click="scrollToContent" class="px-8 py-3 rounded-full bg-white/90 text-slate-900 font-bold hover:bg-white hover:scale-105 transition shadow-lg flex items-center gap-2 mx-auto backdrop-blur-sm">
+                                开始阅读 <i class="ri-arrow-down-line"></i>
+                            </button>
                         </div>
                     </div>
 
                     <div id="content-area" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                        
                         <div v-if="initLoading" class="grid grid-cols-1 md:grid-cols-2 gap-8 animate-pulse">
-                            <div v-for="i in 4" :key="i" class="glass rounded-3xl p-6 h-96">
-                                <div class="h-48 bg-slate-200 dark:bg-slate-700/50 rounded-2xl mb-6"></div>
+                            <div v-for="i in 4" :key="i" class="glass rounded-3xl p-6 h-80">
+                                <div class="h-40 bg-slate-200 dark:bg-slate-700/50 rounded-xl mb-6"></div>
                                 <div class="h-6 bg-slate-200 dark:bg-slate-700/50 rounded w-3/4 mb-4"></div>
-                                <div class="h-4 bg-slate-200 dark:bg-slate-700/50 rounded w-full mb-2"></div>
-                                <div class="h-4 bg-slate-200 dark:bg-slate-700/50 rounded w-2/3"></div>
+                                <div class="h-4 bg-slate-200 dark:bg-slate-700/50 rounded w-full"></div>
                             </div>
                         </div>
 
                         <div v-else class="flex flex-col lg:flex-row gap-12">
                             <div class="flex-1">
-                                <div class="flex flex-wrap gap-2 mb-10">
-                                    <button @click="changeCategory('')" :class="['px-5 py-2 rounded-xl text-sm font-bold transition border', !filterCategory ? 'bg-slate-800 text-white border-slate-800 shadow-lg shadow-slate-500/20 dark:bg-white dark:text-slate-900' : 'bg-white text-slate-600 border-gray-200 hover:border-primary hover:text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 hover:shadow-md']">全部</button>
-                                    <button v-for="cat in categories" :key="cat" @click="changeCategory(cat)" :class="['px-5 py-2 rounded-xl text-sm font-bold transition border', filterCategory === cat ? 'bg-slate-800 text-white border-slate-800 shadow-lg shadow-slate-500/20 dark:bg-white dark:text-slate-900' : 'bg-white text-slate-600 border-gray-200 hover:border-primary hover:text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 hover:shadow-md']">{{ cat }}</button>
+                                <div class="flex flex-wrap gap-3 mb-10">
+                                    <button @click="changeCategory('')" :class="['px-4 py-1.5 rounded-full text-sm font-bold transition border', !filterCategory ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-gray-200 hover:border-primary hover:text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400']">全部</button>
+                                    <button v-for="cat in categories" :key="cat" @click="changeCategory(cat)" :class="['px-4 py-1.5 rounded-full text-sm font-bold transition border', filterCategory === cat ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-gray-200 hover:border-primary hover:text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400']">{{ cat }}</button>
                                 </div>
 
                                 <div v-if="pinnedPosts.length > 0 && !searchQuery && !filterCategory && currentPage === 1" class="mb-16">
-                                    <h3 class="flex items-center gap-2 text-2xl font-extrabold mb-6 text-slate-800 dark:text-white tracking-tight">
-                                        <i class="ri-pushpin-2-fill text-secondary"></i> 精选置顶
-                                    </h3>
+                                    <h3 class="flex items-center gap-2 text-xl font-bold mb-6 text-slate-800 dark:text-white"><i class="ri-pushpin-2-fill text-secondary"></i> 精选置顶</h3>
                                     <div class="grid grid-cols-1 gap-8">
-                                        <article v-for="post in pinnedPosts" :key="post.file" @click="loadPost(post)" class="group cursor-pointer relative">
-                                            <div class="glass rounded-3xl p-6 md:p-8 card-hover border-l-4 border-secondary/50 flex flex-col md:flex-row gap-8 items-center">
-                                                <div class="w-full md:w-56 h-36 rounded-2xl overflow-hidden flex-shrink-0 bg-gray-200 shadow-inner">
-                                                    <img :src="post.image" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition duration-700" onerror="this.src='https://picsum.photos/seed/error/800/500'">
+                                        <article v-for="post in pinnedPosts" :key="post.file" @click="loadPost(post)" class="glass rounded-3xl p-6 md:p-8 card-hover border-l-4 border-secondary/50 flex flex-col md:flex-row gap-8 items-center cursor-pointer">
+                                            <div class="w-full md:w-56 h-36 rounded-xl overflow-hidden flex-shrink-0 bg-gray-200">
+                                                <img :src="post.image" loading="lazy" class="w-full h-full object-cover transform hover:scale-110 transition duration-700">
+                                            </div>
+                                            <div class="flex-1 text-center md:text-left">
+                                                <div class="flex items-center justify-center md:justify-start gap-3 mb-3 text-xs text-slate-400">
+                                                    <span class="px-2 py-0.5 rounded bg-secondary/10 text-secondary font-bold">TOP</span>
+                                                    <span>{{ post.date }}</span>
+                                                    <span><i class="ri-time-line"></i> {{ post.readTime }} min</span>
                                                 </div>
-                                                <div class="flex-1 text-center md:text-left">
-                                                    <div class="flex items-center justify-center md:justify-start gap-3 mb-3">
-                                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-secondary/10 text-secondary border border-secondary/20">TOP</span>
-                                                        <span class="text-xs text-slate-400 font-medium">{{ post.date }}</span>
-                                                        <span class="text-xs text-slate-400 flex items-center gap-1"><i class="ri-time-line"></i> {{ post.readTime }} min</span>
-                                                    </div>
-                                                    <h3 class="text-2xl font-bold mb-3 text-slate-800 dark:text-slate-100 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all">{{ post.title }}</h3>
-                                                    <p class="text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">{{ post.excerpt }}</p>
-                                                </div>
+                                                <h3 class="text-2xl font-bold mb-3 text-slate-800 dark:text-slate-100 hover:text-primary transition">{{ post.title }}</h3>
+                                                <p class="text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">{{ post.excerpt }}</p>
                                             </div>
                                         </article>
                                     </div>
                                 </div>
 
-                                <div id="regular-list-top">
-                                    <h3 class="flex items-center gap-2 text-2xl font-extrabold mb-6 text-slate-800 dark:text-white tracking-tight">
-                                        <i class="ri-article-line text-primary"></i> 最新发布
-                                    </h3>
+                                <div>
+                                    <h3 class="flex items-center gap-2 text-xl font-bold mb-6 text-slate-800 dark:text-white"><i class="ri-article-line text-primary"></i> 最新发布</h3>
                                     <div v-if="paginatedPosts.length > 0">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                                            <article v-for="post in paginatedPosts" :key="post.file" @click="loadPost(post)" class="group cursor-pointer">
-                                                <div class="glass rounded-3xl overflow-hidden card-hover h-full flex flex-col">
-                                                    <div class="h-48 overflow-hidden relative bg-gray-200">
-                                                        <img :src="post.image" loading="lazy" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700" onerror="this.src='https://picsum.photos/seed/error/800/500'">
-                                                        <div class="absolute top-4 right-4">
-                                                            <span class="px-3 py-1 rounded-lg text-xs font-bold bg-white/90 dark:bg-slate-900/90 text-slate-800 dark:text-slate-200 shadow-sm backdrop-blur-sm">{{ post.category }}</span>
-                                                        </div>
+                                            <article v-for="post in paginatedPosts" :key="post.file" @click="loadPost(post)" class="glass rounded-3xl overflow-hidden card-hover h-full flex flex-col cursor-pointer">
+                                                <div class="h-48 overflow-hidden relative bg-gray-200">
+                                                    <img :src="post.image" loading="lazy" class="w-full h-full object-cover transform hover:scale-110 transition duration-700">
+                                                    <div class="absolute top-4 right-4"><span class="px-3 py-1 rounded-lg text-xs font-bold bg-white/90 text-slate-800 shadow-sm backdrop-blur-sm">{{ post.category }}</span></div>
+                                                </div>
+                                                <div class="p-6 flex-1 flex flex-col">
+                                                    <div class="flex justify-between items-center mb-3 text-xs text-slate-400">
+                                                        <div>{{ post.date }}</div>
+                                                        <div class="flex items-center gap-1"><i class="ri-time-line"></i> {{ post.readTime }} min</div>
                                                     </div>
-                                                    <div class="p-6 flex-1 flex flex-col">
-                                                        <div class="flex justify-between items-center mb-3">
-                                                            <div class="text-xs font-medium text-slate-400">{{ post.date }}</div>
-                                                            <div class="text-xs text-slate-400 flex items-center gap-1"><i class="ri-time-line"></i> {{ post.readTime }} min</div>
-                                                        </div>
-                                                        <h3 class="text-lg font-bold mb-3 text-slate-800 dark:text-slate-100 group-hover:text-primary transition line-clamp-2 leading-snug">{{ post.title }}</h3>
-                                                        <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-4 flex-1 leading-relaxed">{{ post.excerpt }}</p>
-                                                    </div>
+                                                    <h3 class="text-lg font-bold mb-3 text-slate-800 dark:text-slate-100 hover:text-primary transition line-clamp-2">{{ post.title }}</h3>
+                                                    <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-4 flex-1 leading-relaxed">{{ post.excerpt }}</p>
                                                 </div>
                                             </article>
                                         </div>
                                         <div v-if="totalPages > 1" class="flex flex-wrap justify-center items-center gap-4 py-8">
-                                            <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" class="px-5 py-2.5 rounded-xl glass font-bold disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition flex items-center gap-1 hover:shadow-lg"><i class="ri-arrow-left-line"></i> <span class="hidden sm:inline">上一页</span></button>
+                                            <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" class="px-4 py-2 rounded-lg glass font-bold disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition flex items-center gap-1"><i class="ri-arrow-left-line"></i></button>
                                             <span class="font-bold text-slate-500 dark:text-slate-400 px-2">{{ currentPage }} / {{ totalPages }}</span>
-                                            <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages" class="px-5 py-2.5 rounded-xl glass font-bold disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition flex items-center gap-1 hover:shadow-lg"><span class="hidden sm:inline">下一页</span> <i class="ri-arrow-right-line"></i></button>
+                                            <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages" class="px-4 py-2 rounded-lg glass font-bold disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition flex items-center gap-1"><i class="ri-arrow-right-line"></i></button>
                                         </div>
                                     </div>
-                                    <div v-else class="text-center py-20 bg-white/50 dark:bg-slate-800/50 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700">
-                                        <div class="text-5xl mb-4 opacity-50">🛸</div>
-                                        <p class="text-slate-500 font-medium">暂无相关内容</p>
-                                    </div>
+                                    <div v-else class="text-center py-20 bg-white/50 dark:bg-slate-800/50 rounded-3xl"><div class="text-4xl mb-4">🛸</div><p class="text-slate-500">暂无内容</p></div>
                                 </div>
                             </div>
 
-                            <div class="w-full lg:w-80 flex-shrink-0">
+                            <div class="w-full lg:w-72 flex-shrink-0">
                                 <div class="sticky top-28 space-y-8">
-                                    <div class="glass rounded-3xl p-6 shadow-xl relative overflow-hidden">
-                                        <div class="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
-                                        <h3 class="font-bold text-lg mb-6 text-slate-800 dark:text-white flex items-center gap-2"><i class="ri-contacts-book-2-fill text-primary"></i> 合作联系</h3>
-                                        <div class="space-y-4">
-                                            <a href="mailto:tmrmwbm@gmail.com" class="flex items-center gap-4 p-3 rounded-2xl bg-white/50 dark:bg-slate-800/50 hover:bg-primary hover:text-white transition group border border-transparent hover:border-primary/20 hover:shadow-lg hover:-translate-y-0.5">
-                                                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-white/20 group-hover:text-white"><i class="ri-mail-send-line text-xl"></i></div>
-                                                <span class="text-sm font-bold">Email Me</span>
-                                            </a>
-                                            <a href="https://x.com/tmrmwbm" target="_blank" class="flex items-center gap-4 p-3 rounded-2xl bg-white/50 dark:bg-slate-800/50 hover:bg-black hover:text-white transition group border border-transparent hover:border-black/20 hover:shadow-lg hover:-translate-y-0.5">
-                                                <div class="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center text-slate-700 dark:text-slate-300 group-hover:bg-white/20 group-hover:text-white"><i class="ri-twitter-x-line text-xl"></i></div>
-                                                <span class="text-sm font-bold">Follow X</span>
-                                            </a>
-                                            <a href="https://t.me/MRMWBM" target="_blank" class="flex items-center gap-4 p-3 rounded-2xl bg-white/50 dark:bg-slate-800/50 hover:bg-[#229ED9] hover:text-white transition group border border-transparent hover:border-[#229ED9]/20 hover:shadow-lg hover:-translate-y-0.5">
-                                                <div class="w-10 h-10 rounded-full bg-[#229ED9]/10 flex items-center justify-center text-[#229ED9] group-hover:bg-white/20 group-hover:text-white"><i class="ri-telegram-line text-xl"></i></div>
-                                                <span class="text-sm font-bold">Telegram</span>
-                                            </a>
+                                    <div class="glass rounded-3xl p-6 shadow-lg">
+                                        <h3 class="font-bold text-base mb-4 text-slate-800 dark:text-white flex items-center gap-2"><i class="ri-contacts-book-2-fill text-primary"></i> 合作联系</h3>
+                                        <div class="space-y-3">
+                                            <a href="mailto:tmrmwbm@gmail.com" class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/50 dark:hover:bg-slate-700/50 transition text-sm font-medium text-slate-600 dark:text-slate-300"><div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary"><i class="ri-mail-send-line"></i></div> Email Me</a>
+                                            <a href="https://x.com/tmrmwbm" target="_blank" class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/50 dark:hover:bg-slate-700/50 transition text-sm font-medium text-slate-600 dark:text-slate-300"><div class="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center text-slate-800 dark:text-white"><i class="ri-twitter-x-line"></i></div> Follow X</a>
+                                            <a href="https://t.me/MRMWBM" target="_blank" class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/50 dark:hover:bg-slate-700/50 transition text-sm font-medium text-slate-600 dark:text-slate-300"><div class="w-8 h-8 rounded-full bg-blue-400/10 flex items-center justify-center text-blue-400"><i class="ri-telegram-line"></i></div> Telegram</a>
                                         </div>
                                     </div>
                                 </div>
@@ -255,56 +271,46 @@
                 </div>
 
                 <div v-else key="detail" class="animate-fade-in-up max-w-7xl mx-auto px-4 py-12 flex flex-col lg:flex-row gap-12">
+                    
                     <div class="flex-1 min-w-0">
-                        <button @click="goHome" class="mb-8 px-5 py-2 rounded-full glass text-sm font-bold text-slate-600 hover:text-primary transition flex items-center gap-2 dark:text-slate-300 hover:pl-3"><i class="ri-arrow-left-line"></i> 返回首页 <span class="opacity-50 text-xs ml-1">(ESC)</span></button>
+                        <button @click="goHome" class="mb-6 px-4 py-2 rounded-full glass text-sm font-bold text-slate-600 hover:text-primary transition flex items-center gap-2 dark:text-slate-300 hover:pl-3 group">
+                            <i class="ri-arrow-left-line group-hover:-translate-x-1 transition"></i> 返回首页
+                        </button>
 
-                        <div v-if="errorMsg" class="text-center py-20 bg-red-50 dark:bg-red-900/20 rounded-3xl border border-red-200 dark:border-red-800">
-                            <i class="ri-error-warning-line text-4xl text-red-500 mb-4 inline-block"></i>
+                        <div v-if="errorMsg" class="text-center py-20 glass rounded-3xl">
                             <h2 class="text-xl font-bold text-slate-800 dark:text-white mb-2">无法加载文章</h2>
-                            <p class="text-slate-500 dark:text-slate-400 mb-6">{{ errorMsg }}</p>
-                            <button @click="goHome" class="px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-primary transition">返回首页</button>
+                            <p class="text-slate-500 mb-6">{{ errorMsg }}</p>
+                            <button @click="goHome" class="px-6 py-2 bg-slate-800 text-white rounded-lg">返回</button>
                         </div>
 
-                        <article v-else class="glass rounded-[2rem] p-8 md:p-14 shadow-2xl relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-secondary to-primary opacity-50"></div>
-                            <div class="text-center mb-12 border-b border-gray-100 dark:border-slate-700/50 pb-12">
-                                <span class="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-6 tracking-wide uppercase">{{ activePost.category }}</span>
-                                <h1 class="text-3xl md:text-5xl font-extrabold text-slate-800 dark:text-white mb-8 leading-tight font-sans">{{ activePost.title }}</h1>
-                                <div class="flex flex-wrap justify-center items-center gap-4 text-sm text-slate-500 dark:text-slate-400 font-medium">
-                                    <span class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full"><i class="ri-calendar-line"></i> {{ activePost.date }}</span>
-                                    <span class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full"><i class="ri-time-line"></i> 预计阅读 {{ activePost.readTime }} 分钟</span>
+                        <article v-else class="glass rounded-[2rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                            <div class="text-center mb-10 border-b border-gray-100 dark:border-slate-700/50 pb-10">
+                                <span class="inline-block px-3 py-1 rounded-lg bg-primary/10 text-primary text-xs font-bold mb-6 tracking-wider uppercase">{{ activePost.category }}</span>
+                                <h1 class="text-3xl md:text-4xl font-bold text-slate-800 dark:text-white mb-6 leading-tight">{{ activePost.title }}</h1>
+                                <div class="flex justify-center items-center gap-6 text-sm text-slate-500 dark:text-slate-400">
+                                    <span class="flex items-center gap-1"><i class="ri-calendar-line"></i> {{ activePost.date }}</span>
+                                    <span class="flex items-center gap-1"><i class="ri-time-line"></i> {{ activePost.readTime }} 分钟阅读</span>
                                 </div>
                             </div>
-                            <div class="prose prose-lg max-w-none prose-slate dark:prose-invert prose-img:rounded-2xl prose-headings:font-sans prose-headings:font-bold prose-a:text-primary hover:prose-a:text-secondary transition-all font-serif leading-loose" v-html="compiledMarkdown"></div>
                             
-                            <div class="mt-20 pt-10 border-t border-gray-100 dark:border-slate-700 text-center">
-                                <p class="text-slate-500 mb-8 font-medium">如果这篇文章对你有帮助，不妨请我喝杯咖啡 ☕️</p>
-                                <button @click="showDonate = true" class="px-10 py-4 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold shadow-xl shadow-orange-500/30 hover:scale-105 hover:shadow-orange-500/50 transition flex items-center gap-2 mx-auto"><i class="ri-cup-line text-xl"></i> 赞赏支持</button>
+                            <div class="prose prose-lg max-w-none prose-slate dark:prose-invert prose-img:rounded-xl" v-html="compiledMarkdown"></div>
+                            
+                            <div class="mt-16 pt-8 border-t border-gray-100 dark:border-slate-700 text-center">
+                                <button @click="showDonate = true" class="px-8 py-3 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold shadow-lg hover:scale-105 transition flex items-center gap-2 mx-auto"><i class="ri-cup-line"></i> 赞赏支持</button>
                             </div>
                         </article>
-                        
-                        <div v-if="relatedPosts.length > 0 && !errorMsg" class="mt-16">
-                            <h3 class="text-2xl font-bold text-slate-800 dark:text-white mb-8 flex items-center gap-2"><i class="ri-lightbulb-flash-line text-yellow-500"></i> 猜你喜欢</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <article v-for="post in relatedPosts" :key="post.file" @click="loadPost(post)" class="glass rounded-2xl p-5 cursor-pointer hover:bg-white/80 dark:hover:bg-slate-800/80 transition flex gap-5 items-center group border border-transparent hover:border-primary/20">
-                                    <div class="w-28 h-24 rounded-xl bg-gray-200 overflow-hidden shrink-0 shadow-sm">
-                                        <img :src="post.image" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <h4 class="font-bold text-slate-800 dark:text-white truncate group-hover:text-primary transition mb-2 text-lg">{{ post.title }}</h4>
-                                        <p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">{{ post.excerpt }}</p>
-                                    </div>
-                                </article>
-                            </div>
-                        </div>
                     </div>
 
-                    <div v-if="!errorMsg" class="hidden lg:block w-72 shrink-0">
+                    <div v-if="!errorMsg && toc.length > 0" class="hidden lg:block w-72 shrink-0">
                         <div class="sticky top-28">
-                            <div class="glass rounded-3xl p-6 shadow-sm border-l-4 border-primary/20">
-                                <h3 class="font-bold text-sm text-slate-400 uppercase mb-6 tracking-widest border-b border-gray-100 dark:border-slate-700 pb-2">目录导航</h3>
-                                <ul class="space-y-3 text-sm text-slate-600 dark:text-slate-400 max-h-[70vh] overflow-y-auto no-scrollbar pr-2">
-                                    <li v-for="item in toc" :key="item.id" :class="['cursor-pointer transition pl-3 py-1 rounded-r-lg border-l-2 border-transparent truncate hover:bg-slate-50 dark:hover:bg-slate-800', item.indent === 3 ? 'ml-4 text-xs' : 'font-medium', activeHeader === item.id ? 'toc-active text-primary bg-primary/5' : 'hover:border-slate-300']" @click="scrollToHeader(item.id)">{{ item.text }}</li>
+                            <div class="glass rounded-2xl p-6 shadow-sm border-l-4 border-primary/20">
+                                <h3 class="font-bold text-sm text-slate-400 uppercase mb-4 tracking-widest pb-2">目录导航</h3>
+                                <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400 max-h-[70vh] overflow-y-auto no-scrollbar pr-2">
+                                    <li v-for="item in toc" :key="item.id" 
+                                        :class="['toc-item cursor-pointer truncate', item.indent === 3 ? 'toc-h3' : 'font-medium', activeHeader === item.id ? 'toc-active' : '']" 
+                                        @click="scrollToHeader(item.id)">
+                                        {{ item.text }}
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -313,32 +319,24 @@
             </transition>
         </main>
         
-        <footer class="py-12 text-center text-slate-400 text-sm border-t border-gray-100 dark:border-slate-800 mt-20 relative z-10 glass">
+        <footer class="py-10 text-center text-slate-400 text-sm mt-12 relative z-10">
             <p>© <span id="year"></span> Soft Wealth. All rights reserved.</p>
         </footer>
         <script>document.getElementById('year').innerText = new Date().getFullYear();</script>
 
         <div id="lightbox" class="fixed inset-0 z-[100] bg-slate-900/95 hidden flex items-center justify-center cursor-zoom-out backdrop-blur-md p-4" onclick="this.classList.add('hidden')">
-            <img id="lightbox-img" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl transform transition-transform duration-300 scale-100 ring-1 ring-white/10">
+            <img id="lightbox-img" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl">
         </div>
 
         <div v-if="showDonate" class="fixed inset-0 z-[100] bg-slate-900/60 flex items-center justify-center backdrop-blur-md p-4 animate-fade-in" @click.self="showDonate = false">
-            <div class="glass bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-2xl max-w-sm w-full text-center relative border border-white/20">
-                <button @click="showDonate = false" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"><i class="ri-close-circle-fill text-3xl"></i></button>
-                <div class="w-16 h-16 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">☕️</div>
-                <h3 class="text-2xl font-bold mb-2 text-slate-800 dark:text-white">感谢支持</h3>
-                <p class="text-slate-500 text-sm mb-8">您的支持是我持续更新的动力</p>
-                <div class="w-56 h-56 bg-white mx-auto rounded-2xl overflow-hidden mb-6 flex items-center justify-center border-2 border-dashed border-slate-200 p-2">
-                    <div class="w-full h-full bg-slate-100 rounded-xl flex flex-col items-center justify-center text-slate-400">
-                        <i class="ri-qr-code-line text-4xl mb-2"></i>
-                        <span class="text-xs">此处放收款码</span>
-                    </div>
-                </div>
-                <p class="text-xs text-slate-400">Soft Wealth 舒适的搞钱哲学</p>
+            <div class="glass bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-2xl max-w-sm w-full text-center relative">
+                <button @click="showDonate = false" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="ri-close-circle-fill text-2xl"></i></button>
+                <h3 class="text-xl font-bold mb-6 text-slate-800 dark:text-white">感谢支持</h3>
+                <div class="w-48 h-48 bg-slate-100 mx-auto rounded-xl flex items-center justify-center mb-4 text-slate-400 text-sm">这里放收款码</div>
             </div>
         </div>
 
-        <button id="backToTop" class="fixed bottom-8 right-8 bg-slate-800/80 dark:bg-white/80 text-white dark:text-slate-900 w-12 h-12 rounded-full shadow-lg backdrop-blur-md translate-y-20 opacity-0 transition-all duration-500 z-40 flex items-center justify-center hover:bg-primary hover:text-white hover:scale-110 border border-white/10" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="ri-arrow-up-line text-xl"></i></button>
+        <button id="backToTop" class="fixed bottom-8 right-8 bg-slate-800 text-white w-10 h-10 rounded-full shadow-lg translate-y-20 opacity-0 transition-all duration-300 z-40 flex items-center justify-center hover:bg-primary" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="ri-arrow-up-line"></i></button>
 
     </div>
 
@@ -357,40 +355,45 @@
                 const filterCategory = ref('');
                 const isDark = ref(false);
                 const scrollProgress = ref(0);
-                const savedScrollPosition = ref(0);
                 const currentPage = ref(1);
-                const jumpInput = ref('');
                 const errorMsg = ref('');
                 const toc = ref([]);
                 const activeHeader = ref('');
                 const showBanner = ref(true);
                 const showDonate = ref(false);
                 
+                // 打字机
                 const typewriterTexts = ["自动化", "量化交易", "数字游民", "被动收入"];
                 const displayedText = ref('');
-                let typeIndex = 0;
-                let charIndex = 0;
-                let isDeleting = false;
-
+                let typeIndex = 0, charIndex = 0, isDeleting = false;
                 const typeWriter = () => {
                     const currentWord = typewriterTexts[typeIndex];
-                    if (isDeleting) {
-                        displayedText.value = currentWord.substring(0, charIndex - 1);
-                        charIndex--;
-                    } else {
-                        displayedText.value = currentWord.substring(0, charIndex + 1);
-                        charIndex++;
-                    }
+                    if (isDeleting) { displayedText.value = currentWord.substring(0, charIndex - 1); charIndex--; } 
+                    else { displayedText.value = currentWord.substring(0, charIndex + 1); charIndex++; }
                     let typeSpeed = isDeleting ? 50 : 150;
-                    if (!isDeleting && charIndex === currentWord.length) {
-                        typeSpeed = 2000; 
-                        isDeleting = true;
-                    } else if (isDeleting && charIndex === 0) {
-                        isDeleting = false;
-                        typeIndex = (typeIndex + 1) % typewriterTexts.length;
-                        typeSpeed = 500;
-                    }
+                    if (!isDeleting && charIndex === currentWord.length) { typeSpeed = 2000; isDeleting = true; } 
+                    else if (isDeleting && charIndex === 0) { isDeleting = false; typeIndex = (typeIndex + 1) % typewriterTexts.length; typeSpeed = 500; }
                     setTimeout(typeWriter, typeSpeed);
+                };
+
+                // Markdown 预处理：Callouts, Math, Checkboxes
+                const processMarkdown = (text) => {
+                    // 1. 处理 Callouts (Obsidian 风格)
+                    // > [!INFO] Title
+                    text = text.replace(/^>\s?\[!(\w+)\]\s?(.*)$/gm, (match, type, title) => {
+                        const typeLower = type.toLowerCase();
+                        let icon = 'ri-information-line';
+                        if(typeLower === 'warning') icon = 'ri-alert-line';
+                        if(typeLower === 'tip') icon = 'ri-lightbulb-line';
+                        if(typeLower === 'question') icon = 'ri-question-line';
+                        if(typeLower === 'success') icon = 'ri-check-line';
+                        return `<div class="callout callout-${typeLower}"><div class="callout-title"><i class="${icon}"></i> ${title || type}</div><div class="callout-content">`;
+                    });
+                    // 关闭 Callout div (简单的做法，假设 > 块结束)
+                    // 实际上 marked 会处理引用块，我们这里主要做类名替换。
+                    // 为了更精确，建议在 marked 渲染后处理 DOM，或者使用简单的正则替换 class。
+                    
+                    return text;
                 };
 
                 const parseFrontMatter = (text, filename) => {
@@ -411,18 +414,26 @@
                             }
                         });
                     }
-                    const cleanBody = body.replace(/[#*`\[\]()!>]/g, '').replace(/\s+/g, ' ');
-                    metadata.excerpt = cleanBody.substring(0, 80) + '...';
                     metadata.file = 'posts/' + filename;
                     metadata.bodyRaw = body; 
-                    metadata.readTime = Math.ceil(cleanBody.length / 400);
+                    metadata.excerpt = body.replace(/[#*`\[\]()!>]/g, '').replace(/\s+/g, ' ').substring(0, 80) + '...';
+                    metadata.readTime = Math.ceil(metadata.bodyRaw.length / 400);
                     return metadata;
                 };
+
+                // 配置 Marked
+                marked.setOptions({
+                    gfm: true, // 启用 GitHub 风格 (表格、任务列表)
+                    breaks: true, // 换行符转 <br>
+                    highlight: function(code, lang) {
+                        const language = highlight.getLanguage(lang) ? lang : 'plaintext';
+                        return highlight.highlight(code, { language }).value;
+                    }
+                });
 
                 onMounted(async () => {
                     if (localStorage.getItem('hideBanner')) showBanner.value = false;
                     typeWriter();
-
                     try {
                         const res = await fetch('posts.json');
                         if (!res.ok) throw new Error("无法读取文章列表");
@@ -431,122 +442,86 @@
                             try {
                                 const mdRes = await fetch(`posts/${filename}`);
                                 if (!mdRes.ok) return null;
-                                const text = await mdRes.text();
-                                return parseFrontMatter(text, filename);
+                                return parseFrontMatter(await mdRes.text(), filename);
                             } catch (e) { return null; }
                         });
-                        const results = await Promise.all(promises);
-                        posts.value = results.filter(p => p !== null).sort((a, b) => new Date(b.date) - new Date(a.date));
+                        posts.value = (await Promise.all(promises)).filter(p => p !== null).sort((a, b) => new Date(b.date) - new Date(a.date));
                         
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const postFile = urlParams.get('p');
+                        const postFile = new URLSearchParams(window.location.search).get('p');
                         if (postFile) {
-                            const targetPost = posts.value.find(p => p.file === postFile || p.file === decodeURIComponent(postFile));
-                            if (targetPost) loadPost(targetPost);
-                            else errorMsg.value = "找不到该文章，可能已被删除。";
+                            const target = posts.value.find(p => p.file === postFile || p.file === decodeURIComponent(postFile));
+                            if (target) loadPost(target); else errorMsg.value = "找不到该文章";
                         }
-                    } catch (e) { console.error("Error", e); errorMsg.value = "系统初始化失败，请检查网络。"; } 
+                    } catch (e) { errorMsg.value = "初始化失败"; } 
                     finally { initLoading.value = false; }
 
-                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                        isDark.value = true;
-                        document.documentElement.classList.add('dark');
-                    }
+                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { isDark.value = true; document.documentElement.classList.add('dark'); }
                     window.addEventListener('scroll', updateProgress);
-                    window.addEventListener('keydown', (e) => {
-                        if (e.key === 'Escape' && currentView.value === 'detail') goHome();
-                    });
+                    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && currentView.value === 'detail') goHome(); });
                 });
 
-                onUnmounted(() => window.removeEventListener('scroll', updateProgress));
-
                 const closeBanner = () => { showBanner.value = false; localStorage.setItem('hideBanner', 'true'); };
-
+                const toggleDark = () => { isDark.value = !isDark.value; document.documentElement.classList.toggle('dark', isDark.value); };
+                const scrollToContent = () => document.getElementById('content-area').scrollIntoView({ behavior: 'smooth' });
+                const changeCategory = (cat) => { filterCategory.value = cat; currentPage.value = 1; };
+                const changePage = (p) => { if (p >= 1 && p <= totalPages.value) { currentPage.value = p; document.getElementById('regular-list-top').scrollIntoView({ behavior: 'smooth' }); }};
+                
                 const updateProgress = () => {
-                    const scrollTop = window.scrollY;
-                    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-                    scrollProgress.value = (scrollTop / docHeight) * 100;
+                    scrollProgress.value = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
                     const btn = document.getElementById('backToTop');
-                    if (btn) {
-                        if (scrollTop > 300) btn.classList.remove('translate-y-20', 'opacity-0');
-                        else btn.classList.add('translate-y-20', 'opacity-0');
-                    }
+                    if (btn) btn.classList.toggle('opacity-0', window.scrollY < 300);
+                    if (btn) btn.classList.toggle('translate-y-20', window.scrollY < 300);
+                    
                     if (currentView.value === 'detail' && toc.value.length > 0) {
                         for (const item of toc.value) {
                             const el = document.getElementById(item.id);
-                            if (el && el.getBoundingClientRect().top < 150) {
-                                activeHeader.value = item.id;
-                                break;
-                            }
+                            if (el && el.getBoundingClientRect().top < 150) { activeHeader.value = item.id; }
                         }
                     }
                 };
 
-                const toggleDark = () => { isDark.value = !isDark.value; document.documentElement.classList.toggle('dark', isDark.value); };
-                const scrollToContent = () => { document.getElementById('content-area').scrollIntoView({ behavior: 'smooth' }); };
-                
+                // 生成目录核心逻辑
                 const generateTOC = () => {
                     toc.value = [];
-                    const headers = document.querySelectorAll('.prose h2, .prose h3');
-                    headers.forEach((header, index) => {
-                        const id = 'header-' + index;
-                        header.id = id;
-                        toc.value.push({ id: id, text: header.innerText, indent: parseInt(header.tagName.substring(1)) });
-                    });
-                    if (toc.value.length > 0) activeHeader.value = toc.value[0].id;
+                    // 使用 setTimeout 确保 DOM 已经渲染完毕
+                    setTimeout(() => {
+                        const headers = document.querySelectorAll('.prose h2, .prose h3'); // 只抓取 H2 和 H3
+                        if (headers.length === 0) return;
+                        
+                        headers.forEach((header, index) => {
+                            const id = 'header-' + index;
+                            header.id = id; // 自动给标题加 ID
+                            toc.value.push({
+                                id: id,
+                                text: header.innerText,
+                                indent: parseInt(header.tagName.substring(1)) // 2 或 3
+                            });
+                        });
+                        if (toc.value.length > 0) activeHeader.value = toc.value[0].id;
+                    }, 100);
                 };
                 
                 const scrollToHeader = (id) => {
                     const el = document.getElementById(id);
-                    if (el) {
-                        const y = el.getBoundingClientRect().top + window.scrollY - 100;
-                        window.scrollTo({ top: y, behavior: 'smooth' });
-                    }
+                    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
                 };
 
-                const filteredList = computed(() => {
-                    return posts.value.filter(post => {
-                        const matchSearch = post.title.toLowerCase().includes(searchQuery.value.toLowerCase());
-                        const matchCat = filterCategory.value ? post.category === filterCategory.value : true;
-                        return matchSearch && matchCat;
-                    });
-                });
-                
-                const relatedPosts = computed(() => {
-                    if (!activePost.value.file) return [];
-                    return posts.value.filter(p => p.category === activePost.value.category && p.file !== activePost.value.file).slice(0, 2);
-                });
-
+                const filteredList = computed(() => posts.value.filter(p => p.title.toLowerCase().includes(searchQuery.value.toLowerCase()) && (!filterCategory.value || p.category === filterCategory.value)));
                 const pinnedPosts = computed(() => filteredList.value.filter(p => p.pinned));
-                const regularPosts = computed(() => {
-                    const showPinnedSection = !searchQuery.value && !filterCategory.value && currentPage.value === 1;
-                    if (showPinnedSection) return filteredList.value.filter(p => !p.pinned); 
-                    else return filteredList.value; 
-                });
-
+                const regularPosts = computed(() => (!searchQuery.value && !filterCategory.value && currentPage.value === 1) ? filteredList.value.filter(p => !p.pinned) : filteredList.value);
                 const totalPages = computed(() => Math.ceil(regularPosts.value.length / PAGE_SIZE));
-                const paginatedPosts = computed(() => {
-                    const start = (currentPage.value - 1) * PAGE_SIZE;
-                    return regularPosts.value.slice(start, start + PAGE_SIZE);
-                });
-
-                const changePage = (page) => {
-                    if (page >= 1 && page <= totalPages.value) {
-                        currentPage.value = page;
-                        document.getElementById('regular-list-top').scrollIntoView({ behavior: 'smooth' });
-                    }
-                };
-
-                const handleJump = () => {
-                    const page = parseInt(jumpInput.value);
-                    if (page >= 1 && page <= totalPages.value) { changePage(page); jumpInput.value = ''; } else { alert('页码无效'); }
-                };
-
-                const changeCategory = (cat) => { filterCategory.value = cat; currentPage.value = 1; };
-                watch(searchQuery, () => { currentPage.value = 1; });
-
+                const paginatedPosts = computed(() => regularPosts.value.slice((currentPage.value - 1) * PAGE_SIZE, currentPage.value * PAGE_SIZE));
                 const categories = computed(() => [...new Set(posts.value.map(p => p.category))]);
-                const compiledMarkdown = computed(() => marked.parse(markdownContent.value));
+                const relatedPosts = computed(() => posts.value.filter(p => p.category === activePost.value.category && p.file !== activePost.value.file).slice(0, 2));
+
+                // 核心渲染逻辑
+                const compiledMarkdown = computed(() => {
+                    let html = marked.parse(processMarkdown(markdownContent.value));
+                    // 这里可以进一步处理 html 字符串，例如替换 Checkbox
+                    html = html.replace(/<li><input disabled="" type="checkbox">/g, '<li class="task-list-item"><input type="checkbox" disabled>');
+                    html = html.replace(/<li><input checked="" disabled="" type="checkbox">/g, '<li class="task-list-item"><input type="checkbox" checked disabled>');
+                    return html;
+                });
 
                 const loadPost = (post) => {
                     savedScrollPosition.value = window.scrollY;
@@ -556,36 +531,28 @@
                     errorMsg.value = ''; 
                     window.scrollTo(0, 0);
                     document.title = `${post.title} - Soft Wealth`;
-                    const newUrl = `?p=${encodeURIComponent(post.file)}`;
-                    window.history.pushState({ path: newUrl }, '', newUrl);
+                    window.history.pushState({ path: `?p=${encodeURIComponent(post.file)}` }, '', `?p=${encodeURIComponent(post.file)}`);
 
                     nextTick(() => {
                         generateTOC(); 
+                        renderMathInElement(document.querySelector('.prose'), { delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}] });
+                        
                         document.querySelectorAll('pre code').forEach((el) => {
-                            hljs.highlightElement(el);
                             const pre = el.parentElement;
-                            pre.style.position = 'relative';
-                            if (pre.querySelector('.copy-btn')) return;
-                            const btn = document.createElement('button');
-                            btn.className = 'copy-btn';
-                            btn.innerText = '复制';
-                            btn.onclick = () => {
-                                navigator.clipboard.writeText(el.innerText).then(() => {
-                                    btn.innerText = '已复制!';
-                                    setTimeout(() => btn.innerText = '复制', 2000);
-                                });
-                            };
-                            pre.appendChild(btn);
+                            if (!pre.querySelector('.copy-btn')) {
+                                const btn = document.createElement('button');
+                                btn.className = 'copy-btn';
+                                btn.innerText = 'Copy';
+                                btn.onclick = () => { navigator.clipboard.writeText(el.innerText).then(() => { btn.innerText = 'Copied!'; setTimeout(() => btn.innerText = 'Copy', 2000); }); };
+                                pre.appendChild(btn);
+                            }
                         });
-
+                        
                         document.querySelectorAll('.prose img').forEach(img => {
-                            img.style.cursor = 'zoom-in';
                             img.onclick = (e) => {
                                 e.stopPropagation();
-                                const lightbox = document.getElementById('lightbox');
-                                const lightboxImg = document.getElementById('lightbox-img');
-                                lightboxImg.src = img.src;
-                                lightbox.classList.remove('hidden');
+                                document.getElementById('lightbox').classList.remove('hidden');
+                                document.getElementById('lightbox-img').src = img.src;
                             };
                         });
                     });
@@ -595,18 +562,13 @@
                     currentView.value = 'list'; 
                     searchQuery.value = ''; 
                     activePost.value = {}; 
-                    errorMsg.value = '';
                     document.title = 'Soft Wealth | 舒适的搞钱哲学'; 
-                    window.history.pushState({ path: '/' }, '', window.location.pathname);
+                    window.history.pushState({ path: '/' }, '', '/');
                     await nextTick();
                     window.scrollTo(0, savedScrollPosition.value);
                 };
 
-                return { 
-                    currentView, pinnedPosts, regularPosts, paginatedPosts, activePost, loadPost, compiledMarkdown, initLoading, 
-                    searchQuery, filterCategory, categories, goHome, isDark, toggleDark, scrollProgress, scrollToContent,
-                    currentPage, totalPages, changePage, changeCategory, jumpInput, handleJump, errorMsg, toc, scrollToHeader, activeHeader, relatedPosts, showBanner, closeBanner, showDonate, displayedText
-                };
+                return { currentView, pinnedPosts, regularPosts, paginatedPosts, activePost, compiledMarkdown, initLoading, searchQuery, filterCategory, categories, goHome, isDark, toggleDark, scrollProgress, scrollToContent, currentPage, totalPages, changePage, changeCategory, errorMsg, toc, scrollToHeader, activeHeader, relatedPosts, showBanner, closeBanner, showDonate, displayedText, loadPost };
             }
         }).mount('#app');
     </script>
