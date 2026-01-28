@@ -4,6 +4,13 @@
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <link rel="preconnect" href="https://unpkg.com">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💸</text></svg>">
+    
+    <meta name="description" content="Soft Wealth 是一个专注于 A股量化交易、Python 自动化脚本开发以及数字游民生活方式分享的个人博客。">
+    
+    <meta property="og:title" content="Soft Wealth | 舒适的搞钱哲学">
+    <meta property="og:description" content="分享 A股量化交易、Python 脚本开发及数字游民的实战经验。">
+    <meta property="og:type" content="website">
 
     <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
@@ -24,11 +31,7 @@
             theme: {
                 extend: {
                     colors: { primary: '#6366f1', secondary: '#ec4899', dark: '#0f172a', light: '#f8fafc' },
-                    animation: { 
-                        'fade-in': 'fadeIn 0.5s ease-out', 
-                        'bounce-slow': 'bounce 3s infinite',
-                        'blob': 'blob 7s infinite'
-                    },
+                    animation: { 'fade-in': 'fadeIn 0.5s ease-out', 'bounce-slow': 'bounce 3s infinite', 'blob': 'blob 7s infinite' },
                     keyframes: { 
                         fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
                         blob: {
@@ -50,34 +53,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     
     <style>
-        /* 玻璃拟态 */
         .glass { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); }
         .dark .glass { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255, 255, 255, 0.1); }
-        
-        /* ✨ 2. 自定义精美滚动条 */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
         .dark ::-webkit-scrollbar-thumb { background-color: #475569; }
         ::-webkit-scrollbar-thumb:hover { background-color: #6366f1; }
-
-        /* 基础样式 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         [v-cloak] { display: none; }
-        
-        /* 图片与代码块 */
         .prose img { margin: 2rem auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s; cursor: zoom-in; }
         .prose img:hover { transform: scale(1.01); }
         pre { position: relative; }
-        .copy-btn {
-            position: absolute; top: 8px; right: 8px;
-            font-size: 12px; color: #94a3b8; background: rgba(30, 41, 59, 0.6);
-            padding: 4px 8px; border-radius: 4px; cursor: pointer; transition: all 0.2s; opacity: 0;
-        }
+        .copy-btn { position: absolute; top: 8px; right: 8px; font-size: 12px; color: #94a3b8; background: rgba(30, 41, 59, 0.6); padding: 4px 8px; border-radius: 4px; cursor: pointer; transition: all 0.2s; opacity: 0; }
         pre:hover .copy-btn { opacity: 1; }
         .copy-btn:hover { background: #6366f1; color: white; }
-
         .animation-delay-2000 { animation-delay: 2s; }
         .animation-delay-4000 { animation-delay: 4s; }
     </style>
@@ -95,18 +86,20 @@
         <nav class="sticky top-0 z-50 glass shadow-sm transition-all duration-300">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16 items-center">
-                    <div @click="goHome" class="flex items-center gap-2 cursor-pointer group">
+                    <div @click="goHome" class="flex items-center gap-2 cursor-pointer group shrink-0">
                         <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition">
                             <span class="text-lg">💸</span>
                         </div>
-                        <span class="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Soft Wealth</span>
+                        <span class="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary hidden sm:block">Soft Wealth</span>
+                        <span class="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary sm:hidden">SW</span>
                     </div>
-                    <div class="flex items-center gap-4">
-                        <div class="hidden md:flex items-center bg-white/50 dark:bg-slate-800/50 rounded-full px-4 py-1.5 border border-gray-200 dark:border-slate-700 focus-within:ring-2 ring-primary transition">
+                    
+                    <div class="flex items-center gap-2 sm:gap-4 flex-1 justify-end">
+                        <div class="flex items-center bg-white/50 dark:bg-slate-800/50 rounded-full px-3 py-1.5 border border-gray-200 dark:border-slate-700 focus-within:ring-2 ring-primary transition w-32 focus-within:w-48 sm:w-auto">
                             <i class="ri-search-line text-gray-400"></i>
-                            <input v-model="searchQuery" type="text" placeholder="搜索..." class="bg-transparent border-none outline-none text-sm ml-2 w-24 focus:w-40 transition-all text-slate-700 dark:text-slate-200">
+                            <input v-model="searchQuery" type="text" placeholder="搜索..." class="bg-transparent border-none outline-none text-sm ml-2 w-full transition-all text-slate-700 dark:text-slate-200 placeholder:text-slate-400">
                         </div>
-                        <button @click="toggleDark" class="w-10 h-10 rounded-full glass flex items-center justify-center text-slate-600 dark:text-yellow-400 hover:scale-110 transition shadow-sm">
+                        <button @click="toggleDark" class="w-10 h-10 rounded-full glass flex items-center justify-center text-slate-600 dark:text-yellow-400 hover:scale-110 transition shadow-sm shrink-0">
                             <i :class="isDark ? 'ri-sun-line' : 'ri-moon-line'"></i>
                         </button>
                     </div>
@@ -119,7 +112,6 @@
             <transition name="fade" mode="out-in">
                 
                 <div v-if="currentView === 'list'" key="list" class="animate-fade-in">
-                    
                     <div class="relative w-full h-[400px] flex items-center justify-center bg-cover bg-center overflow-hidden" 
                          style="background-image: url('https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=2340&auto=format&fit=crop');">
                         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]"></div>
@@ -200,7 +192,6 @@
                                                 </div>
                                             </article>
                                         </div>
-
                                         <div v-if="totalPages > 1" class="flex flex-wrap justify-center items-center gap-4 py-8">
                                             <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" class="px-4 py-2 rounded-lg glass font-bold disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition flex items-center gap-1"><i class="ri-arrow-left-line"></i> <span class="hidden sm:inline">上一页</span></button>
                                             <span class="font-bold text-slate-500 dark:text-slate-400">{{ currentPage }} / {{ totalPages }}</span>
@@ -249,7 +240,6 @@
                                 <span><i class="ri-time-line"></i> 预计阅读 {{ activePost.readTime }} 分钟</span>
                             </div>
                         </div>
-                        
                         <div class="prose prose-lg max-w-none prose-slate dark:prose-invert prose-img:rounded-xl prose-headings:font-extrabold prose-a:text-primary hover:prose-a:text-secondary transition-all" v-html="compiledMarkdown"></div>
                     </article>
                 </div>
@@ -258,8 +248,9 @@
         </main>
         
         <footer class="py-12 text-center text-slate-400 text-sm bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 mt-12 relative z-10">
-            <p>© 2026 Soft Wealth. All rights reserved.</p>
+            <p>© <span id="year"></span> Soft Wealth. All rights reserved.</p>
         </footer>
+        <script>document.getElementById('year').innerText = new Date().getFullYear();</script>
 
         <div id="lightbox" class="fixed inset-0 z-[100] bg-black/90 hidden flex items-center justify-center cursor-zoom-out backdrop-blur-sm" onclick="this.classList.add('hidden')">
             <img id="lightbox-img" class="max-w-[90%] max-h-[90%] object-contain rounded-lg shadow-2xl transform transition-transform duration-300 scale-100">
@@ -319,10 +310,7 @@
                     metadata.excerpt = cleanBody.substring(0, 80) + '...';
                     metadata.file = 'posts/' + filename;
                     metadata.bodyRaw = body; 
-                    
-                    // 1. ⏱️ 自动计算阅读时长 (按每分钟400字估算)
                     metadata.readTime = Math.ceil(cleanBody.length / 400);
-                    
                     return metadata;
                 };
 
@@ -340,6 +328,15 @@
                         });
                         const results = await Promise.all(promises);
                         posts.value = results.filter(p => p !== null).sort((a, b) => new Date(b.date) - new Date(a.date));
+                        
+                        // 1. 🔗 核心修复：检查 URL 是否带有 ?p=文章名，如果有则直接跳转
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const postFile = urlParams.get('p');
+                        if (postFile) {
+                            const targetPost = posts.value.find(p => p.file === postFile || p.file === decodeURIComponent(postFile));
+                            if (targetPost) loadPost(targetPost);
+                        }
+
                     } catch (e) { console.error("Error", e); } 
                     finally { initLoading.value = false; }
 
@@ -348,7 +345,6 @@
                         document.documentElement.classList.add('dark');
                     }
                     window.addEventListener('scroll', updateProgress);
-                    // 3. ⌨️ 监听 ESC 键
                     window.addEventListener('keydown', (e) => {
                         if (e.key === 'Escape' && currentView.value === 'detail') goHome();
                     });
@@ -430,6 +426,10 @@
                     currentView.value = 'detail';
                     window.scrollTo(0, 0);
                     document.title = `${post.title} - Soft Wealth`;
+                    
+                    // 1. 🔗 核心修复：更新地址栏 URL
+                    const newUrl = `?p=${encodeURIComponent(post.file)}`;
+                    window.history.pushState({ path: newUrl }, '', newUrl);
 
                     nextTick(() => {
                         document.querySelectorAll('pre code').forEach((el) => {
@@ -466,6 +466,8 @@
                     currentView.value = 'list'; 
                     searchQuery.value = ''; 
                     document.title = 'Soft Wealth | 舒适的搞钱哲学'; 
+                    // 1. 🔗 核心修复：还原地址栏 URL
+                    window.history.pushState({ path: '/' }, '', window.location.pathname);
                     await nextTick();
                     window.scrollTo(0, savedScrollPosition.value);
                 };
@@ -480,5 +482,3 @@
     </script>
 </body>
 </html>
-
-```
