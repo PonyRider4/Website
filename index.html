@@ -6,7 +6,7 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-web/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -28,7 +28,7 @@
                 extend: {
                     fontFamily: {
                         // 优先使用文楷，英文使用 Inter
-                        sans: ['Inter', '"LXGW WenKai Screen"', 'sans-serif'],
+                        sans: ['Inter', '"LXGW WenKai Screen"', 'system-ui', '-apple-system', 'sans-serif'],
                         serif: ['"LXGW WenKai Screen"', 'serif'],
                     },
                     colors: { primary: '#6366f1', secondary: '#ec4899', dark: '#0f172a', light: '#f8fafc' },
@@ -44,7 +44,7 @@
                                 color: '#334155', // slate-700
                                 fontFamily: '"LXGW WenKai Screen", sans-serif',
                                 lineHeight: '1.8', // 增加行高，阅读更舒适
-                                'h1, h2, h3, h4': { color: '#1e293b', fontWeight: '700', letterSpacing: '-0.025em' },
+                                'h1, h2, h3, h4': { color: '#1e293b', fontWeight: '700', letterSpacing: '-0.025em', marginTop: '1.5em', marginBottom: '0.8em' },
                                 blockquote: { 
                                     borderLeftColor: '#6366f1', 
                                     backgroundColor: 'rgba(99, 102, 241, 0.05)', 
@@ -57,9 +57,9 @@
                                 'code::before': { content: '""' },
                                 'code::after': { content: '""' },
                                 // 优化表格样式
-                                table: { width: '100%', marginTop: '2em', marginBottom: '2em', borderRadius: '0.5rem', overflow: 'hidden' },
-                                'thead th': { backgroundColor: '#f1f5f9', padding: '0.75rem', color: '#475569' },
-                                'tbody td': { padding: '0.75rem', borderTop: '1px solid #e2e8f0' },
+                                table: { width: '100%', marginTop: '2em', marginBottom: '2em', borderRadius: '0.5rem', overflow: 'hidden', borderCollapse: 'collapse' },
+                                'thead th': { backgroundColor: '#f1f5f9', padding: '0.75rem', color: '#475569', textAlign: 'left', borderBottom: '2px solid #e2e8f0' },
+                                'tbody td': { padding: '0.75rem', borderBottom: '1px solid #e2e8f0' },
                                 'tbody tr:nth-child(even)': { backgroundColor: '#f8fafc' },
                             }
                         },
@@ -67,8 +67,8 @@
                             css: {
                                 color: '#94a3b8',
                                 'h1, h2, h3, h4': { color: '#f8fafc' },
-                                'thead th': { backgroundColor: '#1e293b', color: '#cbd5e1' },
-                                'tbody td': { borderTopColor: '#334155' },
+                                'thead th': { backgroundColor: '#1e293b', color: '#cbd5e1', borderBottomColor: '#334155' },
+                                'tbody td': { borderBottomColor: '#334155' },
                                 'tbody tr:nth-child(even)': { backgroundColor: '#1e293b' },
                                 blockquote: { backgroundColor: 'rgba(99, 102, 241, 0.1)' },
                             }
@@ -89,8 +89,8 @@
         /* 基础样式优化 */
         body { font-feature-settings: "ss01", "ss02", "cv01", "cv02"; -webkit-font-smoothing: antialiased; }
         
-        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05); }
-        .dark .glass { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); }
+        .glass { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05); }
+        .dark .glass { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); }
         
         .card-hover { transition: all 0.3s ease; }
         .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(99, 102, 241, 0.25); }
@@ -104,7 +104,7 @@
         [v-cloak] { display: none; }
         
         /* Obsidian 风格 Callout 样式 */
-        .callout { margin: 1.5rem 0; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid; display: flex; flex-direction: column; }
+        .callout { margin: 1.5rem 0; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid; display: flex; flex-direction: column; font-size: 0.95rem; }
         .callout-title { font-weight: 700; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
         .callout-info { background: rgba(59, 130, 246, 0.1); border-left-color: #3b82f6; }
         .callout-info .callout-title { color: #2563eb; }
@@ -112,18 +112,21 @@
         .callout-warning .callout-title { color: #d97706; }
         .callout-tip { background: rgba(16, 185, 129, 0.1); border-left-color: #10b981; }
         .callout-tip .callout-title { color: #059669; }
+        .callout-error { background: rgba(239, 68, 68, 0.1); border-left-color: #ef4444; }
+        .callout-error .callout-title { color: #dc2626; }
         
         /* 图片与代码块优化 */
         .prose img { margin: 2rem auto; border-radius: 0.75rem; box-shadow: 0 8px 20px rgba(0,0,0,0.1); cursor: zoom-in; }
-        pre { background: #282c34 !important; border-radius: 0.75rem; padding-top: 3rem !important; position: relative; }
+        pre { background: #282c34 !important; border-radius: 0.75rem; padding-top: 3rem !important; position: relative; border: 1px solid rgba(0,0,0,0.1); }
         /* Mac 窗口圆点 */
         pre::before { content: ''; position: absolute; top: 1rem; left: 1rem; width: 0.75rem; height: 0.75rem; background: #ff5f56; border-radius: 50%; box-shadow: 1.25rem 0 0 #ffbd2e, 2.5rem 0 0 #27c93f; }
         
         /* 目录优化 */
-        .toc-item { transition: all 0.2s; border-left: 2px solid transparent; padding: 4px 0 4px 16px; margin-left: 2px; position: relative; }
+        .toc-item { transition: all 0.2s; border-left: 3px solid transparent; padding: 6px 0 6px 16px; margin-left: 2px; position: relative; color: #64748b; }
+        .dark .toc-item { color: #94a3b8; }
         .toc-item:hover { color: #6366f1; }
-        .toc-active { border-left-color: #6366f1; color: #6366f1; font-weight: 600; background: linear-gradient(90deg, rgba(99,102,241,0.05), transparent); }
-        .toc-h3 { padding-left: 32px; font-size: 0.9em; opacity: 0.8; }
+        .toc-active { border-left-color: #6366f1; color: #6366f1 !important; font-weight: 600; background: linear-gradient(90deg, rgba(99,102,241,0.08), transparent); }
+        .toc-h3 { padding-left: 32px; font-size: 0.9em; opacity: 0.9; }
         
         /* 任务列表 Checkbox 样式 */
         .prose input[type="checkbox"] { margin-right: 0.5em; accent-color: #6366f1; transform: scale(1.1); }
@@ -139,7 +142,7 @@
         </div>
 
         <div v-if="showBanner" class="bg-gradient-to-r from-primary to-secondary text-white text-xs py-2 px-4 relative z-[60] shadow-sm">
-            <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="max-w-6xl mx-auto flex justify-between items-center">
                 <div class="flex-1 text-center font-bold tracking-wide">
                     🚀 新的《Python量化入门课》正在更新中，关注 B 站不迷路！
                 </div>
@@ -148,7 +151,7 @@
         </div>
 
         <nav class="sticky top-0 z-50 glass shadow-sm transition-all duration-300">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16 items-center">
                     <div @click="goHome" class="flex items-center gap-2 cursor-pointer group shrink-0">
                         <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white shadow-md group-hover:rotate-6 transition duration-300">
@@ -189,7 +192,7 @@
                         </div>
                     </div>
 
-                    <div id="content-area" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                    <div id="content-area" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                         <div v-if="initLoading" class="grid grid-cols-1 md:grid-cols-2 gap-8 animate-pulse">
                             <div v-for="i in 4" :key="i" class="glass rounded-3xl p-6 h-80">
                                 <div class="h-40 bg-slate-200 dark:bg-slate-700/50 rounded-xl mb-6"></div>
@@ -270,9 +273,9 @@
                     </div>
                 </div>
 
-                <div v-else key="detail" class="animate-fade-in-up max-w-7xl mx-auto px-4 py-12 flex flex-col lg:flex-row gap-12">
+                <div v-else key="detail" class="animate-fade-in-up max-w-6xl mx-auto px-4 py-12 flex flex-col lg:flex-row gap-8">
                     
-                    <div class="flex-1 min-w-0">
+                    <div class="w-full lg:w-3/4">
                         <button @click="goHome" class="mb-6 px-4 py-2 rounded-full glass text-sm font-bold text-slate-600 hover:text-primary transition flex items-center gap-2 dark:text-slate-300 hover:pl-3 group">
                             <i class="ri-arrow-left-line group-hover:-translate-x-1 transition"></i> 返回首页
                         </button>
@@ -301,7 +304,7 @@
                         </article>
                     </div>
 
-                    <div v-if="!errorMsg && toc.length > 0" class="hidden lg:block w-72 shrink-0">
+                    <div v-if="!errorMsg && toc.length > 0" class="hidden lg:block w-full lg:w-1/4 shrink-0">
                         <div class="sticky top-28">
                             <div class="glass rounded-2xl p-6 shadow-sm border-l-4 border-primary/20">
                                 <h3 class="font-bold text-sm text-slate-400 uppercase mb-4 tracking-widest pb-2">目录导航</h3>
@@ -387,11 +390,9 @@
                         if(typeLower === 'tip') icon = 'ri-lightbulb-line';
                         if(typeLower === 'question') icon = 'ri-question-line';
                         if(typeLower === 'success') icon = 'ri-check-line';
+                        if(typeLower === 'error') icon = 'ri-close-circle-line';
                         return `<div class="callout callout-${typeLower}"><div class="callout-title"><i class="${icon}"></i> ${title || type}</div><div class="callout-content">`;
                     });
-                    // 关闭 Callout div (简单的做法，假设 > 块结束)
-                    // 实际上 marked 会处理引用块，我们这里主要做类名替换。
-                    // 为了更精确，建议在 marked 渲染后处理 DOM，或者使用简单的正则替换 class。
                     
                     return text;
                 };
@@ -517,7 +518,7 @@
                 // 核心渲染逻辑
                 const compiledMarkdown = computed(() => {
                     let html = marked.parse(processMarkdown(markdownContent.value));
-                    // 这里可以进一步处理 html 字符串，例如替换 Checkbox
+                    // Checkbox 替换
                     html = html.replace(/<li><input disabled="" type="checkbox">/g, '<li class="task-list-item"><input type="checkbox" disabled>');
                     html = html.replace(/<li><input checked="" disabled="" type="checkbox">/g, '<li class="task-list-item"><input type="checkbox" checked disabled>');
                     return html;
