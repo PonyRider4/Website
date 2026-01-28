@@ -1,1889 +1,647 @@
- <!DOCTYPE html>
-
+<!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
-
     <link rel="preconnect" href="https://unpkg.com">
-
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-
     
-
-
-    <link
-
-
-
-href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Serif+SC:wght@400;700&display=swap"
-
-rel="stylesheet">
-
-
-    <link rel="icon" href="data:image/svg+xml,<svg
-
-xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100
-
-100%22><text y=%22.9em%22
-
-font-size=%2290%22>💸</text></svg>">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💸</text></svg>">
     
-
     <meta name="description" content="Soft Wealth 是一个专注于 A股量化交易、Python 自动化脚本开发以及数字游民生活方式分享的个人博客。">
-
     <meta property="og:title" content="Soft Wealth | 舒适的搞钱哲学">
-
     <meta property="og:description" content="分享 A股量化交易、Python 脚本开发及数字游民的实战经验。">
-
     <meta property="og:type" content="website">
 
-
     <script type="text/javascript">
-
     (function(c,l,a,r,i,t,y){
-
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-
     })(window, document, "clarity", "script", "v7vrpruxba");
-
     </script>
-
     
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Soft Wealth | 舒适的搞钱哲学</title>
-
     
-
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-
     <script>
-
         tailwind.config = {
-
             darkMode: 'class',
-
             theme: {
-
                 extend: {
-
                     fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['"Noto Serif SC"', 'serif'] },
-
                     colors: { primary: '#6366f1', secondary: '#ec4899', dark: '#0f172a', light: '#f8fafc' },
-
-
-                    animation: { 'fade-in-up': 'fadeInUp 0.6s
-
-cubic-bezier(0.16, 1, 0.3, 1)', 'blob': 'blob 10s infinite', 'cursor':
-
-'cursor .75s step-end infinite' },
-
+                    animation: { 'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)', 'blob': 'blob 10s infinite', 'cursor': 'cursor .75s step-end infinite' },
                     keyframes: { 
-
-
-                        fadeInUp: { '0%': { opacity: '0', transform:
-
-'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)'
-
-} },
-
-
-                        blob: { '0%': { transform: 'translate(0px, 0px)
-
-scale(1)' }, '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-
-'66%': { transform: 'translate(-20px, 20px) scale(0.9)' }, '100%': {
-
-transform: 'translate(0px, 0px) scale(1)' } },
-
+                        fadeInUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        blob: { '0%': { transform: 'translate(0px, 0px) scale(1)' }, '33%': { transform: 'translate(30px, -50px) scale(1.1)' }, '66%': { transform: 'translate(-20px, 20px) scale(0.9)' }, '100%': { transform: 'translate(0px, 0px) scale(1)' } },
                         cursor: { '0%, 100%': { borderColor: 'transparent' }, '50%': { borderColor: 'currentColor' } }
-
                     }
-
                 }
-
             }
-
         }
-
     </script>
-
     
-
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-
-
-    <link rel="stylesheet"
-
-href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
     
-
     <style>
-
-
-        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter:
-
-blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid
-
-rgba(255, 255, 255, 0.5); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05); }
-
-
-        .dark .glass { background: rgba(15, 23, 42, 0.6); border: 1px
-
-solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 30px rgba(0, 0, 0,
-
-0.2); }
-
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05); }
+        .dark .glass { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2); }
         .card-hover { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-
-
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0
-
-20px 40px -15px rgba(99, 102, 241, 0.3); border-color: rgba(99, 102,
-
-241, 0.4); }
-
-
-        .dark .card-hover:hover { box-shadow: 0 20px 40px -15px
-
-rgba(236, 72, 153, 0.3); border-color: rgba(236, 72, 153, 0.4); }
-
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.3); border-color: rgba(99, 102, 241, 0.4); }
+        .dark .card-hover:hover { box-shadow: 0 20px 40px -15px rgba(236, 72, 153, 0.3); border-color: rgba(236, 72, 153, 0.4); }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-
         ::-webkit-scrollbar-track { background: transparent; }
-
         ::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
-
         .dark ::-webkit-scrollbar-thumb { background-color: #334155; }
-
         ::-webkit-scrollbar-thumb:hover { background-color: #6366f1; }
-
         .no-scrollbar::-webkit-scrollbar { display: none; }
-
         input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-
         [v-cloak] { display: none; }
-
         
-
         /* 1. 胶片噪点纹理 */
-
-
-        .noise-bg { position: fixed; top: 0; left: 0; width: 100%;
-
-height: 100%; pointer-events: none; z-index: -1; opacity: 0.05;
-
-background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200'
-
-xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter
-
-id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise'
-
-baseFrequency='0.65' numOctaves='3'
-
-stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25'
-
-height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
-
+        .noise-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
         .dark .noise-bg { opacity: 0.08; }
 
-
         /* 2. Mac 终端风格代码块 */
-
-
-        pre { padding-top: 3.5rem !important; position: relative;
-
-border-radius: 0.75rem; overflow: hidden; background: #282c34
-
-!important; }
-
-
-        pre::before { content: ''; position: absolute; top: 1rem; left:
-
-1rem; width: 0.75rem; height: 0.75rem; background: #ff5f56;
-
-border-radius: 50%; box-shadow: 1.25rem 0 0 #ffbd2e, 2.5rem 0 0 #27c93f;
-
-}
-
+        pre { padding-top: 3.5rem !important; position: relative; border-radius: 0.75rem; overflow: hidden; background: #282c34 !important; }
+        pre::before { content: ''; position: absolute; top: 1rem; left: 1rem; width: 0.75rem; height: 0.75rem; background: #ff5f56; border-radius: 50%; box-shadow: 1.25rem 0 0 #ffbd2e, 2.5rem 0 0 #27c93f; }
         
-
-
-        .prose img { margin: 2.5rem auto; border-radius: 1rem;
-
-box-shadow: 0 15px 40px -10px rgba(0,0,0,0.15); transition: transform
-
-0.3s ease; cursor: zoom-in; }
-
+        .prose img { margin: 2.5rem auto; border-radius: 1rem; box-shadow: 0 15px 40px -10px rgba(0,0,0,0.15); transition: transform 0.3s ease; cursor: zoom-in; }
         .prose img:hover { transform: scale(1.02); }
-
-
-        .copy-btn { position: absolute; top: 0.75rem; right: 1rem;
-
-font-size: 12px; color: #abb2bf; background: rgba(255, 255, 255, 0.1);
-
-padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all
-
-0.2s; backdrop-filter: blur(4px); border: 1px solid
-
-rgba(255,255,255,0.1); }
-
+        .copy-btn { position: absolute; top: 0.75rem; right: 1rem; font-size: 12px; color: #abb2bf; background: rgba(255, 255, 255, 0.1); padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.1); }
         .copy-btn:hover { background: #6366f1; color: white; border-color: #6366f1; }
-
         .animation-delay-2000 { animation-delay: 2s; }
-
         .animation-delay-4000 { animation-delay: 4s; }
-
-
-        .toc-active { color: #6366f1; border-left: 3px solid #6366f1;
-
-padding-left: 12px; font-weight: 600; background: linear-gradient(90deg,
-
-rgba(99,102,241,0.1) 0%, rgba(0,0,0,0) 100%); }
-
         .typewriter { border-right: 3px solid; animation: cursor .75s step-end infinite; }
-
     </style>
-
 </head>
-
-
-<body class="bg-gray-50 text-slate-800 transition-colors
-
-duration-300 dark:bg-slate-900 dark:text-slate-200 overflow-x-hidden
-
-font-sans selection:bg-primary/30 selection:text-primary-900">
-
+<body class="bg-gray-50 text-slate-800 transition-colors duration-300 dark:bg-slate-900 dark:text-slate-200 overflow-x-hidden font-sans selection:bg-primary/30 selection:text-primary-900">
 
     <div id="app" class="min-h-screen relative z-0 flex flex-col" v-cloak>
-
         
-
         <div class="noise-bg"></div>
 
-
         <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-
-
-            <div class="absolute top-0 left-0 -translate-x-1/2
-
--translate-y-1/2 w-[500px] h-[500px] bg-primary/20 dark:bg-primary/10
-
-rounded-full blur-[100px] opacity-60 animate-blob mix-blend-multiply
-
-dark:mix-blend-screen"></div>
-
-
-            <div class="absolute bottom-0 right-0 translate-x-1/3
-
-translate-y-1/3 w-[500px] h-[500px] bg-secondary/20 dark:bg-secondary/10
-
-rounded-full blur-[100px] opacity-60 animate-blob animation-delay-2000
-
-mix-blend-multiply dark:mix-blend-screen"></div>
-
-
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2
-
--translate-y-1/2 w-[600px] h-[600px] bg-blue-200/20 dark:bg-blue-900/10
-
-rounded-full blur-[100px] opacity-50 animate-blob animation-delay-4000
-
-mix-blend-multiply dark:mix-blend-screen"></div>
-
+            <div class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/20 dark:bg-primary/10 rounded-full blur-[100px] opacity-60 animate-blob mix-blend-multiply dark:mix-blend-screen"></div>
+            <div class="absolute bottom-0 right-0 translate-x-1/3 translate-y-1/3 w-[500px] h-[500px] bg-secondary/20 dark:bg-secondary/10 rounded-full blur-[100px] opacity-60 animate-blob animation-delay-2000 mix-blend-multiply dark:mix-blend-screen"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-200/20 dark:bg-blue-900/10 rounded-full blur-[100px] opacity-50 animate-blob animation-delay-4000 mix-blend-multiply dark:mix-blend-screen"></div>
         </div>
 
-
-
-        <div v-if="showBanner" class="bg-gradient-to-r from-primary
-
-to-secondary text-white text-xs sm:text-sm py-2 px-4 relative z-[60]
-
-shadow-lg">
-
+        <div v-if="showBanner" class="bg-gradient-to-r from-primary to-secondary text-white text-xs sm:text-sm py-2 px-4 relative z-[60] shadow-lg">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
-
                 <div class="flex-1 text-center font-bold tracking-wide flex items-center justify-center gap-2">
-
                     <span class="animate-pulse">🚀</span> 新的《Python量化入门课》正在更新中，点击关注 B 站动态！
-
                 </div>
-
-
-                <button @click="closeBanner" class="ml-4 opacity-80
-
-hover:opacity-100 hover:rotate-90 transition"><i
-
-class="ri-close-line text-lg"></i></button>
-
+                <button @click="closeBanner" class="ml-4 opacity-80 hover:opacity-100 hover:rotate-90 transition"><i class="ri-close-line text-lg"></i></button>
             </div>
-
         </div>
-
 
         <nav class="sticky top-0 z-50 glass shadow-sm transition-all duration-300">
-
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
                 <div class="flex justify-between h-16 items-center">
-
                     <div @click="goHome" class="flex items-center gap-2 cursor-pointer group shrink-0">
-
-
-                        <div class="w-9 h-9 rounded-xl
-
-bg-gradient-to-br from-primary to-secondary flex items-center
-
-justify-center text-white shadow-lg group-hover:scale-110
-
-group-hover:rotate-6 transition duration-300">
-
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white shadow-lg group-hover:scale-110 group-hover:rotate-6 transition duration-300">
                             <span class="text-xl">💸</span>
-
                         </div>
-
-
-                        <span class="font-extrabold text-xl
-
-tracking-tight bg-clip-text text-transparent bg-gradient-to-r
-
-from-primary to-secondary hidden sm:block">Soft Wealth</span>
-
-
-                        <span class="font-bold text-xl
-
-tracking-tight bg-clip-text text-transparent bg-gradient-to-r
-
-from-primary to-secondary sm:hidden">SW</span>
-
+                        <span class="font-extrabold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary hidden sm:block">Soft Wealth</span>
+                        <span class="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary sm:hidden">SW</span>
                     </div>
-
                     <div class="flex items-center gap-2 sm:gap-4 flex-1 justify-end">
-
-
-                        <div class="flex items-center bg-white/50
-
-dark:bg-slate-800/50 rounded-full px-3 py-1.5 border border-gray-200
-
-dark:border-slate-700 focus-within:border-primary/50 focus-within:ring-2
-
-ring-primary/20 transition w-32 focus-within:w-48 sm:w-auto">
-
+                        <div class="flex items-center bg-white/50 dark:bg-slate-800/50 rounded-full px-3 py-1.5 border border-gray-200 dark:border-slate-700 focus-within:border-primary/50 focus-within:ring-2 ring-primary/20 transition w-32 focus-within:w-48 sm:w-auto">
                             <i class="ri-search-line text-gray-400"></i>
-
-
-                            <input v-model="searchQuery" type="text"
-
-placeholder="搜索..." class="bg-transparent border-none outline-none
-
-text-sm ml-2 w-full transition-all text-slate-700 dark:text-slate-200
-
-placeholder:text-slate-400">
-
+                            <input v-model="searchQuery" type="text" placeholder="搜索..." class="bg-transparent border-none outline-none text-sm ml-2 w-full transition-all text-slate-700 dark:text-slate-200 placeholder:text-slate-400">
                         </div>
-
-
-                        <button @click="toggleDark" class="w-10 h-10
-
-rounded-full glass flex items-center justify-center text-slate-600
-
-dark:text-yellow-400 hover:bg-slate-100 dark:hover:bg-slate-800
-
-transition shadow-sm shrink-0 border border-transparent
-
-hover:border-slate-200 dark:hover:border-slate-700">
-
+                        <button @click="toggleDark" class="w-10 h-10 rounded-full glass flex items-center justify-center text-slate-600 dark:text-yellow-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition shadow-sm shrink-0 border border-transparent hover:border-slate-200 dark:hover:border-slate-700">
                             <i :class="isDark ? 'ri-sun-line' : 'ri-moon-line'"></i>
-
                         </button>
-
                     </div>
-
                 </div>
-
             </div>
-
-
-            <div v-if="currentView === 'detail'" class="h-0.5
-
-bg-gradient-to-r from-primary to-secondary transition-all duration-100
-
-ease-out shadow-[0_0_10px_rgba(99,102,241,0.5)]" :style="{ width:
-
-scrollProgress + '%' }"></div>
-
+            <div v-if="currentView === 'detail'" class="h-0.5 bg-gradient-to-r from-primary to-secondary transition-all duration-100 ease-out shadow-[0_0_10px_rgba(99,102,241,0.5)]" :style="{ width: scrollProgress + '%' }"></div>
         </nav>
 
-
         <main class="relative z-10 flex-grow">
-
             <transition name="fade" mode="out-in">
-
                 
-
                 <div v-if="currentView === 'list'" key="list" class="animate-fade-in-up">
-
-
-                    <div class="relative w-full h-[450px] flex
-
-items-center justify-center bg-cover bg-center overflow-hidden"
-
-style="background-image:
-
-url('https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=2340&auto=format&fit=crop');">
-
+                    <div class="relative w-full h-[450px] flex items-center justify-center bg-cover bg-center overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=2340&auto=format&fit=crop');">
                         <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-[3px]"></div>
-
-
-                        <div class="absolute bottom-0 left-0 right-0
-
-h-24 bg-gradient-to-t from-gray-50 dark:from-slate-900
-
-to-transparent"></div>
-
+                        <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-50 dark:from-slate-900 to-transparent"></div>
                         <div class="relative z-10 text-center px-4 max-w-4xl mt-[-20px]">
-
-
-                            <h1 class="text-4xl md:text-6xl
-
-font-extrabold text-white mb-6 drop-shadow-2xl tracking-tight
-
-leading-tight">
-
-
-                                探索 <span class="text-transparent
-
-bg-clip-text bg-gradient-to-r from-primary via-purple-400
-
-to-secondary">{{ displayedText }}</span><span
-
-class="typewriter text-white ml-1"></span>
-
+                            <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 drop-shadow-2xl tracking-tight leading-tight">
+                                探索 <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-secondary">{{ displayedText }}</span><span class="typewriter text-white ml-1"></span>
                             </h1>
-
-
-                            <p class="text-lg md:text-xl
-
-text-gray-100 mb-8 max-w-2xl mx-auto leading-relaxed
-
-font-light">在这里，我分享关于 A股量化交易、Python 脚本以及数字游民的实战复盘。</p>
-
+                            <p class="text-lg md:text-xl text-gray-100 mb-8 max-w-2xl mx-auto leading-relaxed font-light">在这里，我分享关于 A股量化交易、Python 脚本以及数字游民的实战复盘。</p>
                             <div class="flex justify-center gap-4">
-
-
-                                <button @click="scrollToContent"
-
-class="px-8 py-3 rounded-full bg-white/90 text-slate-900 font-bold
-
-hover:bg-white hover:scale-105 transition
-
-shadow-[0_0_20px_rgba(255,255,255,0.3)] flex items-center gap-2
-
-backdrop-blur-sm">
-
+                                <button @click="scrollToContent" class="px-8 py-3 rounded-full bg-white/90 text-slate-900 font-bold hover:bg-white hover:scale-105 transition shadow-[0_0_20px_rgba(255,255,255,0.3)] flex items-center gap-2 backdrop-blur-sm">
                                     开始阅读 <i class="ri-arrow-down-line animate-bounce-slow"></i>
-
                                 </button>
-
                             </div>
-
                         </div>
-
                     </div>
-
 
                     <div id="content-area" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-
                         
-
                         <div v-if="initLoading" class="grid grid-cols-1 md:grid-cols-2 gap-8 animate-pulse">
-
                             <div v-for="i in 4" :key="i" class="glass rounded-3xl p-6 h-96">
-
                                 <div class="h-48 bg-slate-200 dark:bg-slate-700/50 rounded-2xl mb-6"></div>
-
                                 <div class="h-6 bg-slate-200 dark:bg-slate-700/50 rounded w-3/4 mb-4"></div>
-
                                 <div class="h-4 bg-slate-200 dark:bg-slate-700/50 rounded w-full mb-2"></div>
-
                                 <div class="h-4 bg-slate-200 dark:bg-slate-700/50 rounded w-2/3"></div>
-
                             </div>
-
                         </div>
-
 
                         <div v-else class="flex flex-col lg:flex-row gap-12">
-
                             <div class="flex-1">
-
                                 <div class="flex flex-wrap gap-2 mb-10">
-
-
-                                    <button
-
-@click="changeCategory('')" :class="['px-5 py-2 rounded-xl text-sm
-
-font-bold transition border', !filterCategory ? 'bg-slate-800 text-white
-
-border-slate-800 shadow-lg shadow-slate-500/20 dark:bg-white
-
-dark:text-slate-900' : 'bg-white text-slate-600 border-gray-200
-
-hover:border-primary hover:text-primary dark:bg-slate-800
-
-dark:border-slate-700 dark:text-slate-400
-
-hover:shadow-md']">全部</button>
-
-
-                                    <button v-for="cat in
-
-categories" :key="cat" @click="changeCategory(cat)" :class="['px-5 py-2
-
-rounded-xl text-sm font-bold transition border', filterCategory === cat ?
-
-'bg-slate-800 text-white border-slate-800 shadow-lg shadow-slate-500/20
-
-dark:bg-white dark:text-slate-900' : 'bg-white text-slate-600
-
-border-gray-200 hover:border-primary hover:text-primary
-
-dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400
-
-hover:shadow-md']">{{ cat }}</button>
-
+                                    <button @click="changeCategory('')" :class="['px-5 py-2 rounded-xl text-sm font-bold transition border', !filterCategory ? 'bg-slate-800 text-white border-slate-800 shadow-lg shadow-slate-500/20 dark:bg-white dark:text-slate-900' : 'bg-white text-slate-600 border-gray-200 hover:border-primary hover:text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 hover:shadow-md']">全部</button>
+                                    <button v-for="cat in categories" :key="cat" @click="changeCategory(cat)" :class="['px-5 py-2 rounded-xl text-sm font-bold transition border', filterCategory === cat ? 'bg-slate-800 text-white border-slate-800 shadow-lg shadow-slate-500/20 dark:bg-white dark:text-slate-900' : 'bg-white text-slate-600 border-gray-200 hover:border-primary hover:text-primary dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400 hover:shadow-md']">{{ cat }}</button>
                                 </div>
 
-
-
-                                <div v-if="pinnedPosts.length > 0
-
-&& !searchQuery && !filterCategory &&
-
-currentPage === 1" class="mb-16">
-
-
-                                    <h3 class="flex items-center
-
-gap-2 text-2xl font-extrabold mb-6 text-slate-800 dark:text-white
-
-tracking-tight">
-
+                                <div v-if="pinnedPosts.length > 0 && !searchQuery && !filterCategory && currentPage === 1" class="mb-16">
+                                    <h3 class="flex items-center gap-2 text-2xl font-extrabold mb-6 text-slate-800 dark:text-white tracking-tight">
                                         <i class="ri-pushpin-2-fill text-secondary"></i> 精选置顶
-
                                     </h3>
-
                                     <div class="grid grid-cols-1 gap-8">
-
-
-                                        <article v-for="post in
-
-pinnedPosts" :key="post.file" @click="loadPost(post)" class="group
-
-cursor-pointer relative">
-
-
-                                            <div class="glass
-
-rounded-3xl p-6 md:p-8 card-hover border-l-4 border-secondary/50 flex
-
-flex-col md:flex-row gap-8 items-center">
-
-
-                                                <div class="w-full
-
-md:w-56 h-36 rounded-2xl overflow-hidden flex-shrink-0 bg-gray-200
-
-shadow-inner">
-
-
-                                                    <img
-
-:src="post.image" loading="lazy" class="w-full h-full object-cover
-
-group-hover:scale-110 transition duration-700"
-
-onerror="this.src='https://picsum.photos/seed/error/800/500'">
-
+                                        <article v-for="post in pinnedPosts" :key="post.file" @click="loadPost(post)" class="group cursor-pointer relative">
+                                            <div class="glass rounded-3xl p-6 md:p-8 card-hover border-l-4 border-secondary/50 flex flex-col md:flex-row gap-8 items-center">
+                                                <div class="w-full md:w-56 h-36 rounded-2xl overflow-hidden flex-shrink-0 bg-gray-200 shadow-inner">
+                                                    <img :src="post.image" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition duration-700" onerror="this.src='https://picsum.photos/seed/error/800/500'">
                                                 </div>
-
                                                 <div class="flex-1 text-center md:text-left">
-
-
-                                                    <div class="flex
-
-items-center justify-center md:justify-start gap-3 mb-3">
-
-
-                                                        <span
-
-class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-secondary/10
-
-text-secondary border border-secondary/20">TOP</span>
-
-
-                                                        <span
-
-class="text-xs text-slate-400 font-medium">{{ post.date
-
-}}</span>
-
-
-                                                        <span
-
-class="text-xs text-slate-400 flex items-center gap-1"><i
-
-class="ri-time-line"></i> {{ post.readTime }} min</span>
-
+                                                    <div class="flex items-center justify-center md:justify-start gap-3 mb-3">
+                                                        <span class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-secondary/10 text-secondary border border-secondary/20">TOP</span>
+                                                        <span class="text-xs text-slate-400 font-medium">{{ post.date }}</span>
+                                                        <span class="text-xs text-slate-400 flex items-center gap-1"><i class="ri-time-line"></i> {{ post.readTime }} min</span>
                                                     </div>
-
-
-                                                    <h3
-
-class="text-2xl font-bold mb-3 text-slate-800 dark:text-slate-100
-
-group-hover:text-transparent group-hover:bg-clip-text
-
-group-hover:bg-gradient-to-r group-hover:from-primary
-
-group-hover:to-secondary transition-all">{{ post.title }}</h3>
-
-
-                                                    <p
-
-class="text-slate-500 dark:text-slate-400 line-clamp-2
-
-leading-relaxed">{{ post.excerpt }}</p>
-
+                                                    <h3 class="text-2xl font-bold mb-3 text-slate-800 dark:text-slate-100 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-secondary transition-all">{{ post.title }}</h3>
+                                                    <p class="text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">{{ post.excerpt }}</p>
                                                 </div>
-
                                             </div>
-
                                         </article>
-
                                     </div>
-
                                 </div>
-
 
                                 <div id="regular-list-top">
-
-
-                                    <h3 class="flex items-center
-
-gap-2 text-2xl font-extrabold mb-6 text-slate-800 dark:text-white
-
-tracking-tight">
-
+                                    <h3 class="flex items-center gap-2 text-2xl font-extrabold mb-6 text-slate-800 dark:text-white tracking-tight">
                                         <i class="ri-article-line text-primary"></i> 最新发布
-
                                     </h3>
-
                                     <div v-if="paginatedPosts.length > 0">
-
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-
-
-                                            <article v-for="post in
-
-paginatedPosts" :key="post.file" @click="loadPost(post)" class="group
-
-cursor-pointer">
-
-
-                                                <div class="glass
-
-rounded-3xl overflow-hidden card-hover h-full flex flex-col">
-
+                                            <article v-for="post in paginatedPosts" :key="post.file" @click="loadPost(post)" class="group cursor-pointer">
+                                                <div class="glass rounded-3xl overflow-hidden card-hover h-full flex flex-col">
                                                     <div class="h-48 overflow-hidden relative bg-gray-200">
-
-
-                                                        <img
-
-:src="post.image" loading="lazy" class="w-full h-full object-cover
-
-transform group-hover:scale-110 transition duration-700"
-
-onerror="this.src='https://picsum.photos/seed/error/800/500'">
-
+                                                        <img :src="post.image" loading="lazy" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700" onerror="this.src='https://picsum.photos/seed/error/800/500'">
                                                         <div class="absolute top-4 right-4">
-
-
-                                                            <span
-
-class="px-3 py-1 rounded-lg text-xs font-bold bg-white/90
-
-dark:bg-slate-900/90 text-slate-800 dark:text-slate-200 shadow-sm
-
-backdrop-blur-sm">{{ post.category }}</span>
-
+                                                            <span class="px-3 py-1 rounded-lg text-xs font-bold bg-white/90 dark:bg-slate-900/90 text-slate-800 dark:text-slate-200 shadow-sm backdrop-blur-sm">{{ post.category }}</span>
                                                         </div>
-
                                                     </div>
-
                                                     <div class="p-6 flex-1 flex flex-col">
-
                                                         <div class="flex justify-between items-center mb-3">
-
-
-                                                            <div
-
-class="text-xs font-medium text-slate-400">{{ post.date
-
-}}</div>
-
-
-                                                            <div
-
-class="text-xs text-slate-400 flex items-center gap-1"><i
-
-class="ri-time-line"></i> {{ post.readTime }} min</div>
-
+                                                            <div class="text-xs font-medium text-slate-400">{{ post.date }}</div>
+                                                            <div class="text-xs text-slate-400 flex items-center gap-1"><i class="ri-time-line"></i> {{ post.readTime }} min</div>
                                                         </div>
-
-
-                                                        <h3
-
-class="text-lg font-bold mb-3 text-slate-800 dark:text-slate-100
-
-group-hover:text-primary transition line-clamp-2 leading-snug">{{
-
-post.title }}</h3>
-
-
-                                                        <p
-
-class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-4
-
-flex-1 leading-relaxed">{{ post.excerpt }}</p>
-
+                                                        <h3 class="text-lg font-bold mb-3 text-slate-800 dark:text-slate-100 group-hover:text-primary transition line-clamp-2 leading-snug">{{ post.title }}</h3>
+                                                        <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-4 flex-1 leading-relaxed">{{ post.excerpt }}</p>
                                                     </div>
-
                                                 </div>
-
                                             </article>
-
                                         </div>
-
-
-                                        <div v-if="totalPages >
-
-1" class="flex flex-wrap justify-center items-center gap-4 py-8">
-
-
-                                            <button
-
-@click="changePage(currentPage - 1)" :disabled="currentPage === 1"
-
-class="px-5 py-2.5 rounded-xl glass font-bold disabled:opacity-50
-
-hover:bg-white dark:hover:bg-slate-700 transition flex items-center
-
-gap-1 hover:shadow-lg"><i class="ri-arrow-left-line"></i>
-
-<span class="hidden sm:inline">上一页</span></button>
-
-
-                                            <span class="font-bold
-
-text-slate-500 dark:text-slate-400 px-2">{{ currentPage }} / {{
-
-totalPages }}</span>
-
-
-                                            <button
-
-@click="changePage(currentPage + 1)" :disabled="currentPage ===
-
-totalPages" class="px-5 py-2.5 rounded-xl glass font-bold
-
-disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition
-
-flex items-center gap-1 hover:shadow-lg"><span class="hidden
-
-sm:inline">下一页</span> <i
-
-class="ri-arrow-right-line"></i></button>
-
+                                        <div v-if="totalPages > 1" class="flex flex-wrap justify-center items-center gap-4 py-8">
+                                            <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" class="px-5 py-2.5 rounded-xl glass font-bold disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition flex items-center gap-1 hover:shadow-lg"><i class="ri-arrow-left-line"></i> <span class="hidden sm:inline">上一页</span></button>
+                                            <span class="font-bold text-slate-500 dark:text-slate-400 px-2">{{ currentPage }} / {{ totalPages }}</span>
+                                            <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages" class="px-5 py-2.5 rounded-xl glass font-bold disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition flex items-center gap-1 hover:shadow-lg"><span class="hidden sm:inline">下一页</span> <i class="ri-arrow-right-line"></i></button>
                                         </div>
-
                                     </div>
-
-
-                                    <div v-else class="text-center
-
-py-20 bg-white/50 dark:bg-slate-800/50 rounded-3xl border border-dashed
-
-border-slate-300 dark:border-slate-700">
-
+                                    <div v-else class="text-center py-20 bg-white/50 dark:bg-slate-800/50 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700">
                                         <div class="text-5xl mb-4 opacity-50">🛸</div>
-
                                         <p class="text-slate-500 font-medium">暂无相关内容</p>
-
                                     </div>
-
                                 </div>
-
                             </div>
-
 
                             <div class="w-full lg:w-80 flex-shrink-0">
-
                                 <div class="sticky top-28 space-y-8">
-
                                     <div class="glass rounded-3xl p-6 shadow-xl relative overflow-hidden">
-
-
-                                        <div class="absolute top-0
-
-right-0 -mr-4 -mt-4 w-24 h-24 bg-primary/10 rounded-full
-
-blur-2xl"></div>
-
-
-                                        <h3 class="font-bold text-lg
-
-mb-6 text-slate-800 dark:text-white flex items-center gap-2"><i
-
-class="ri-contacts-book-2-fill text-primary"></i>
-
-合作联系</h3>
-
+                                        <div class="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
+                                        <h3 class="font-bold text-lg mb-6 text-slate-800 dark:text-white flex items-center gap-2"><i class="ri-contacts-book-2-fill text-primary"></i> 合作联系</h3>
                                         <div class="space-y-4">
-
-
-                                            <a
-
-href="mailto:tmrmwbm@gmail.com" class="flex items-center gap-4 p-3
-
-rounded-2xl bg-white/50 dark:bg-slate-800/50 hover:bg-primary
-
-hover:text-white transition group border border-transparent
-
-hover:border-primary/20 hover:shadow-lg hover:-translate-y-0.5">
-
-
-                                                <div class="w-10
-
-h-10 rounded-full bg-primary/10 flex items-center justify-center
-
-text-primary group-hover:bg-white/20 group-hover:text-white"><i
-
-class="ri-mail-send-line text-xl"></i></div>
-
+                                            <a href="mailto:tmrmwbm@gmail.com" class="flex items-center gap-4 p-3 rounded-2xl bg-white/50 dark:bg-slate-800/50 hover:bg-primary hover:text-white transition group border border-transparent hover:border-primary/20 hover:shadow-lg hover:-translate-y-0.5">
+                                                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-white/20 group-hover:text-white"><i class="ri-mail-send-line text-xl"></i></div>
                                                 <span class="text-sm font-bold">Email Me</span>
-
                                             </a>
-
-
-                                            <a
-
-href="https://x.com/tmrmwbm" target="_blank" class="flex items-center
-
-gap-4 p-3 rounded-2xl bg-white/50 dark:bg-slate-800/50 hover:bg-black
-
-hover:text-white transition group border border-transparent
-
-hover:border-black/20 hover:shadow-lg hover:-translate-y-0.5">
-
-
-                                                <div class="w-10
-
-h-10 rounded-full bg-black/5 flex items-center justify-center
-
-text-slate-700 dark:text-slate-300 group-hover:bg-white/20
-
-group-hover:text-white"><i class="ri-twitter-x-line
-
-text-xl"></i></div>
-
+                                            <a href="https://x.com/tmrmwbm" target="_blank" class="flex items-center gap-4 p-3 rounded-2xl bg-white/50 dark:bg-slate-800/50 hover:bg-black hover:text-white transition group border border-transparent hover:border-black/20 hover:shadow-lg hover:-translate-y-0.5">
+                                                <div class="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center text-slate-700 dark:text-slate-300 group-hover:bg-white/20 group-hover:text-white"><i class="ri-twitter-x-line text-xl"></i></div>
                                                 <span class="text-sm font-bold">Follow X</span>
-
                                             </a>
-
-
-                                            <a
-
-href="https://t.me/MRMWBM" target="_blank" class="flex items-center
-
-gap-4 p-3 rounded-2xl bg-white/50 dark:bg-slate-800/50
-
-hover:bg-[#229ED9] hover:text-white transition group border
-
-border-transparent hover:border-[#229ED9]/20 hover:shadow-lg
-
-hover:-translate-y-0.5">
-
-
-                                                <div class="w-10
-
-h-10 rounded-full bg-[#229ED9]/10 flex items-center justify-center
-
-text-[#229ED9] group-hover:bg-white/20 group-hover:text-white"><i
-
-class="ri-telegram-line text-xl"></i></div>
-
+                                            <a href="https://t.me/MRMWBM" target="_blank" class="flex items-center gap-4 p-3 rounded-2xl bg-white/50 dark:bg-slate-800/50 hover:bg-[#229ED9] hover:text-white transition group border border-transparent hover:border-[#229ED9]/20 hover:shadow-lg hover:-translate-y-0.5">
+                                                <div class="w-10 h-10 rounded-full bg-[#229ED9]/10 flex items-center justify-center text-[#229ED9] group-hover:bg-white/20 group-hover:text-white"><i class="ri-telegram-line text-xl"></i></div>
                                                 <span class="text-sm font-bold">Telegram</span>
-
                                             </a>
-
                                         </div>
-
                                     </div>
-
                                 </div>
-
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
-
-
-
-                <div v-else key="detail" class="animate-fade-in-up
-
-max-w-7xl mx-auto px-4 py-12 flex flex-col lg:flex-row gap-12">
-
-                    <div class="flex-1 min-w-0">
-
-
-                        <button @click="goHome" class="mb-8 px-5
-
-py-2 rounded-full glass text-sm font-bold text-slate-600
-
-hover:text-primary transition flex items-center gap-2
-
-dark:text-slate-300 hover:pl-3"><i
-
-class="ri-arrow-left-line"></i> 返回首页 <span class="opacity-50
-
-text-xs ml-1">(ESC)</span></button>
-
-
-
-                        <div v-if="errorMsg" class="text-center
-
-py-20 bg-red-50 dark:bg-red-900/20 rounded-3xl border border-red-200
-
-dark:border-red-800">
-
-                            <i class="ri-error-warning-line text-4xl text-red-500 mb-4 inline-block"></i>
-
-                            <h2 class="text-xl font-bold text-slate-800 dark:text-white mb-2">无法加载文章</h2>
-
-                            <p class="text-slate-500 dark:text-slate-400 mb-6">{{ errorMsg }}</p>
-
-
-                            <button @click="goHome" class="px-6 py-2
-
-bg-slate-800 text-white rounded-lg hover:bg-primary
-
-transition">返回首页</button>
-
-                        </div>
-
-
-
-                        <article v-else class="glass
-
-rounded-[2rem] p-8 md:p-14 shadow-2xl relative overflow-hidden">
-
-
-                            <div class="absolute top-0 left-0 w-full
-
-h-2 bg-gradient-to-r from-primary via-secondary to-primary
-
-opacity-50"></div>
-
-                            <div class="text-center mb-12 border-b border-gray-100 dark:border-slate-700/50 pb-12">
-
-
-                                <span class="inline-block px-4
-
-py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-6
-
-tracking-wide uppercase">{{ activePost.category }}</span>
-
-
-                                <h1 class="text-3xl md:text-5xl
-
-font-extrabold text-slate-800 dark:text-white mb-8 leading-tight
-
-font-sans">{{ activePost.title }}</h1>
-
-
-                                <div class="flex flex-wrap
-
-justify-center items-center gap-4 text-sm text-slate-500
-
-dark:text-slate-400 font-medium">
-
-
-                                    <span class="flex items-center
-
-gap-1 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full"><i
-
-class="ri-calendar-line"></i> {{ activePost.date
-
-}}</span>
-
-
-                                    <span class="flex items-center
-
-gap-1 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full"><i
-
-class="ri-time-line"></i> 预计阅读 {{ activePost.readTime }}
-
-分钟</span>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="prose prose-lg max-w-none
-
-prose-slate dark:prose-invert prose-img:rounded-2xl
-
-prose-headings:font-sans prose-headings:font-bold prose-a:text-primary
-
-hover:prose-a:text-secondary transition-all font-serif leading-loose"
-
-v-html="compiledMarkdown"></div>
-
-                            
-
-                            <div class="mt-20 pt-10 border-t border-gray-100 dark:border-slate-700 text-center">
-
-                                <p class="text-slate-500 mb-8 font-medium">如果这篇文章对你有帮助，不妨请我喝杯咖啡 ☕️</p>
-
-
-                                <button @click="showDonate = true"
-
-class="px-10 py-4 rounded-full bg-gradient-to-r from-yellow-400
-
-to-orange-500 text-white font-bold shadow-xl shadow-orange-500/30
-
-hover:scale-105 hover:shadow-orange-500/50 transition flex items-center
-
-gap-2 mx-auto"><i class="ri-cup-line text-xl"></i>
-
-赞赏支持</button>
-
-                            </div>
-
-                        </article>
-
-                        
-
-                        <div v-if="relatedPosts.length > 0 && !errorMsg" class="mt-16">
-
-
-                            <h3 class="text-2xl font-bold
-
-text-slate-800 dark:text-white mb-8 flex items-center gap-2"><i
-
-class="ri-lightbulb-flash-line text-yellow-500"></i>
-
-猜你喜欢</h3>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-
-                                <article v-for="post in
-
-relatedPosts" :key="post.file" @click="loadPost(post)" class="glass
-
-rounded-2xl p-5 cursor-pointer hover:bg-white/80
-
-dark:hover:bg-slate-800/80 transition flex gap-5 items-center group
-
-border border-transparent hover:border-primary/20">
-
-
-                                    <div class="w-28 h-24
-
-rounded-xl bg-gray-200 overflow-hidden shrink-0 shadow-sm">
-
-
-                                        <img :src="post.image"
-
-class="w-full h-full object-cover group-hover:scale-110 transition
-
-duration-500">
-
-                                    </div>
-
-                                    <div class="flex-1 min-w-0">
-
-
-                                        <h4 class="font-bold
-
-text-slate-800 dark:text-white truncate group-hover:text-primary
-
-transition mb-2 text-lg">{{ post.title }}</h4>
-
-
-                                        <p class="text-xs
-
-text-slate-500 mt-1 line-clamp-2 leading-relaxed">{{ post.excerpt
-
-}}</p>
-
-                                    </div>
-
-                                </article>
-
-                            </div>
-
-                        </div>
-
+<div v-else key="detail" class="animate-fade-in-up max-w-4xl mx-auto px-4 py-12">
+    <div>
+        <button @click="goHome" class="mb-8 px-5 py-2 rounded-full glass text-sm font-bold text-slate-600 hover:text-primary transition flex items-center gap-2 dark:text-slate-300 hover:pl-3"><i class="ri-arrow-left-line"></i> 返回首页 <span class="opacity-50 text-xs ml-1">(ESC)</span></button>
+
+        <div v-if="errorMsg" class="text-center py-20 bg-red-50 dark:bg-red-900/20 rounded-3xl border border-red-200 dark:border-red-800">
+            <i class="ri-error-warning-line text-4xl text-red-500 mb-4 inline-block"></i>
+            <h2 class="text-xl font-bold text-slate-800 dark:text-white mb-2">无法加载文章</h2>
+            <p class="text-slate-500 dark:text-slate-400 mb-6">{{ errorMsg }}</p>
+            <button @click="goHome" class="px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-primary transition">返回首页</button>
+        </div>
+
+        <article v-else class="glass rounded-[2rem] p-8 md:p-14 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-secondary to-primary opacity-50"></div>
+            <div class="text-center mb-12 border-b border-gray-100 dark:border-slate-700/50 pb-12">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-6 tracking-wide uppercase">{{ activePost.category }}</span>
+                <h1 class="text-3xl md:text-5xl font-extrabold text-slate-800 dark:text-white mb-8 leading-tight font-sans">{{ activePost.title }}</h1>
+                <div class="flex flex-wrap justify-center items-center gap-4 text-sm text-slate-500 dark:text-slate-400 font-medium">
+                    <span class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full"><i class="ri-calendar-line"></i> {{ activePost.date }}</span>
+                    <span class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full"><i class="ri-time-line"></i> 预计阅读 {{ activePost.readTime }} 分钟</span>
+                </div>
+            </div>
+            <div class="prose prose-lg max-w-none prose-slate dark:prose-invert prose-img:rounded-2xl prose-headings:font-sans prose-headings:font-bold prose-a:text-primary hover:prose-a:text-secondary transition-all font-serif leading-loose" v-html="compiledMarkdown"></div>
+            
+            <div class="mt-20 pt-10 border-t border-gray-100 dark:border-slate-700 text-center">
+                <p class="text-slate-500 mb-8 font-medium">如果这篇文章对你有帮助，不妨请我喝杯咖啡 ☕️</p>
+                <button @click="showDonate = true" class="px-10 py-4 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold shadow-xl shadow-orange-500/30 hover:scale-105 hover:shadow-orange-500/50 transition flex items-center gap-2 mx-auto"><i class="ri-cup-line text-xl"></i> 赞赏支持</button>
+            </div>
+        </article>
+        
+        <div v-if="relatedPosts.length > 0 && !errorMsg" class="mt-16">
+            <h3 class="text-2xl font-bold text-slate-800 dark:text-white mb-8 flex items-center gap-2"><i class="ri-lightbulb-flash-line text-yellow-500"></i> 猜你喜欢</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <article v-for="post in relatedPosts" :key="post.file" @click="loadPost(post)" class="glass rounded-2xl p-5 cursor-pointer hover:bg-white/80 dark:hover:bg-slate-800/80 transition flex gap-5 items-center group border border-transparent hover:border-primary/20">
+                    <div class="w-28 h-24 rounded-xl bg-gray-200 overflow-hidden shrink-0 shadow-sm">
+                        <img :src="post.image" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
                     </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-slate-800 dark:text-white truncate group-hover:text-primary transition mb-2 text-lg">{{ post.title }}</h4>
+                        <p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">{{ post.excerpt }}</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</div>
 
+                        <article v-else class="glass rounded-[2rem] p-8 md:p-14 shadow-2xl relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-secondary to-primary opacity-50"></div>
+                            <div class="text-center mb-12 border-b border-gray-100 dark:border-slate-700/50 pb-12">
+                                <span class="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-6 tracking-wide uppercase">{{ activePost.category }}</span>
+                                <h1 class="text-3xl md:text-5xl font-extrabold text-slate-800 dark:text-white mb-8 leading-tight font-sans">{{ activePost.title }}</h1>
+                                <div class="flex flex-wrap justify-center items-center gap-4 text-sm text-slate-500 dark:text-slate-400 font-medium">
+                                    <span class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full"><i class="ri-calendar-line"></i> {{ activePost.date }}</span>
+                                    <span class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full"><i class="ri-time-line"></i> 预计阅读 {{ activePost.readTime }} 分钟</span>
+                                </div>
+                            </div>
+                            <div class="prose prose-lg max-w-none prose-slate dark:prose-invert prose-img:rounded-2xl prose-headings:font-sans prose-headings:font-bold prose-a:text-primary hover:prose-a:text-secondary transition-all font-serif leading-loose" v-html="compiledMarkdown"></div>
+                            
+                            <div class="mt-20 pt-10 border-t border-gray-100 dark:border-slate-700 text-center">
+                                <p class="text-slate-500 mb-8 font-medium">如果这篇文章对你有帮助，不妨请我喝杯咖啡 ☕️</p>
+                                <button @click="showDonate = true" class="px-10 py-4 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold shadow-xl shadow-orange-500/30 hover:scale-105 hover:shadow-orange-500/50 transition flex items-center gap-2 mx-auto"><i class="ri-cup-line text-xl"></i> 赞赏支持</button>
+                            </div>
+                        </article>
+                        
+                        <div v-if="relatedPosts.length > 0 && !errorMsg" class="mt-16">
+                            <h3 class="text-2xl font-bold text-slate-800 dark:text-white mb-8 flex items-center gap-2"><i class="ri-lightbulb-flash-line text-yellow-500"></i> 猜你喜欢</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <article v-for="post in relatedPosts" :key="post.file" @click="loadPost(post)" class="glass rounded-2xl p-5 cursor-pointer hover:bg-white/80 dark:hover:bg-slate-800/80 transition flex gap-5 items-center group border border-transparent hover:border-primary/20">
+                                    <div class="w-28 h-24 rounded-xl bg-gray-200 overflow-hidden shrink-0 shadow-sm">
+                                        <img :src="post.image" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="font-bold text-slate-800 dark:text-white truncate group-hover:text-primary transition mb-2 text-lg">{{ post.title }}</h4>
+                                        <p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">{{ post.excerpt }}</p>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
 
                     <div v-if="!errorMsg" class="hidden lg:block w-72 shrink-0">
-
                         <div class="sticky top-28">
-
                             <div class="glass rounded-3xl p-6 shadow-sm border-l-4 border-primary/20">
-
-
-                                <h3 class="font-bold text-sm
-
-text-slate-400 uppercase mb-6 tracking-widest border-b border-gray-100
-
-dark:border-slate-700 pb-2">目录导航</h3>
-
-
-                                <ul class="space-y-3 text-sm
-
-text-slate-600 dark:text-slate-400 max-h-[70vh] overflow-y-auto
-
-no-scrollbar pr-2">
-
-
-                                    <li v-for="item in toc"
-
-:key="item.id" :class="['cursor-pointer transition pl-3 py-1
-
-rounded-r-lg border-l-2 border-transparent truncate hover:bg-slate-50
-
-dark:hover:bg-slate-800', item.indent === 3 ? 'ml-4 text-xs' :
-
-'font-medium', activeHeader === item.id ? 'toc-active text-primary
-
-bg-primary/5' : 'hover:border-slate-300']"
-
-@click="scrollToHeader(item.id)">{{ item.text }}</li>
-
+                                <h3 class="font-bold text-sm text-slate-400 uppercase mb-6 tracking-widest border-b border-gray-100 dark:border-slate-700 pb-2">目录导航</h3>
+                                <ul class="space-y-3 text-sm text-slate-600 dark:text-slate-400 max-h-[70vh] overflow-y-auto no-scrollbar pr-2">
+                                    <li v-for="item in toc" :key="item.id" :class="['cursor-pointer transition pl-3 py-1 rounded-r-lg border-l-2 border-transparent truncate hover:bg-slate-50 dark:hover:bg-slate-800', item.indent === 3 ? 'ml-4 text-xs' : 'font-medium', activeHeader === item.id ? 'toc-active text-primary bg-primary/5' : 'hover:border-slate-300']" @click="scrollToHeader(item.id)">{{ item.text }}</li>
                                 </ul>
-
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </transition>
-
         </main>
-
         
-
-
-        <footer class="py-12 text-center text-slate-400 text-sm
-
-border-t border-gray-100 dark:border-slate-800 mt-20 relative z-10
-
-glass">
-
+        <footer class="py-12 text-center text-slate-400 text-sm border-t border-gray-100 dark:border-slate-800 mt-20 relative z-10 glass">
             <p>© <span id="year"></span> Soft Wealth. All rights reserved.</p>
-
         </footer>
-
         <script>document.getElementById('year').innerText = new Date().getFullYear();</script>
 
-
-
-        <div id="lightbox" class="fixed inset-0 z-[100]
-
-bg-slate-900/95 hidden flex items-center justify-center cursor-zoom-out
-
-backdrop-blur-md p-4" onclick="this.classList.add('hidden')">
-
-
-            <img id="lightbox-img" class="max-w-full max-h-full
-
-object-contain rounded-lg shadow-2xl transform transition-transform
-
-duration-300 scale-100 ring-1 ring-white/10">
-
+        <div id="lightbox" class="fixed inset-0 z-[100] bg-slate-900/95 hidden flex items-center justify-center cursor-zoom-out backdrop-blur-md p-4" onclick="this.classList.add('hidden')">
+            <img id="lightbox-img" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl transform transition-transform duration-300 scale-100 ring-1 ring-white/10">
         </div>
 
-
-
-        <div v-if="showDonate" class="fixed inset-0 z-[100]
-
-bg-slate-900/60 flex items-center justify-center backdrop-blur-md p-4
-
-animate-fade-in" @click.self="showDonate = false">
-
-
-            <div class="glass bg-white dark:bg-slate-800 p-8
-
-rounded-[2rem] shadow-2xl max-w-sm w-full text-center relative border
-
-border-white/20">
-
-
-                <button @click="showDonate = false" class="absolute
-
-top-5 right-5 text-slate-400 hover:text-slate-600
-
-dark:hover:text-slate-200 transition"><i
-
-class="ri-close-circle-fill text-3xl"></i></button>
-
-
-                <div class="w-16 h-16 bg-yellow-100 text-yellow-600
-
-rounded-full flex items-center justify-center mx-auto mb-4
-
-text-3xl">☕️</div>
-
+        <div v-if="showDonate" class="fixed inset-0 z-[100] bg-slate-900/60 flex items-center justify-center backdrop-blur-md p-4 animate-fade-in" @click.self="showDonate = false">
+            <div class="glass bg-white dark:bg-slate-800 p-8 rounded-[2rem] shadow-2xl max-w-sm w-full text-center relative border border-white/20">
+                <button @click="showDonate = false" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"><i class="ri-close-circle-fill text-3xl"></i></button>
+                <div class="w-16 h-16 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">☕️</div>
                 <h3 class="text-2xl font-bold mb-2 text-slate-800 dark:text-white">感谢支持</h3>
-
                 <p class="text-slate-500 text-sm mb-8">您的支持是我持续更新的动力</p>
-
-
-                <div class="w-56 h-56 bg-white mx-auto rounded-2xl
-
-overflow-hidden mb-6 flex items-center justify-center border-2
-
-border-dashed border-slate-200 p-2">
-
-
-                    <div class="w-full h-full bg-slate-100
-
-rounded-xl flex flex-col items-center justify-center text-slate-400">
-
+                <div class="w-56 h-56 bg-white mx-auto rounded-2xl overflow-hidden mb-6 flex items-center justify-center border-2 border-dashed border-slate-200 p-2">
+                    <div class="w-full h-full bg-slate-100 rounded-xl flex flex-col items-center justify-center text-slate-400">
                         <i class="ri-qr-code-line text-4xl mb-2"></i>
-
                         <span class="text-xs">此处放收款码</span>
-
                     </div>
-
                 </div>
-
                 <p class="text-xs text-slate-400">Soft Wealth 舒适的搞钱哲学</p>
-
             </div>
-
         </div>
 
-
-
-        <button id="backToTop" class="fixed bottom-8 right-8
-
-bg-slate-800/80 dark:bg-white/80 text-white dark:text-slate-900 w-12
-
-h-12 rounded-full shadow-lg backdrop-blur-md translate-y-20 opacity-0
-
-transition-all duration-500 z-40 flex items-center justify-center
-
-hover:bg-primary hover:text-white hover:scale-110 border
-
-border-white/10" onclick="window.scrollTo({top: 0, behavior:
-
-'smooth'})"><i class="ri-arrow-up-line
-
-text-xl"></i></button>
-
+        <button id="backToTop" class="fixed bottom-8 right-8 bg-slate-800/80 dark:bg-white/80 text-white dark:text-slate-900 w-12 h-12 rounded-full shadow-lg backdrop-blur-md translate-y-20 opacity-0 transition-all duration-500 z-40 flex items-center justify-center hover:bg-primary hover:text-white hover:scale-110 border border-white/10" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"><i class="ri-arrow-up-line text-xl"></i></button>
 
     </div>
 
-
     <script>
-
         const { createApp, ref, computed, onMounted, onUnmounted, nextTick, watch } = Vue;
 
-
         createApp({
-
             setup() {
-
                 const PAGE_SIZE = 12; 
-
                 const currentView = ref('list');
-
                 const posts = ref([]);
-
                 const activePost = ref({});
-
                 const markdownContent = ref('');
-
                 const initLoading = ref(true);
-
                 const searchQuery = ref('');
-
                 const filterCategory = ref('');
-
                 const isDark = ref(false);
-
                 const scrollProgress = ref(0);
-
                 const savedScrollPosition = ref(0);
-
                 const currentPage = ref(1);
-
                 const jumpInput = ref('');
-
                 const errorMsg = ref('');
-
                 const toc = ref([]);
-
                 const activeHeader = ref('');
-
                 const showBanner = ref(true);
-
                 const showDonate = ref(false);
-
                 
-
                 const typewriterTexts = ["自动化", "量化交易", "数字游民", "被动收入"];
-
                 const displayedText = ref('');
-
                 let typeIndex = 0;
-
                 let charIndex = 0;
-
                 let isDeleting = false;
 
-
                 const typeWriter = () => {
-
                     const currentWord = typewriterTexts[typeIndex];
-
                     if (isDeleting) {
-
                         displayedText.value = currentWord.substring(0, charIndex - 1);
-
                         charIndex--;
-
                     } else {
-
                         displayedText.value = currentWord.substring(0, charIndex + 1);
-
                         charIndex++;
-
                     }
-
                     let typeSpeed = isDeleting ? 50 : 150;
-
                     if (!isDeleting && charIndex === currentWord.length) {
-
                         typeSpeed = 2000; 
-
                         isDeleting = true;
-
                     } else if (isDeleting && charIndex === 0) {
-
                         isDeleting = false;
-
                         typeIndex = (typeIndex + 1) % typewriterTexts.length;
-
                         typeSpeed = 500;
-
                     }
-
                     setTimeout(typeWriter, typeSpeed);
-
                 };
-
 
                 const parseFrontMatter = (text, filename) => {
-
                     const regex = /^---\s*\n([\s\S]*?)\n---\s*\n/;
-
                     const match = text.match(regex);
-
-
-                    let metadata = { title: filename.replace('.md',
-
-''), date: '2026-01-01', category: '默认', image:
-
-'https://picsum.photos/seed/default/800/500', pinned: false };
-
+                    let metadata = { title: filename.replace('.md', ''), date: '2026-01-01', category: '默认', image: 'https://picsum.photos/seed/default/800/500', pinned: false };
                     let body = text;
-
                     if (match) {
-
                         const yaml = match[1];
-
                         body = text.replace(match[0], ''); 
-
                         yaml.split('\n').forEach(line => {
-
                             const [key, ...rest] = line.split(':');
-
                             if (key && rest.length) {
-
                                 let value = rest.join(':').trim();
-
                                 if (value === 'true') value = true;
-
                                 if (value === 'false') value = false;
-
                                 metadata[key.trim()] = value;
-
                             }
-
                         });
-
                     }
-
                     const cleanBody = body.replace(/[#*`\[\]()!>]/g, '').replace(/\s+/g, ' ');
-
                     metadata.excerpt = cleanBody.substring(0, 80) + '...';
-
                     metadata.file = 'posts/' + filename;
-
                     metadata.bodyRaw = body; 
-
                     metadata.readTime = Math.ceil(cleanBody.length / 400);
-
                     return metadata;
-
                 };
 
-
                 onMounted(async () => {
-
                     if (localStorage.getItem('hideBanner')) showBanner.value = false;
-
                     typeWriter();
 
-
                     try {
-
                         const res = await fetch('posts.json');
-
                         if (!res.ok) throw new Error("无法读取文章列表");
-
                         const filenames = await res.json();
-
                         const promises = filenames.map(async (filename) => {
-
                             try {
-
                                 const mdRes = await fetch(`posts/${filename}`);
-
                                 if (!mdRes.ok) return null;
-
                                 const text = await mdRes.text();
-
                                 return parseFrontMatter(text, filename);
-
                             } catch (e) { return null; }
-
                         });
-
                         const results = await Promise.all(promises);
-
-
-                        posts.value = results.filter(p => p !==
-
-null).sort((a, b) => new Date(b.date) - new Date(a.date));
-
+                        posts.value = results.filter(p => p !== null).sort((a, b) => new Date(b.date) - new Date(a.date));
                         
-
                         const urlParams = new URLSearchParams(window.location.search);
-
                         const postFile = urlParams.get('p');
-
                         if (postFile) {
-
-
-                            const targetPost = posts.value.find(p =>
-
-p.file === postFile || p.file === decodeURIComponent(postFile));
-
+                            const targetPost = posts.value.find(p => p.file === postFile || p.file === decodeURIComponent(postFile));
                             if (targetPost) loadPost(targetPost);
-
                             else errorMsg.value = "找不到该文章，可能已被删除。";
-
                         }
-
                     } catch (e) { console.error("Error", e); errorMsg.value = "系统初始化失败，请检查网络。"; } 
-
                     finally { initLoading.value = false; }
 
-
                     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-
                         isDark.value = true;
-
                         document.documentElement.classList.add('dark');
-
                     }
-
                     window.addEventListener('scroll', updateProgress);
-
                     window.addEventListener('keydown', (e) => {
-
                         if (e.key === 'Escape' && currentView.value === 'detail') goHome();
-
                     });
-
                 });
-
 
                 onUnmounted(() => window.removeEventListener('scroll', updateProgress));
 
-
                 const closeBanner = () => { showBanner.value = false; localStorage.setItem('hideBanner', 'true'); };
 
-
                 const updateProgress = () => {
-
                     const scrollTop = window.scrollY;
-
                     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-
                     scrollProgress.value = (scrollTop / docHeight) * 100;
-
                     const btn = document.getElementById('backToTop');
-
                     if (btn) {
-
                         if (scrollTop > 300) btn.classList.remove('translate-y-20', 'opacity-0');
-
                         else btn.classList.add('translate-y-20', 'opacity-0');
-
                     }
-
                     if (currentView.value === 'detail' && toc.value.length > 0) {
-
                         for (const item of toc.value) {
-
                             const el = document.getElementById(item.id);
-
                             if (el && el.getBoundingClientRect().top < 150) {
-
                                 activeHeader.value = item.id;
-
                                 break;
-
                             }
-
                         }
-
                     }
-
                 };
 
-
-
-                const toggleDark = () => { isDark.value =
-
-!isDark.value; document.documentElement.classList.toggle('dark',
-
-isDark.value); };
-
-
-                const scrollToContent = () => {
-
-document.getElementById('content-area').scrollIntoView({ behavior:
-
-'smooth' }); };
-
+                const toggleDark = () => { isDark.value = !isDark.value; document.documentElement.classList.toggle('dark', isDark.value); };
+                const scrollToContent = () => { document.getElementById('content-area').scrollIntoView({ behavior: 'smooth' }); };
                 
-
                 const generateTOC = () => {
-
                     toc.value = [];
-
                     const headers = document.querySelectorAll('.prose h2, .prose h3');
-
                     headers.forEach((header, index) => {
-
                         const id = 'header-' + index;
-
                         header.id = id;
-
                         toc.value.push({ id: id, text: header.innerText, indent: parseInt(header.tagName.substring(1)) });
-
                     });
-
                     if (toc.value.length > 0) activeHeader.value = toc.value[0].id;
-
                 };
-
                 
-
                 const scrollToHeader = (id) => {
-
                     const el = document.getElementById(id);
-
                     if (el) {
-
                         const y = el.getBoundingClientRect().top + window.scrollY - 100;
-
                         window.scrollTo({ top: y, behavior: 'smooth' });
-
                     }
-
                 };
-
 
                 const filteredList = computed(() => {
-
                     return posts.value.filter(post => {
-
                         const matchSearch = post.title.toLowerCase().includes(searchQuery.value.toLowerCase());
-
                         const matchCat = filterCategory.value ? post.category === filterCategory.value : true;
-
                         return matchSearch && matchCat;
-
                     });
-
                 });
-
                 
-
                 const relatedPosts = computed(() => {
-
                     if (!activePost.value.file) return [];
-
-
-                    return posts.value.filter(p => p.category ===
-
-activePost.value.category && p.file !==
-
-activePost.value.file).slice(0, 2);
-
+                    return posts.value.filter(p => p.category === activePost.value.category && p.file !== activePost.value.file).slice(0, 2);
                 });
-
 
                 const pinnedPosts = computed(() => filteredList.value.filter(p => p.pinned));
-
                 const regularPosts = computed(() => {
-
-
-                    const showPinnedSection = !searchQuery.value
-
-&& !filterCategory.value && currentPage.value === 1;
-
+                    const showPinnedSection = !searchQuery.value && !filterCategory.value && currentPage.value === 1;
                     if (showPinnedSection) return filteredList.value.filter(p => !p.pinned); 
-
                     else return filteredList.value; 
-
                 });
-
 
                 const totalPages = computed(() => Math.ceil(regularPosts.value.length / PAGE_SIZE));
-
                 const paginatedPosts = computed(() => {
-
                     const start = (currentPage.value - 1) * PAGE_SIZE;
-
                     return regularPosts.value.slice(start, start + PAGE_SIZE);
-
                 });
 
-
                 const changePage = (page) => {
-
                     if (page >= 1 && page <= totalPages.value) {
-
                         currentPage.value = page;
-
                         document.getElementById('regular-list-top').scrollIntoView({ behavior: 'smooth' });
-
                     }
-
                 };
-
 
                 const handleJump = () => {
-
                     const page = parseInt(jumpInput.value);
-
-
-                    if (page >= 1 && page <=
-
-totalPages.value) { changePage(page); jumpInput.value = ''; } else {
-
-alert('页码无效'); }
-
+                    if (page >= 1 && page <= totalPages.value) { changePage(page); jumpInput.value = ''; } else { alert('页码无效'); }
                 };
-
 
                 const changeCategory = (cat) => { filterCategory.value = cat; currentPage.value = 1; };
-
                 watch(searchQuery, () => { currentPage.value = 1; });
 
-
                 const categories = computed(() => [...new Set(posts.value.map(p => p.category))]);
-
                 const compiledMarkdown = computed(() => marked.parse(markdownContent.value));
 
-
                 const loadPost = (post) => {
-
                     savedScrollPosition.value = window.scrollY;
-
                     activePost.value = post;
-
                     markdownContent.value = post.bodyRaw;
-
                     currentView.value = 'detail';
-
                     errorMsg.value = ''; 
-
                     window.scrollTo(0, 0);
-
                     document.title = `${post.title} - Soft Wealth`;
-
                     const newUrl = `?p=${encodeURIComponent(post.file)}`;
-
                     window.history.pushState({ path: newUrl }, '', newUrl);
 
-
                     nextTick(() => {
-
                         generateTOC(); 
-
                         document.querySelectorAll('pre code').forEach((el) => {
-
                             hljs.highlightElement(el);
-
                             const pre = el.parentElement;
-
                             pre.style.position = 'relative';
-
                             if (pre.querySelector('.copy-btn')) return;
-
                             const btn = document.createElement('button');
-
                             btn.className = 'copy-btn';
-
                             btn.innerText = '复制';
-
                             btn.onclick = () => {
-
                                 navigator.clipboard.writeText(el.innerText).then(() => {
-
                                     btn.innerText = '已复制!';
-
                                     setTimeout(() => btn.innerText = '复制', 2000);
-
                                 });
-
                             };
-
                             pre.appendChild(btn);
-
                         });
-
 
                         document.querySelectorAll('.prose img').forEach(img => {
-
                             img.style.cursor = 'zoom-in';
-
                             img.onclick = (e) => {
-
                                 e.stopPropagation();
-
                                 const lightbox = document.getElementById('lightbox');
-
                                 const lightboxImg = document.getElementById('lightbox-img');
-
                                 lightboxImg.src = img.src;
-
                                 lightbox.classList.remove('hidden');
-
                             };
-
                         });
-
                     });
-
                 };
-
 
                 const goHome = async () => { 
-
                     currentView.value = 'list'; 
-
                     searchQuery.value = ''; 
-
                     activePost.value = {}; 
-
                     errorMsg.value = '';
-
                     document.title = 'Soft Wealth | 舒适的搞钱哲学'; 
-
                     window.history.pushState({ path: '/' }, '', window.location.pathname);
-
                     await nextTick();
-
                     window.scrollTo(0, savedScrollPosition.value);
-
                 };
-
 
                 return { 
-
-
-                    currentView, pinnedPosts, regularPosts,
-
-paginatedPosts, activePost, loadPost, compiledMarkdown, initLoading, 
-
+                    currentView, pinnedPosts, regularPosts, paginatedPosts, activePost, loadPost, compiledMarkdown, initLoading, 
                     searchQuery, filterCategory, categories, goHome, isDark, toggleDark, scrollProgress, scrollToContent,
-
-
-                    currentPage, totalPages, changePage,
-
-changeCategory, jumpInput, handleJump, errorMsg, toc, scrollToHeader,
-
-activeHeader, relatedPosts, showBanner, closeBanner, showDonate,
-
-displayedText
-
+                    currentPage, totalPages, changePage, changeCategory, jumpInput, handleJump, errorMsg, toc, scrollToHeader, activeHeader, relatedPosts, showBanner, closeBanner, showDonate, displayedText
                 };
-
             }
-
         }).mount('#app');
-
     </script>
-
 </body>
-
-</html> 
+</html>
