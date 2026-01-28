@@ -7,7 +7,6 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💸</text></svg>">
     
     <meta name="description" content="Soft Wealth 是一个专注于 A股量化交易、Python 自动化脚本开发以及数字游民生活方式分享的个人博客。">
-    
     <meta property="og:title" content="Soft Wealth | 舒适的搞钱哲学">
     <meta property="og:description" content="分享 A股量化交易、Python 脚本开发及数字游民的实战经验。">
     <meta property="og:type" content="website">
@@ -71,6 +70,9 @@
         .copy-btn:hover { background: #6366f1; color: white; }
         .animation-delay-2000 { animation-delay: 2s; }
         .animation-delay-4000 { animation-delay: 4s; }
+        
+        /* 目录高亮样式 */
+        .toc-active { color: #6366f1; border-left: 2px solid #6366f1; padding-left: 10px; }
     </style>
 </head>
 <body class="bg-gray-50 text-slate-800 transition-colors duration-300 dark:bg-slate-900 dark:text-slate-200 overflow-x-hidden font-sans">
@@ -196,10 +198,6 @@
                                             <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1" class="px-4 py-2 rounded-lg glass font-bold disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition flex items-center gap-1"><i class="ri-arrow-left-line"></i> <span class="hidden sm:inline">上一页</span></button>
                                             <span class="font-bold text-slate-500 dark:text-slate-400">{{ currentPage }} / {{ totalPages }}</span>
                                             <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages" class="px-4 py-2 rounded-lg glass font-bold disabled:opacity-50 hover:bg-white dark:hover:bg-slate-700 transition flex items-center gap-1"><span class="hidden sm:inline">下一页</span> <i class="ri-arrow-right-line"></i></button>
-                                            <div class="flex items-center gap-2 ml-2 sm:ml-4 pl-4 border-l border-gray-200 dark:border-slate-700">
-                                                <input v-model.number="jumpInput" @keyup.enter="handleJump" type="number" min="1" :max="totalPages" placeholder="Go" class="w-14 px-2 py-2 rounded-lg glass text-center font-bold outline-none focus:ring-2 ring-primary bg-transparent text-sm appearance-none">
-                                                <button @click="handleJump" class="w-8 h-8 rounded-lg glass flex items-center justify-center text-slate-500 hover:text-primary hover:bg-white dark:hover:bg-slate-700 transition"><i class="ri-share-forward-fill"></i></button>
-                                            </div>
                                         </div>
                                     </div>
                                     <div v-else class="text-center py-20 bg-white/50 dark:bg-slate-800/50 rounded-2xl"><div class="text-4xl mb-4">🛸</div><p class="text-slate-500">没有相关内容</p></div>
@@ -216,32 +214,69 @@
                                             <a href="https://t.me/MRMWBM" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-white/50 dark:bg-slate-800/50 hover:bg-blue-500 hover:text-white transition group"><i class="ri-telegram-line text-lg text-blue-400 group-hover:text-white"></i><span class="text-sm font-bold">Telegram</span></a>
                                         </div>
                                     </div>
-                                    <div class="glass rounded-2xl p-6 shadow-sm border border-secondary/20 bg-secondary/5">
-                                        <h3 class="font-bold text-sm mb-2 text-secondary uppercase tracking-wide">News</h3>
-                                        <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">新的自动化交易课程正在录制中，预计下周上线 B 站。</p>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div v-else key="detail" class="animate-fade-in max-w-4xl mx-auto px-4 py-8">
-                    <button @click="goHome" class="mb-8 px-5 py-2 rounded-full glass text-sm font-bold text-slate-600 hover:text-primary transition flex items-center gap-2 dark:text-slate-300">
-                        <i class="ri-arrow-left-line"></i> 返回首页 <span class="opacity-50 text-xs ml-1">(ESC)</span>
-                    </button>
+                <div v-else key="detail" class="animate-fade-in max-w-7xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-12">
+                    
+                    <div class="flex-1 min-w-0">
+                        <button @click="goHome" class="mb-8 px-5 py-2 rounded-full glass text-sm font-bold text-slate-600 hover:text-primary transition flex items-center gap-2 dark:text-slate-300">
+                            <i class="ri-arrow-left-line"></i> 返回首页 <span class="opacity-50 text-xs ml-1">(ESC)</span>
+                        </button>
 
-                    <article class="glass rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
-                        <div class="text-center mb-10 border-b border-gray-100 dark:border-slate-700 pb-10">
-                            <span class="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-4">{{ activePost.category }}</span>
-                            <h1 class="text-3xl md:text-5xl font-extrabold text-slate-800 dark:text-white mb-6 leading-tight">{{ activePost.title }}</h1>
-                            <div class="flex justify-center items-center gap-6 text-sm text-slate-500 dark:text-slate-400">
-                                <span><i class="ri-calendar-line"></i> {{ activePost.date }}</span>
-                                <span><i class="ri-time-line"></i> 预计阅读 {{ activePost.readTime }} 分钟</span>
+                        <div v-if="errorMsg" class="text-center py-20 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-200 dark:border-red-800">
+                            <i class="ri-error-warning-line text-4xl text-red-500 mb-4 inline-block"></i>
+                            <h2 class="text-xl font-bold text-slate-800 dark:text-white mb-2">无法加载文章</h2>
+                            <p class="text-slate-500 dark:text-slate-400 mb-6">{{ errorMsg }}</p>
+                            <button @click="goHome" class="px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-primary transition">返回首页</button>
+                        </div>
+
+                        <article v-else class="glass rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                            <div class="text-center mb-10 border-b border-gray-100 dark:border-slate-700 pb-10">
+                                <span class="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-4">{{ activePost.category }}</span>
+                                <h1 class="text-3xl md:text-5xl font-extrabold text-slate-800 dark:text-white mb-6 leading-tight">{{ activePost.title }}</h1>
+                                <div class="flex justify-center items-center gap-6 text-sm text-slate-500 dark:text-slate-400">
+                                    <span><i class="ri-calendar-line"></i> {{ activePost.date }}</span>
+                                    <span><i class="ri-time-line"></i> 预计阅读 {{ activePost.readTime }} 分钟</span>
+                                </div>
+                            </div>
+                            <div class="prose prose-lg max-w-none prose-slate dark:prose-invert prose-img:rounded-xl prose-headings:font-extrabold prose-a:text-primary hover:prose-a:text-secondary transition-all" v-html="compiledMarkdown"></div>
+                        </article>
+                        
+                        <div v-if="relatedPosts.length > 0 && !errorMsg" class="mt-12">
+                            <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-6">猜你喜欢</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <article v-for="post in relatedPosts" :key="post.file" @click="loadPost(post)" class="glass rounded-xl p-4 cursor-pointer hover:shadow-lg transition flex gap-4 items-center group">
+                                    <div class="w-24 h-24 rounded-lg bg-gray-200 overflow-hidden shrink-0">
+                                        <img :src="post.image" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="font-bold text-slate-800 dark:text-white truncate group-hover:text-primary transition">{{ post.title }}</h4>
+                                        <p class="text-xs text-slate-500 mt-1 line-clamp-2">{{ post.excerpt }}</p>
+                                    </div>
+                                </article>
                             </div>
                         </div>
-                        <div class="prose prose-lg max-w-none prose-slate dark:prose-invert prose-img:rounded-xl prose-headings:font-extrabold prose-a:text-primary hover:prose-a:text-secondary transition-all" v-html="compiledMarkdown"></div>
-                    </article>
+                    </div>
+
+                    <div v-if="!errorMsg" class="hidden lg:block w-64 shrink-0">
+                        <div class="sticky top-24">
+                            <div class="glass rounded-2xl p-6 shadow-sm">
+                                <h3 class="font-bold text-sm text-slate-400 uppercase mb-4 tracking-wider">目录</h3>
+                                <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400 max-h-[70vh] overflow-y-auto no-scrollbar">
+                                    <li v-for="item in toc" :key="item.id" 
+                                        :class="['cursor-pointer hover:text-primary transition pl-2 border-l-2 border-transparent truncate', item.indent === 3 ? 'ml-4' : 'font-bold', activeHeader === item.id ? 'toc-active' : '']"
+                                        @click="scrollToHeader(item.id)">
+                                        {{ item.text }}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
             </transition>
@@ -280,6 +315,9 @@
                 const savedScrollPosition = ref(0);
                 const currentPage = ref(1);
                 const jumpInput = ref('');
+                const errorMsg = ref('');
+                const toc = ref([]); // 1. 目录数据
+                const activeHeader = ref('');
 
                 const parseFrontMatter = (text, filename) => {
                     const regex = /^---\s*\n([\s\S]*?)\n---\s*\n/;
@@ -292,7 +330,6 @@
                         pinned: false 
                     };
                     let body = text;
-
                     if (match) {
                         const yaml = match[1];
                         body = text.replace(match[0], ''); 
@@ -317,6 +354,7 @@
                 onMounted(async () => {
                     try {
                         const res = await fetch('posts.json');
+                        if (!res.ok) throw new Error("无法读取文章列表");
                         const filenames = await res.json();
                         const promises = filenames.map(async (filename) => {
                             try {
@@ -329,15 +367,14 @@
                         const results = await Promise.all(promises);
                         posts.value = results.filter(p => p !== null).sort((a, b) => new Date(b.date) - new Date(a.date));
                         
-                        // 1. 🔗 核心修复：检查 URL 是否带有 ?p=文章名，如果有则直接跳转
                         const urlParams = new URLSearchParams(window.location.search);
                         const postFile = urlParams.get('p');
                         if (postFile) {
                             const targetPost = posts.value.find(p => p.file === postFile || p.file === decodeURIComponent(postFile));
                             if (targetPost) loadPost(targetPost);
+                            else errorMsg.value = "找不到该文章，可能已被删除。";
                         }
-
-                    } catch (e) { console.error("Error", e); } 
+                    } catch (e) { console.error("Error", e); errorMsg.value = "系统初始化失败，请检查网络。"; } 
                     finally { initLoading.value = false; }
 
                     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -362,6 +399,16 @@
                         if (scrollTop > 300) btn.classList.remove('translate-y-20', 'opacity-0');
                         else btn.classList.add('translate-y-20', 'opacity-0');
                     }
+                    
+                    // 滚动监听更新 TOC 高亮
+                    if (currentView.value === 'detail' && toc.value.length > 0) {
+                        for (const item of toc.value) {
+                            const el = document.getElementById(item.id);
+                            if (el && el.getBoundingClientRect().top < 150) {
+                                activeHeader.value = item.id;
+                            }
+                        }
+                    }
                 };
 
                 const toggleDark = () => {
@@ -372,6 +419,30 @@
                 const scrollToContent = () => {
                     document.getElementById('content-area').scrollIntoView({ behavior: 'smooth' });
                 };
+                
+                // 1. 生成 TOC 目录逻辑
+                const generateTOC = () => {
+                    toc.value = [];
+                    const headers = document.querySelectorAll('.prose h2, .prose h3');
+                    headers.forEach((header, index) => {
+                        const id = 'header-' + index;
+                        header.id = id;
+                        toc.value.push({
+                            id: id,
+                            text: header.innerText,
+                            indent: parseInt(header.tagName.substring(1))
+                        });
+                    });
+                    if (toc.value.length > 0) activeHeader.value = toc.value[0].id;
+                };
+                
+                const scrollToHeader = (id) => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        const y = el.getBoundingClientRect().top + window.scrollY - 100;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                    }
+                };
 
                 const filteredList = computed(() => {
                     return posts.value.filter(post => {
@@ -379,6 +450,14 @@
                         const matchCat = filterCategory.value ? post.category === filterCategory.value : true;
                         return matchSearch && matchCat;
                     });
+                });
+                
+                // 2. 相关推荐逻辑
+                const relatedPosts = computed(() => {
+                    if (!activePost.value.file) return [];
+                    return posts.value
+                        .filter(p => p.category === activePost.value.category && p.file !== activePost.value.file)
+                        .slice(0, 2);
                 });
 
                 const pinnedPosts = computed(() => filteredList.value.filter(p => p.pinned));
@@ -424,14 +503,14 @@
                     activePost.value = post;
                     markdownContent.value = post.bodyRaw;
                     currentView.value = 'detail';
+                    errorMsg.value = ''; // 清除错误
                     window.scrollTo(0, 0);
                     document.title = `${post.title} - Soft Wealth`;
-                    
-                    // 1. 🔗 核心修复：更新地址栏 URL
                     const newUrl = `?p=${encodeURIComponent(post.file)}`;
                     window.history.pushState({ path: newUrl }, '', newUrl);
 
                     nextTick(() => {
+                        generateTOC(); // 生成目录
                         document.querySelectorAll('pre code').forEach((el) => {
                             hljs.highlightElement(el);
                             const pre = el.parentElement;
@@ -465,8 +544,9 @@
                 const goHome = async () => { 
                     currentView.value = 'list'; 
                     searchQuery.value = ''; 
+                    activePost.value = {}; // 清空当前文章状态
+                    errorMsg.value = '';
                     document.title = 'Soft Wealth | 舒适的搞钱哲学'; 
-                    // 1. 🔗 核心修复：还原地址栏 URL
                     window.history.pushState({ path: '/' }, '', window.location.pathname);
                     await nextTick();
                     window.scrollTo(0, savedScrollPosition.value);
@@ -475,7 +555,7 @@
                 return { 
                     currentView, pinnedPosts, regularPosts, paginatedPosts, activePost, loadPost, compiledMarkdown, initLoading, 
                     searchQuery, filterCategory, categories, goHome, isDark, toggleDark, scrollProgress, scrollToContent,
-                    currentPage, totalPages, changePage, changeCategory, jumpInput, handleJump
+                    currentPage, totalPages, changePage, changeCategory, jumpInput, handleJump, errorMsg, toc, scrollToHeader, activeHeader, relatedPosts
                 };
             }
         }).mount('#app');
