@@ -574,24 +574,41 @@
                     window.history.pushState({ path: newUrl }, '', newUrl);
 
                     nextTick(() => {
-                        generateTOC(); 
-                        document.querySelectorAll('pre code').forEach((el) => {
-                            hljs.highlightElement(el);
-                            const pre = el.parentElement;
-                            pre.style.position = 'relative';
-                            if (pre.querySelector('.copy-btn')) return;
-                            const btn = document.createElement('button');
-                            btn.className = 'copy-btn';
-                            btn.innerText = '复制';
-                            btn.onclick = () => {
-                                navigator.clipboard.writeText(el.innerText).then(() => {
-                                    btn.innerText = '已复制!';
-                                    setTimeout(() => btn.innerText = '复制', 2000);
-                                });
-                            };
-                            pre.appendChild(btn);
-                        });
+                        // === 这里我们加上 setTimeout 延迟器 ===
+                        setTimeout(() => {
+                            generateTOC(); // 先等一下，然后再生成目录
+                        
+                            // 代码高亮和复制按钮（原样搬进来）
+                            document.querySelectorAll('pre code').forEach((el) => {
+                                hljs.highlightElement(el);
+                                const pre = el.parentElement;
+                                pre.style.position = 'relative';
+                                if (pre.querySelector('.copy-btn')) return;
+                                const btn = document.createElement('button');
+                                btn.className = 'copy-btn';
+                                btn.innerText = '复制';
+                                btn.onclick = () => {
+                                    navigator.clipboard.writeText(el.innerText).then(() => {
+                                        btn.innerText = '已复制!';
+                                        setTimeout(() => btn.innerText = '复制', 2000);
+                                    });
+                                };
+                                pre.appendChild(btn);
+                            });
 
+                            // 图片点击放大（原样搬进来）
+                            document.querySelectorAll('.prose img').forEach(img => {
+                                img.style.cursor = 'zoom-in';
+                                img.onclick = (e) => {
+                                    e.stopPropagation();
+                                    const lightbox = document.getElementById('lightbox');
+                                    const lightboxImg = document.getElementById('lightbox-img');
+                                    lightboxImg.src = img.src;
+                                    lightbox.classList.remove('hidden');
+                                };
+                            });
+                        }, 800); // <--- 重点在这里！延迟 800 毫秒
+                        // =======================================
                         document.querySelectorAll('.prose img').forEach(img => {
                             img.style.cursor = 'zoom-in';
                             img.onclick = (e) => {
