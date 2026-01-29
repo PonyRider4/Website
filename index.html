@@ -341,12 +341,22 @@
                 <div class="flex justify-between items-center mb-3 pb-2 border-b border-gray-200 dark:border-slate-700">
                     <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">目录导航</span>
                     </div>
-                <ul class="overflow-y-auto space-y-2 text-sm text-slate-600 dark:text-slate-300 pr-1 custom-scrollbar">
+                <ul v-else class="overflow-y-auto space-y-1 text-slate-600 dark:text-slate-300 pr-1 custom-scrollbar">
                     <li v-for="item in toc" 
-                        :key="item.id" 
-                        @click="scrollToHeader(item.id); showTocModal = false"
-                        :class="['cursor-pointer transition px-2 py-1.5 rounded-lg truncate hover:bg-primary/10 hover:text-primary', item.indent === 3 ? 'pl-6 text-xs' : 'font-medium', activeHeader === item.id ? 'text-primary bg-primary/5' : '']">
-                        {{ item.text }}
+                         :key="item.id" 
+                         @click="scrollToHeader(item.id); showTocModal = false"
+                         :class="[
+                              'cursor-pointer transition px-2 py-1.5 rounded-lg truncate hover:bg-primary/10 hover:text-primary',
+                              // H2 加粗
+                              item.indent <= 2 ? 'font-bold text-sm' : '',
+                              // H3 缩进+变小
+                              item.indent === 3 ? 'pl-6 text-xs opacity-90' : '',
+                              // H4 更多缩进+更小
+                              item.indent >= 4 ? 'pl-10 text-[10px] opacity-70' : '',
+                              // 选中高亮
+                              activeHeader === item.id ? 'text-primary bg-primary/5' : ''
+                         ]">
+                         {{ item.text }}
                     </li>
                 </ul>
             </div>
