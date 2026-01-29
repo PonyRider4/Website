@@ -501,7 +501,7 @@
                 
                 const generateTOC = () => {
                     toc.value = [];
-                    const headers = document.querySelectorAll('.prose h2, .prose h3');
+                    const headers = document.querySelectorAll('.prose h1, .prose h2, .prose h3, .prose h4');
                     headers.forEach((header, index) => {
                         const id = 'header-' + index;
                         header.id = id;
