@@ -299,16 +299,7 @@
                         </div>
                     </div>
 
-                    <div v-if="!errorMsg" class="hidden lg:block w-72 shrink-0">
-                        <div class="sticky top-28">
-                            <div class="glass rounded-3xl p-6 shadow-sm border-l-4 border-primary/20">
-                                <h3 class="font-bold text-sm text-slate-400 uppercase mb-6 tracking-widest border-b border-gray-100 dark:border-slate-700 pb-2">目录导航</h3>
-                                <ul class="space-y-3 text-sm text-slate-600 dark:text-slate-400 max-h-[70vh] overflow-y-auto no-scrollbar pr-2">
-                                    <li v-for="item in toc" :key="item.id" :class="['cursor-pointer transition pl-3 py-1 rounded-r-lg border-l-2 border-transparent truncate hover:bg-slate-50 dark:hover:bg-slate-800', item.indent === 3 ? 'ml-4 text-xs' : 'font-medium', activeHeader === item.id ? 'toc-active text-primary bg-primary/5' : 'hover:border-slate-300']" @click="scrollToHeader(item.id)">{{ item.text }}</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
             </transition>
         </main>
