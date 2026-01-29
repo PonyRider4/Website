@@ -2,7 +2,7 @@
 title: 一个顶尖PUA的信念系统
 date: 2026-01-27
 category: pua
-image: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeOwDzsIuz7SEsNMabtM7htZggpveOUUVO1w&s
+image: https://w.wallhaven.cc/full/9o/wallhaven-9oo8k1.jpg
 pinned: false
 ---
 
