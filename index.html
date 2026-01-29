@@ -329,7 +329,7 @@
             </div>
         </div>
 
-        <div v-if="currentView === 'detail'">
+        <div v-if="currentView === 'detail' && toc.length > 0">
             <button 
                 @click="showTocModal = !showTocModal" 
                 class="fixed bottom-24 right-8 w-12 h-12 rounded-full glass text-slate-600 dark:text-slate-300 shadow-lg z-40 flex items-center justify-center hover:bg-primary hover:text-white transition-all duration-300 hover:scale-110 border border-white/10"
