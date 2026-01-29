@@ -490,20 +490,36 @@
                     const scrollTop = window.scrollY;
                     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
                     scrollProgress.value = (scrollTop / docHeight) * 100;
+                    
                     const btn = document.getElementById('backToTop');
                     if (btn) {
                         if (scrollTop > 300) btn.classList.remove('translate-y-20', 'opacity-0');
                         else btn.classList.add('translate-y-20', 'opacity-0');
                     }
+
+                    // === 核心修复：高亮检测逻辑 ===
                     if (currentView.value === 'detail' && toc.value.length > 0) {
+                        let currentActive = ''; // 先拿个空本子记着
+                        
+                        // 循环检查每一个标题
                         for (const item of toc.value) {
                             const el = document.getElementById(item.id);
+                            // 如果这个标题跑到了那条线（150px）上面
                             if (el && el.getBoundingClientRect().top < 150) {
-                                activeHeader.value = item.id;
-                                break;
+                                currentActive = item.id; // 更新记录：现在轮到这个了
+                                // 注意：这里没有 break 了！它会继续往下找，直到找到离你眼睛最近的那一个
                             }
                         }
+                        
+                        // 循环结束了，把最终结果告诉网页
+                        if (currentActive) {
+                            activeHeader.value = currentActive;
+                        } else if (scrollTop < 100 && toc.value.length > 0) {
+                            // 如果你在最顶端，谁都没过线，那就默认高亮第一个
+                            activeHeader.value = toc.value[0].id;
+                        }
                     }
+                    // ==============================
                 };
 
                 const toggleDark = () => { isDark.value = !isDark.value; document.documentElement.classList.toggle('dark', isDark.value); };
