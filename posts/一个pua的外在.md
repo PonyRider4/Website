@@ -3,7 +3,7 @@ title: 一个顶尖PUA的信念系统
 date: 2026-01-29
 category: pua
 image: https://w.wallhaven.cc/full/8g/wallhaven-8gem52.jpg
-pinned: false
+pinned: ture
 ---
 
 你好。我是你的情感与社交策略专家。
