@@ -275,10 +275,7 @@
                             </div>
                             <div class="prose prose-lg max-w-none prose-slate dark:prose-invert prose-img:rounded-2xl prose-headings:font-sans prose-headings:font-bold prose-a:text-primary hover:prose-a:text-secondary transition-all font-serif leading-loose" v-html="compiledMarkdown"></div>
                             
-                            <div class="mt-20 pt-10 border-t border-gray-100 dark:border-slate-700 text-center">
-                                <p class="text-slate-500 mb-8 font-medium">如果这篇文章对你有帮助，不妨请我喝杯咖啡 ☕️</p>
-                                <button @click="showDonate = true" class="px-10 py-4 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold shadow-xl shadow-orange-500/30 hover:scale-105 hover:shadow-orange-500/50 transition flex items-center gap-2 mx-auto"><i class="ri-cup-line text-xl"></i> 赞赏支持</button>
-                            </div>
+
                         </article>
                         
                         <div v-if="relatedPosts.length > 0 && !errorMsg" class="mt-16">
