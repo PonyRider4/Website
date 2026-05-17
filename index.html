@@ -5,6 +5,7 @@
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <link rel="preconnect" href="https://unpkg.com">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=75&w=1920&auto=format&fit=crop">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💸</text></svg>">
@@ -80,6 +81,8 @@
         .copy-btn:hover { background: #6366f1; color: white; border-color: #6366f1; }
         .animation-delay-2000 { animation-delay: 2s; }
         .animation-delay-4000 { animation-delay: 4s; }
+        /* 性能优化：提示浏览器 blob 动画独立合成层 */
+        .animate-blob { will-change: transform; }
         .toc-active { color: #6366f1; border-left: 3px solid #6366f1; padding-left: 12px; font-weight: 600; background: linear-gradient(90deg, rgba(99,102,241,0.1) 0%, rgba(0,0,0,0) 100%); }
         .typewriter { border-right: 3px solid; animation: cursor .75s step-end infinite; }
     </style>
@@ -133,7 +136,7 @@
             <transition name="fade" mode="out-in">
                 
                 <div v-if="currentView === 'list'" key="list" class="animate-fade-in-up">
-                    <div class="relative w-full h-[450px] flex items-center justify-center bg-cover bg-center overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=2340&auto=format&fit=crop');">
+                    <div class="relative w-full h-[450px] flex items-center justify-center bg-cover bg-center overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=75&w=1920&auto=format&fit=crop');">
                         <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-[3px]"></div>
                         <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-50 dark:from-slate-900 to-transparent"></div>
                         <div class="relative z-10 text-center px-4 max-w-4xl mt-[-20px]">
@@ -259,7 +262,14 @@
                     <div class="flex-1 min-w-0">
                         <button @click="goHome" class="mb-8 px-5 py-2 rounded-full glass text-sm font-bold text-slate-600 hover:text-primary transition flex items-center gap-2 dark:text-slate-300 hover:pl-3"><i class="ri-arrow-left-line"></i> 返回首页 <span class="opacity-50 text-xs ml-1">(ESC)</span></button>
 
-                        <div v-if="errorMsg" class="text-center py-20 bg-red-50 dark:bg-red-900/20 rounded-3xl border border-red-200 dark:border-red-800">
+                        <div v-if="postLoading" class="glass rounded-[2rem] p-14 flex items-center justify-center animate-pulse min-h-[40vh]">
+                            <div class="text-center">
+                                <div class="w-10 h-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto mb-4"></div>
+                                <p class="text-slate-400 text-sm">加载文章中...</p>
+                            </div>
+                        </div>
+
+                        <div v-else-if="errorMsg" class="text-center py-20 bg-red-50 dark:bg-red-900/20 rounded-3xl border border-red-200 dark:border-red-800">
                             <i class="ri-error-warning-line text-4xl text-red-500 mb-4 inline-block"></i>
                             <h2 class="text-xl font-bold text-slate-800 dark:text-white mb-2">无法加载文章</h2>
                             <p class="text-slate-500 dark:text-slate-400 mb-6">{{ errorMsg }}</p>
@@ -383,6 +393,7 @@
                 const currentPage = ref(1);
                 const jumpInput = ref('');
                 const errorMsg = ref('');
+                const postLoading = ref(false);
                 const toc = ref([]);
                 const activeHeader = ref('');
                 const showBanner = ref(true);
@@ -437,7 +448,6 @@
                     const cleanBody = body.replace(/[#*`\[\]()!>]/g, '').replace(/\s+/g, ' ');
                     metadata.excerpt = cleanBody.substring(0, 80) + '...';
                     metadata.file = 'posts/' + filename;
-                    metadata.bodyRaw = body; 
                     metadata.readTime = Math.ceil(cleanBody.length / 400);
                     return metadata;
                 };
@@ -465,7 +475,7 @@
                         const postFile = urlParams.get('p');
                         if (postFile) {
                             const targetPost = posts.value.find(p => p.file === postFile || p.file === decodeURIComponent(postFile));
-                            if (targetPost) loadPost(targetPost);
+                            if (targetPost) await loadPost(targetPost);
                             else errorMsg.value = "找不到该文章，可能已被删除。";
                         }
                     } catch (e) { console.error("Error", e); errorMsg.value = "系统初始化失败，请检查网络。"; } 
@@ -475,7 +485,13 @@
                         isDark.value = true;
                         document.documentElement.classList.add('dark');
                     }
-                    window.addEventListener('scroll', updateProgress);
+                    let rafPending = false;
+                    window.addEventListener('scroll', () => {
+                        if (!rafPending) {
+                            rafPending = true;
+                            requestAnimationFrame(() => { updateProgress(); rafPending = false; });
+                        }
+                    });
                     window.addEventListener('keydown', (e) => {
                         if (e.key === 'Escape' && currentView.value === 'detail') goHome();
                     });
@@ -587,64 +603,62 @@
                 const categories = computed(() => [...new Set(posts.value.map(p => p.category))]);
                 const compiledMarkdown = computed(() => marked.parse(markdownContent.value));
 
-                const loadPost = (post) => {
+                const applyPostEnhancements = () => {
+                    generateTOC();
+                    document.querySelectorAll('pre code').forEach((el) => {
+                        hljs.highlightElement(el);
+                        const pre = el.parentElement;
+                        pre.style.position = 'relative';
+                        if (pre.querySelector('.copy-btn')) return;
+                        const btn = document.createElement('button');
+                        btn.className = 'copy-btn';
+                        btn.innerText = '复制';
+                        btn.onclick = () => {
+                            navigator.clipboard.writeText(el.innerText).then(() => {
+                                btn.innerText = '已复制!';
+                                setTimeout(() => btn.innerText = '复制', 2000);
+                            });
+                        };
+                        pre.appendChild(btn);
+                    });
+                    document.querySelectorAll('.prose img').forEach(img => {
+                        img.style.cursor = 'zoom-in';
+                        img.onclick = (e) => {
+                            e.stopPropagation();
+                            const lightbox = document.getElementById('lightbox');
+                            const lightboxImg = document.getElementById('lightbox-img');
+                            lightboxImg.src = img.src;
+                            lightbox.classList.remove('hidden');
+                        };
+                    });
+                };
+
+                const loadPost = async (post) => {
                     savedScrollPosition.value = window.scrollY;
                     activePost.value = post;
-                    markdownContent.value = post.bodyRaw;
+                    markdownContent.value = '';
                     currentView.value = 'detail';
-                    errorMsg.value = ''; 
+                    errorMsg.value = '';
+                    postLoading.value = true;
                     window.scrollTo(0, 0);
                     document.title = `${post.title} - Soft Wealth`;
                     const newUrl = `?p=${encodeURIComponent(post.file)}`;
                     window.history.pushState({ path: newUrl }, '', newUrl);
 
-                    nextTick(() => {
-                        // === 这里我们加上 setTimeout 延迟器 ===
-                        setTimeout(() => {
-                            generateTOC(); // 先等一下，然后再生成目录
-                        
-                            // 代码高亮和复制按钮（原样搬进来）
-                            document.querySelectorAll('pre code').forEach((el) => {
-                                hljs.highlightElement(el);
-                                const pre = el.parentElement;
-                                pre.style.position = 'relative';
-                                if (pre.querySelector('.copy-btn')) return;
-                                const btn = document.createElement('button');
-                                btn.className = 'copy-btn';
-                                btn.innerText = '复制';
-                                btn.onclick = () => {
-                                    navigator.clipboard.writeText(el.innerText).then(() => {
-                                        btn.innerText = '已复制!';
-                                        setTimeout(() => btn.innerText = '复制', 2000);
-                                    });
-                                };
-                                pre.appendChild(btn);
-                            });
+                    try {
+                        const res = await fetch(post.file);
+                        if (!res.ok) throw new Error('fetch failed');
+                        const text = await res.text();
+                        const bodyMatch = text.match(/^---\s*\n[\s\S]*?\n---\s*\n/);
+                        markdownContent.value = bodyMatch ? text.replace(bodyMatch[0], '') : text;
+                    } catch (e) {
+                        errorMsg.value = '文章加载失败，请检查网络。';
+                    } finally {
+                        postLoading.value = false;
+                    }
 
-                            // 图片点击放大（原样搬进来）
-                            document.querySelectorAll('.prose img').forEach(img => {
-                                img.style.cursor = 'zoom-in';
-                                img.onclick = (e) => {
-                                    e.stopPropagation();
-                                    const lightbox = document.getElementById('lightbox');
-                                    const lightboxImg = document.getElementById('lightbox-img');
-                                    lightboxImg.src = img.src;
-                                    lightbox.classList.remove('hidden');
-                                };
-                            });
-                        }, 800); // <--- 重点在这里！延迟 800 毫秒
-                        // =======================================
-                        document.querySelectorAll('.prose img').forEach(img => {
-                            img.style.cursor = 'zoom-in';
-                            img.onclick = (e) => {
-                                e.stopPropagation();
-                                const lightbox = document.getElementById('lightbox');
-                                const lightboxImg = document.getElementById('lightbox-img');
-                                lightboxImg.src = img.src;
-                                lightbox.classList.remove('hidden');
-                            };
-                        });
-                    });
+                    await nextTick();
+                    applyPostEnhancements();
                 };
 
                 const goHome = async () => { 
@@ -661,7 +675,7 @@
                 return { 
                     currentView, pinnedPosts, regularPosts, paginatedPosts, activePost, loadPost, compiledMarkdown, initLoading, 
                     searchQuery, filterCategory, categories, goHome, isDark, toggleDark, scrollProgress, scrollToContent,
-                    currentPage, totalPages, changePage, changeCategory, jumpInput, handleJump, errorMsg, toc, scrollToHeader, activeHeader, relatedPosts, showBanner, closeBanner, showDonate, displayedText,
+                    currentPage, totalPages, changePage, changeCategory, jumpInput, handleJump, errorMsg, postLoading, toc, scrollToHeader, activeHeader, relatedPosts, showBanner, closeBanner, showDonate, displayedText,
                     showTocModal
                 };
             }
