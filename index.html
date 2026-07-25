@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>回声 · 唤醒对话里的那个人</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-void:#0c0b17;
+    --bg-void-2:#0f0e1e;
+    --bg-panel:#171526;
+    --bg-panel-2:#1e1b33;
+    --bg-panel-3:#242041;
+    --border-soft:rgba(255,255,255,0.08);
+    --border-soft-2:rgba(255,255,255,0.14);
+    --accent-user:#ffb37a;
+    --accent-user-soft:rgba(255,179,122,0.14);
+    --accent-echo:#9d8cff;
+    --accent-echo-soft:rgba(157,140,255,0.14);
+    --accent-echo-glow:#c3b6ff;
+    --text-primary:#f3f1fa;
+    --text-secondary:#c9c5da;
+    --text-muted:#8d89a8;
+    --text-faint:#5f5c78;
+    --danger:#ff8080;
+    --shadow-deep: 0 20px 60px -20px rgba(0,0,0,0.6);
+    --ease: cubic-bezier(.22,1,.36,1);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(157,140,255,0.16), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(255,179,122,0.10), transparent 55%),
+      var(--bg-void);
+    color:var(--text-primary);
+    font-family:'Noto Sans SC', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  ::selection{ background:var(--accent-echo); color:#0c0b17; }
+  ::-webkit-scrollbar{ width:8px; height:8px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+  ::-webkit-scrollbar-thumb{ background:var(--border-soft-2); border-radius:8px; }
+
+  a:focus-visible, button:focus-visible, textarea:focus-visible, input:focus-visible{
+    outline:2px solid var(--accent-echo-glow);
+    outline-offset:2px;
+  }
+
+  .mono{ font-family:'JetBrains Mono', monospace; letter-spacing:0.02em; }
+  .serif{ font-family:'Noto Serif SC', serif; }
+
+  /* ---------- layout shells ---------- */
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 28px; }
+
+  header.topbar{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter:blur(14px);
+    background:rgba(12,11,23,0.7);
+    border-bottom:1px solid var(--border-soft);
+  }
+  .topbar-inner{
+    max-width:1080px; margin:0 auto; padding:16px 28px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .brand-orb{
+    width:22px; height:22px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #e7ddff, var(--accent-echo) 55%, #6f5fd8 100%);
+    box-shadow:0 0 16px 2px rgba(157,140,255,0.55);
+    animation:breathe 3.6s ease-in-out infinite;
+    flex-shrink:0;
+  }
+  .brand-name{ font-family:'Noto Serif SC', serif; font-weight:700; font-size:18px; letter-spacing:0.02em; }
+  .brand-tag{ color:var(--text-faint); font-size:12px; margin-left:8px; }
+  .topbar-actions{ display:flex; align-items:center; gap:16px; }
+  .stage-pill{
+    font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--text-muted);
+    border:1px solid var(--border-soft-2); padding:5px 12px; border-radius:100px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .stage-pill .dot{ width:6px; height:6px; border-radius:50%; background:var(--accent-echo); }
+
+  /* ---------- hero ---------- */
+  .hero{ position:relative; padding:96px 28px 64px; text-align:center; overflow:hidden; }
+  .hero-stage{
+    position:relative; width:100%; max-width:560px; height:220px; margin:0 auto 12px;
+    pointer-events:none;
+  }
+  .core{
+    position:absolute; left:50%; top:50%; width:64px; height:64px; margin:-32px 0 0 -32px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #ffffff, var(--accent-echo-glow) 40%, var(--accent-echo) 75%, #5a49c9 100%);
+    box-shadow:0 0 60px 10px rgba(157,140,255,0.45), 0 0 120px 40px rgba(157,140,255,0.15);
+    animation:breathe 3.2s ease-in-out infinite;
+    z-index:3;
+  }
+  .frag{
+    position:absolute; padding:6px 12px; border-radius:14px; font-size:12px;
+    font-family:'JetBrains Mono', monospace; white-space:nowrap;
+    border:1px solid var(--border-soft-2);
+    opacity:0; animation:driftIn linear infinite;
+  }
+  .frag.left{ background:var(--accent-user-soft); color:var(--accent-user); border-color:rgba(255,179,122,0.35); }
+  .frag.right{ background:var(--accent-echo-soft); color:var(--accent-echo-glow); border-color:rgba(157,140,255,0.35); }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--text-muted);
+    border:1px solid var(--border-soft-2); padding:6px 14px; border-radius:100px; margin-bottom:26px;
+  }
+  .eyebrow::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--accent-user); box-shadow:0 0 8px 2px rgba(255,179,122,0.6); }
+
+  h1.hero-title{
+    font-family:'Noto Serif SC', serif; font-weight:900;
+    font-size:clamp(34px, 6vw, 60px); line-height:1.25; margin:0 0 20px;
+    letter-spacing:0.01em;
+  }
+  h1.hero-title .accent{
+    background:linear-gradient(100deg, var(--accent-user), var(--accent-echo-glow) 60%, var(--accent-echo));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero-sub{
+    max-width:560px; margin:0 auto 36px; color:var(--text-secondary);
+    font-size:16px; line-height:1.9;
+  }
+  .hero-ctas{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:56px; }
+
+  .btn{
+    font-family:'Noto Sans SC', sans-serif; font-weight:600; font-size:14.5px;
+    padding:13px 26px; border-radius:12px; border:none; cursor:pointer;
+    transition:transform .35s var(--ease), box-shadow .35s var(--ease), opacity .25s;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn:active{ transform:scale(0.97); }
+  .btn-primary{
+    color:#161225; background:linear-gradient(120deg, var(--accent-user), var(--accent-echo-glow));
+    box-shadow:0 10px 30px -8px rgba(157,140,255,0.55);
+  }
+  .btn-primary:hover{ box-shadow:0 14px 38px -6px rgba(157,140,255,0.75); transform:translateY(-2px); }
+  .btn-ghost{
+    color:var(--text-secondary); background:rgba(255,255,255,0.04); border:1px solid var(--border-soft-2);
+  }
+  .btn-ghost:hover{ background:rgba(255,255,255,0.08); color:var(--text-primary); }
+  .btn:disabled{ opacity:0.5; cursor:not-allowed; transform:none !important; box-shadow:none !important; }
+
+  .steps-row{
+    display:flex; justify-content:center; gap:36px; flex-wrap:wrap;
+    color:var(--text-muted); font-size:13px;
+  }
+  .step-mini{ display:flex; align-items:center; gap:10px; }
+  .step-mini .num{
+    font-family:'JetBrains Mono', monospace; font-size:11px; width:22px; height:22px; border-radius:50%;
+    border:1px solid var(--border-soft-2); display:flex; align-items:center; justify-content:center; color:var(--text-secondary);
+  }
+
+  /* ---------- app shell ---------- */
+  .app-section{ padding:20px 28px 100px; }
+  .panel{
+    max-width:760px; margin:0 auto; background:linear-gradient(180deg, var(--bg-panel), var(--bg-panel-2));
+    border:1px solid var(--border-soft); border-radius:22px; box-shadow:var(--shadow-deep);
+    overflow:hidden; position:relative;
+  }
+  .panel-head{
+    padding:26px 30px 0; display:flex; align-items:flex-start; justify-content:space-between; gap:16px;
+  }
+  .panel-head h2{ font-family:'Noto Serif SC', serif; font-size:22px; margin:0 0 6px; font-weight:700; }
+  .panel-head p{ margin:0; color:var(--text-muted); font-size:13.5px; line-height:1.7; max-width:440px; }
+  .panel-body{ padding:22px 30px 30px; }
+
+  .field{ margin-bottom:16px; }
+  .field label{
+    display:block; font-size:12.5px; color:var(--text-muted); margin-bottom:8px;
+    font-family:'JetBrains Mono', monospace; letter-spacing:0.02em;
+  }
+  .field-row{ display:flex; gap:14px; flex-wrap:wrap; }
+  .field-row .field{ flex:1 1 200px; }
+
+  input[type=text], textarea{
+    width:100%; background:rgba(0,0,0,0.22); border:1px solid var(--border-soft-2);
+    border-radius:12px; color:var(--text-primary); font-family:'Noto Sans SC', sans-serif;
+    font-size:14.5px; padding:12px 14px; transition:border-color .25s, box-shadow .25s;
+    resize:none;
+  }
+  input[type=text]:focus, textarea:focus{
+    border-color:var(--accent-echo); box-shadow:0 0 0 4px rgba(157,140,255,0.14); outline:none;
+  }
+  textarea#chatlog{ min-height:190px; line-height:1.7; font-size:13.5px; }
+  .char-count{ text-align:right; font-size:11px; color:var(--text-faint); margin-top:6px; font-family:'JetBrains Mono', monospace; }
+
+  .actions-row{ display:flex; gap:12px; align-items:center; margin-top:6px; flex-wrap:wrap; }
+  .link-btn{
+    background:none; border:none; color:var(--text-muted); font-size:13px; cursor:pointer;
+    text-decoration:underline; text-underline-offset:3px; padding:4px 0; font-family:'Noto Sans SC', sans-serif;
+  }
+  .link-btn:hover{ color:var(--accent-echo-glow); }
+
+  .error-box{
+    margin-top:14px; padding:12px 14px; border-radius:10px; background:rgba(255,128,128,0.09);
+    border:1px solid rgba(255,128,128,0.3); color:#ffb3b3; font-size:13px; line-height:1.6; display:none;
+  }
+
+  /* ---------- analyzing ---------- */
+  .analyzing-wrap{ display:none; flex-direction:column; align-items:center; padding:50px 20px 30px; text-align:center; }
+  .mini-orb{
+    width:56px; height:56px; border-radius:50%; margin-bottom:22px;
+    background:radial-gradient(circle at 35% 30%, #ffffff, var(--accent-echo-glow) 40%, var(--accent-echo) 80%);
+    box-shadow:0 0 40px 8px rgba(157,140,255,0.4);
+    animation:pulseScale 1.4s ease-in-out infinite;
+  }
+  .analyzing-text{ color:var(--text-secondary); font-size:14px; font-family:'JetBrains Mono', monospace; min-height:20px; }
+  .analyzing-bar{ width:220px; height:3px; border-radius:3px; background:rgba(255,255,255,0.08); margin-top:20px; overflow:hidden; }
+  .analyzing-bar span{ display:block; height:100%; width:40%; background:linear-gradient(90deg, var(--accent-user), var(--accent-echo)); animation:barSlide 1.3s ease-in-out infinite; }
+
+  /* ---------- persona card ---------- */
+  .persona-wrap{ display:none; }
+  .persona-summary{
+    font-family:'Noto Serif SC', serif; font-size:19px; line-height:1.8; color:var(--text-primary);
+    padding:18px 20px; border-left:3px solid var(--accent-echo); background:rgba(157,140,255,0.06);
+    border-radius:0 12px 12px 0; margin-bottom:22px;
+  }
+  .trait-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+  .trait-card{
+    background:rgba(255,255,255,0.03); border:1px solid var(--border-soft); border-radius:12px; padding:14px 16px;
+  }
+  .trait-card .k{ font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--text-faint); margin-bottom:6px; text-transform:uppercase; }
+  .trait-card .v{ font-size:13.5px; color:var(--text-secondary); line-height:1.6; }
+  .tag-group{ margin-bottom:18px; }
+  .tag-group .k{ font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--text-faint); margin-bottom:10px; text-transform:uppercase; }
+  .tags{ display:flex; gap:8px; flex-wrap:wrap; }
+  .tag{
+    padding:6px 13px; border-radius:100px; font-size:12.5px; background:var(--accent-user-soft);
+    color:var(--accent-user); border:1px solid rgba(255,179,122,0.3);
+  }
+  .tag.alt{ background:var(--accent-echo-soft); color:var(--accent-echo-glow); border-color:rgba(157,140,255,0.3); }
+
+  /* ---------- chat ---------- */
+  .chat-wrap{ display:none; }
+  .chat-header{
+    display:flex; align-items:center; gap:12px; padding:16px 30px; border-bottom:1px solid var(--border-soft);
+  }
+  .chat-avatar{
+    width:38px; height:38px; border-radius:50%; flex-shrink:0;
+    background:radial-gradient(circle at 35% 30%, #fff, var(--accent-echo-glow) 45%, var(--accent-echo) 90%);
+    box-shadow:0 0 18px 3px rgba(157,140,255,0.4);
+    animation:breathe 3.4s ease-in-out infinite;
+  }
+  .chat-header-name{ font-family:'Noto Serif SC', serif; font-weight:700; font-size:16px; }
+  .chat-header-sub{ font-size:11.5px; color:var(--text-faint); font-family:'JetBrains Mono', monospace; }
+  .chat-header-actions{ margin-left:auto; }
+
+  .chat-body{ height:420px; overflow-y:auto; padding:22px 26px; display:flex; flex-direction:column; gap:14px; }
+  .msg-row{ display:flex; animation:msgIn .45s var(--ease) both; }
+  .msg-row.me{ justify-content:flex-end; }
+  .msg-row.echo{ justify-content:flex-start; }
+  .bubble{
+    max-width:74%; padding:11px 16px; border-radius:18px; font-size:14.5px; line-height:1.65;
+    white-space:pre-wrap; word-break:break-word;
+  }
+  .msg-row.me .bubble{
+    background:linear-gradient(135deg, var(--accent-user), #ff9a5a); color:#241708;
+    border-bottom-right-radius:5px;
+  }
+  .msg-row.echo .bubble{
+    background:var(--bg-panel-3); color:var(--text-primary); border:1px solid var(--border-soft-2);
+    border-bottom-left-radius:5px;
+  }
+  .typing-row{ display:flex; align-items:center; gap:6px; padding:2px 4px; }
+  .typing-dot{ width:6px; height:6px; border-radius:50%; background:var(--accent-echo-glow); animation:typingBounce 1.1s ease-in-out infinite; }
+  .typing-dot:nth-child(2){ animation-delay:.15s; }
+  .typing-dot:nth-child(3){ animation-delay:.3s; }
+
+  .chat-input-row{
+    display:flex; gap:10px; align-items:flex-end; padding:16px 22px 20px; border-top:1px solid var(--border-soft);
+  }
+  .chat-input-row textarea{
+    flex:1; min-height:44px; max-height:120px; padding:11px 14px; font-size:14.5px; line-height:1.5;
+  }
+  .send-btn{
+    width:44px; height:44px; border-radius:12px; border:none; cursor:pointer; flex-shrink:0;
+    background:linear-gradient(135deg, var(--accent-user), var(--accent-echo));
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .25s var(--ease), opacity .2s;
+  }
+  .send-btn:hover{ transform:translateY(-2px) scale(1.04); }
+  .send-btn:disabled{ opacity:.4; cursor:not-allowed; transform:none; }
+
+  .disclaimer{
+    font-size:11.5px; color:var(--text-faint); text-align:center; padding:12px 30px 22px;
+    line-height:1.7; border-top:1px dashed var(--border-soft);
+  }
+
+  footer{ text-align:center; padding:30px 20px 50px; color:var(--text-faint); font-size:12px; }
+  footer .mono{ opacity:0.7; }
+
+  /* ---------- keyframes ---------- */
+  @keyframes breathe{
+    0%,100%{ transform:scale(1); filter:brightness(1); }
+    50%{ transform:scale(1.12); filter:brightness(1.15); }
+  }
+  @keyframes pulseScale{
+    0%,100%{ transform:scale(0.9); box-shadow:0 0 30px 4px rgba(157,140,255,0.35); }
+    50%{ transform:scale(1.15); box-shadow:0 0 50px 14px rgba(157,140,255,0.55); }
+  }
+  @keyframes barSlide{
+    0%{ transform:translateX(-100%); }
+    100%{ transform:translateX(350%); }
+  }
+  @keyframes msgIn{
+    from{ opacity:0; transform:translateY(10px) scale(0.97); }
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+  @keyframes typingBounce{
+    0%,60%,100%{ transform:translateY(0); opacity:0.5; }
+    30%{ transform:translateY(-5px); opacity:1; }
+  }
+  @keyframes driftIn{
+    0%{ opacity:0; transform:translate(0,0) scale(0.8); }
+    15%{ opacity:1; }
+    85%{ opacity:1; }
+    100%{ opacity:0; transform:translate(var(--tx), var(--ty)) scale(1); }
+  }
+  @keyframes fadeSlideUp{
+    from{ opacity:0; transform:translateY(18px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .fade-in{ animation:fadeSlideUp .55s var(--ease) both; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+
+  @media (max-width:640px){
+    .hero{ padding:64px 18px 40px; }
+    .trait-grid{ grid-template-columns:1fr; }
+    .panel-head, .panel-body{ padding-left:20px; padding-right:20px; }
+    .chat-body{ height:380px; padding:16px; }
+    .chat-header{ padding:14px 18px; }
+    .steps-row{ gap:20px; }
+    .field-row{ flex-direction:column; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-orb"></div>
+      <span class="brand-name">回声</span>
+      <span class="brand-tag">Echo · 对话克隆</span>
+    </div>
+    <div class="topbar-actions">
+      <div class="stage-pill"><span class="dot"></span><span id="stagePillText">等待聊天记录</span></div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-stage" id="heroStage" aria-hidden="true">
+    <div class="core"></div>
+  </div>
+
+  <div class="eyebrow">粘贴聊天记录 · AI 学会说话方式 · 立即对话</div>
+  <h1 class="hero-title">唤醒对话里<br><span class="accent">那个熟悉的人</span></h1>
+  <p class="hero-sub">把你们的聊天记录粘贴进来，AI 会读懂对方说话的节奏、口头禅和语气，
+    生成一份专属的「说话风格画像」，然后你就可以像往常一样，接着聊下去。</p>
+
+  <div class="hero-ctas">
+    <button class="btn btn-primary" id="ctaStart">开始 · 粘贴聊天记录 ↓</button>
+    <button class="btn btn-ghost" id="ctaSample">先看一个示例</button>
+  </div>
+
+  <div class="steps-row">
+    <div class="step-mini"><span class="num">01</span>粘贴聊天记录</div>
+    <div class="step-mini"><span class="num">02</span>AI 生成风格画像</div>
+    <div class="step-mini"><span class="num">03</span>开始对话</div>
+  </div>
+</section>
+
+<main class="app-section">
+  <div class="panel" id="appPanel">
+
+    <!-- STAGE 1: INPUT -->
+    <div id="stageInput">
+      <div class="panel-head">
+        <div>
+          <h2>粘贴聊天记录</h2>
+          <p>直接复制粘贴微信 / 短信 / 其它聊天软件的对话内容，格式不用整理，AI 能自己读懂语气与习惯。</p>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="field-row">
+          <div class="field">
+            <label for="personaName">对方的称呼</label>
+            <input type="text" id="personaName" placeholder="例如：阿泽 / 老妈 / 前任小美">
+          </div>
+          <div class="field">
+            <label for="selfCall">希望 AI 怎么称呼你</label>
+            <input type="text" id="selfCall" placeholder="例如：宝 / 你 / 老张（选填）">
+          </div>
+        </div>
+        <div class="field">
+          <label for="chatlog">聊天记录原文</label>
+          <textarea id="chatlog" placeholder="把你们的聊天记录粘贴在这里，越多越好，AI 会从中学习对方的说话方式……"></textarea>
+          <div class="char-count"><span id="charCount">0</span> 字</div>
+        </div>
+        <div class="error-box" id="errorBox"></div>
+        <div class="actions-row">
+          <button class="btn btn-primary" id="analyzeBtn">生成说话风格画像 →</button>
+          <button class="link-btn" id="fillSampleBtn">填入示例对话</button>
+        </div>
+      </div>
+
+      <!-- analyzing overlay content -->
+      <div class="analyzing-wrap" id="analyzingWrap">
+        <div class="mini-orb"></div>
+        <div class="analyzing-text mono" id="analyzingText">正在解析对话节奏…</div>
+        <div class="analyzing-bar"><span></span></div>
+      </div>
+    </div>
+
+    <!-- STAGE 2: PERSONA -->
+    <div class="persona-wrap" id="stagePersona">
+      <div class="panel-head">
+        <div>
+          <h2 id="personaHeading">风格画像</h2>
+          <p>这是 AI 从聊天记录里还原出的说话方式，确认之后就可以开始对话了。</p>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="persona-summary" id="personaSummaryText">…</div>
+        <div class="trait-grid">
+          <div class="trait-card"><div class="k">语气 / TONE</div><div class="v" id="traitTone">—</div></div>
+          <div class="trait-card"><div class="k">句子长度 / LENGTH</div><div class="v" id="traitLength">—</div></div>
+          <div class="trait-card"><div class="k">表情符号习惯 / EMOJI</div><div class="v" id="traitEmoji">—</div></div>
+          <div class="trait-card"><div class="k">打招呼方式 / GREETING</div><div class="v" id="traitGreeting">—</div></div>
+        </div>
+        <div class="tag-group">
+          <div class="k">常用口头禅 / CATCHPHRASES</div>
+          <div class="tags" id="tagCatchphrases"></div>
+        </div>
+        <div class="tag-group">
+          <div class="k">性格小习惯 / QUIRKS</div>
+          <div class="tags" id="tagQuirks"></div>
+        </div>
+        <div class="actions-row">
+          <button class="btn btn-primary" id="startChatBtn">开始对话 →</button>
+          <button class="link-btn" id="backToInputBtn">重新粘贴记录</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE 3: CHAT -->
+    <div class="chat-wrap" id="stageChat">
+      <div class="chat-header">
+        <div class="chat-avatar"></div>
+        <div>
+          <div class="chat-header-name" id="chatHeaderName">—</div>
+          <div class="chat-header-sub">基于聊天记录模拟的说话风格 · AI 生成</div>
+        </div>
+        <div class="chat-header-actions">
+          <button class="link-btn" id="resetBtn">结束并重新开始</button>
+        </div>
+      </div>
+      <div class="chat-body" id="chatBody"></div>
+      <div class="chat-input-row">
+        <textarea id="chatInput" rows="1" placeholder="输入消息，回车发送，Shift+回车换行…"></textarea>
+        <button class="send-btn" id="sendBtn" aria-label="发送">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 11.5L20.5 3L13 20.5L11 13L3 11.5Z" stroke="#161225" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="disclaimer">此对话由 AI 根据你提供的聊天记录风格模拟生成，仅供参考与个人使用，不代表对方的真实想法或立场。</div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="mono">ECHO · 所有对话在本地浏览器中进行 · 请勿用于冒充他人从事欺骗或伤害行为</div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- helpers ---------------- */
+  const $ = (id) => document.getElementById(id);
+  const MODEL = "claude-sonnet-4-6";
+
+  const state = {
+    personaName: "",
+    selfCall: "",
+    chatLog: "",
+    profile: null,
+    messages: [] // {role:'user'|'assistant', content:string}
+  };
+
+  async function callClaude(systemPrompt, messages, maxTokens){
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: maxTokens || 1000,
+        system: systemPrompt,
+        messages: messages
+      })
+    });
+    if(!res.ok){
+      const t = await res.text().catch(()=> "");
+      throw new Error("请求失败 (" + res.status + ") " + t.slice(0,200));
+    }
+    const data = await res.json();
+    const textBlock = (data.content || []).find(b => b.type === "text");
+    if(!textBlock) throw new Error("AI 没有返回文本内容");
+    return textBlock.text;
+  }
+
+  function stripFences(s){
+    return s.trim().replace(/^```json\s*/i,"").replace(/^```\s*/,"").replace(/```\s*$/,"").trim();
+  }
+
+  /* ---------------- hero particle field ---------------- */
+  const heroWords = {
+    left: ["在吗","哈哈哈","好呀","我在忙","晚安","刚下班","真的假的","没事的","等我一下","在干嘛"],
+    right: ["好啊😂","嗯嗯","知道啦","别闹","早点睡","到了叫我","可以呀","哈哈","随便你","我也是"]
+  };
+  function buildHeroParticles(){
+    const stage = $("heroStage");
+    if(!stage) return;
+    const w = stage.clientWidth || 560, h = stage.clientHeight || 220;
+    const frags = [];
+    heroWords.left.forEach((txt,i)=> frags.push({txt, side:"left", i}));
+    heroWords.right.forEach((txt,i)=> frags.push({txt, side:"right", i}));
+    frags.forEach((f, idx) => {
+      const el = document.createElement("div");
+      el.className = "frag " + (f.side === "left" ? "left" : "right");
+      el.textContent = f.txt;
+      const startX = f.side === "left" ? -w/2 - 40 - Math.random()*40 : w/2 + 40 + Math.random()*40;
+      const startY = (Math.random()-0.5) * (h*0.8);
+      const dx = (0 - startX) * (0.85 + Math.random()*0.1);
+      const dy = ((Math.random()-0.5) * 30) - startY * 0.85;
+      el.style.left = "calc(50% + " + startX + "px)";
+      el.style.top = "calc(50% + " + startY + "px)";
+      el.style.setProperty("--tx", dx + "px");
+      el.style.setProperty("--ty", dy + "px");
+      const dur = 5 + Math.random()*3;
+      const delay = idx * 0.55;
+      el.style.animationDuration = dur + "s";
+      el.style.animationDelay = delay + "s";
+      stage.appendChild(el);
+    });
+  }
+  buildHeroParticles();
+
+  /* ---------------- nav / cta ---------------- */
+  $("ctaStart").addEventListener("click", () => {
+    $("appPanel").scrollIntoView({behavior:"smooth", block:"start"});
+    setTimeout(()=> $("chatlog").focus(), 500);
+  });
+  $("ctaSample").addEventListener("click", () => {
+    fillSample();
+    $("appPanel").scrollIntoView({behavior:"smooth", block:"start"});
+  });
+  $("fillSampleBtn").addEventListener("click", fillSample);
+
+  function fillSample(){
+    $("personaName").value = "阿泽";
+    $("selfCall").value = "";
+    $("chatlog").value =
+`阿泽: 到了没
+我: 快了快了 地铁上
+阿泽: 好的哈 我先点单了
+我: 帮我带杯冰美式
+阿泽: 行 老规矩加两份糖是吧😂
+我: 你是懂我的
+阿泽: 那必须的 谁让咱俩认识这么多年
+我: 哈哈哈 说的跟老夫老妻似的
+阿泽: 本来就是（笑哭）
+我: 对了周末有空吗 想去爬山
+阿泽: 有啊 几点集合 我早上不能太早起
+我: 那就九点吧 睡到自然醒那种
+阿泽: 完美 就这么定了 到时候叫我
+我: 没问题 早点睡别熬夜了
+阿泽: 知道啦妈 晚安😴
+我: 晚安`;
+    updateCharCount();
+  }
+
+  /* ---------------- input stage ---------------- */
+  const chatlogEl = $("chatlog");
+  function updateCharCount(){
+    $("charCount").textContent = chatlogEl.value.length;
+  }
+  chatlogEl.addEventListener("input", updateCharCount);
+
+  function showError(msg){
+    const box = $("errorBox");
+    box.textContent = msg;
+    box.style.display = "block";
+  }
+  function hideError(){ $("errorBox").style.display = "none"; }
+
+  $("analyzeBtn").addEventListener("click", analyzeStyle);
+
+  const analyzingMessages = [
+    "正在解析对话节奏…",
+    "捕捉常用口头禅…",
+    "还原语气与情绪起伏…",
+    "梳理表情符号习惯…",
+    "生成专属风格画像…"
+  ];
+  let analyzingTimer = null;
+  function startAnalyzingCycle(){
+    let i = 0;
+    $("analyzingText").textContent = analyzingMessages[0];
+    analyzingTimer = setInterval(()=>{
+      i = (i+1) % analyzingMessages.length;
+      $("analyzingText").textContent = analyzingMessages[i];
+    }, 1200);
+  }
+  function stopAnalyzingCycle(){
+    if(analyzingTimer){ clearInterval(analyzingTimer); analyzingTimer = null; }
+  }
+
+  async function analyzeStyle(){
+    hideError();
+    const name = $("personaName").value.trim();
+    const log = $("chatlog").value.trim();
+    if(!name){ showError("请填写对方的称呼，比如「阿泽」「老妈」。"); $("personaName").focus(); return; }
+    if(log.length < 20){ showError("聊天记录太短啦，多粘贴一些内容，AI 才能学到风格（至少 20 字）。"); chatlogEl.focus(); return; }
+
+    state.personaName = name;
+    state.selfCall = $("selfCall").value.trim();
+    state.chatLog = log.slice(0, 8000);
+
+    $("analyzeBtn").disabled = true;
+    $("stagePillText").textContent = "正在分析风格";
+    document.querySelector("#stageInput .panel-body").style.display = "none";
+    $("analyzingWrap").style.display = "flex";
+    startAnalyzingCycle();
+
+    const sys = `你是一名对话风格分析专家。你会收到一段真实聊天记录，其中一方称为"${name}"。
+请仔细分析"${name}"在聊天记录中的说话方式，只输出一个 JSON 对象，不要输出任何 markdown 代码块标记、前缀、解释或其它文字。
+JSON 结构必须严格如下（所有值用中文，简洁精炼）：
+{
+  "summary": "一句话概括这个人的说话风格，像介绍一个活生生的人",
+  "tone": "整体语气描述，例如活泼直接/温柔细腻/毒舌可爱",
+  "sentenceLength": "句子长度习惯，例如偏短句爱用省略/长短交替",
+  "emojiUsage": "表情符号和标点使用习惯的描述",
+  "greetingStyle": "打招呼或起话头的习惯方式",
+  "catchphrases": ["口头禅或高频用词1", "口头禅2", "口头禅3"],
+  "quirks": ["性格或聊天小习惯1", "小习惯2", "小习惯3"]
+}
+只根据聊天记录中"${name}"说的话进行分析，不要分析对方以外的人。`;
+
+    try{
+      const raw = await callClaude(sys, [{role:"user", content: "聊天记录：\n" + state.chatLog}], 1000);
+      let jsonText = stripFences(raw);
+      let profile;
+      try{
+        profile = JSON.parse(jsonText);
+      }catch(e){
+        // retry once, asking strictly for JSON only
+        const retryRaw = await callClaude(
+          sys + "\n\n重要：只输出合法 JSON，不要有任何其它字符。",
+          [{role:"user", content: "聊天记录：\n" + state.chatLog}], 1000
+        );
+        profile = JSON.parse(stripFences(retryRaw));
+      }
+      state.profile = profile;
+      renderPersona();
+      goToStage("persona");
+    }catch(err){
+      stopAnalyzingCycle();
+      $("analyzingWrap").style.display = "none";
+      document.querySelector("#stageInput .panel-body").style.display = "block";
+      $("analyzeBtn").disabled = false;
+      $("stagePillText").textContent = "等待聊天记录";
+      showError("分析失败：" + err.message + "。请重试一次。");
+    }
+  }
+
+  function renderPersona(){
+    stopAnalyzingCycle();
+    const p = state.profile;
+    $("personaHeading").textContent = state.personaName + " 的风格画像";
+    $("personaSummaryText").textContent = "“" + (p.summary || "这个人说话很有自己的味道。") + "”";
+    $("traitTone").textContent = p.tone || "—";
+    $("traitLength").textContent = p.sentenceLength || "—";
+    $("traitEmoji").textContent = p.emojiUsage || "—";
+    $("traitGreeting").textContent = p.greetingStyle || "—";
+
+    const cp = $("tagCatchphrases"); cp.innerHTML = "";
+    (p.catchphrases || []).forEach(t => {
+      const s = document.createElement("span"); s.className = "tag"; s.textContent = t; cp.appendChild(s);
+    });
+    const qk = $("tagQuirks"); qk.innerHTML = "";
+    (p.quirks || []).forEach(t => {
+      const s = document.createElement("span"); s.className = "tag alt"; s.textContent = t; qk.appendChild(s);
+    });
+  }
+
+  /* ---------------- stage transitions ---------------- */
+  function goToStage(stage){
+    $("stageInput").style.display = stage === "input" ? "block" : "none";
+    $("stagePersona").style.display = stage === "persona" ? "block" : "none";
+    $("stageChat").style.display = stage === "chat" ? "block" : "none";
+    if(stage === "persona"){
+      $("stagePersona").classList.add("fade-in");
+      $("stagePillText").textContent = "风格画像已生成";
+    }
+    if(stage === "chat"){
+      $("stageChat").classList.add("fade-in");
+      $("stagePillText").textContent = "对话中";
+      $("chatHeaderName").textContent = state.personaName;
+      $("chatInput").focus();
+    }
+    if(stage === "input"){
+      $("stagePillText").textContent = "等待聊天记录";
+    }
+  }
+
+  $("startChatBtn").addEventListener("click", () => {
+    if(state.messages.length === 0){
+      renderChatEmpty();
+    }
+    goToStage("chat");
+  });
+
+  $("backToInputBtn").addEventListener("click", () => {
+    document.querySelector("#stageInput .panel-body").style.display = "block";
+    $("analyzingWrap").style.display = "none";
+    $("analyzeBtn").disabled = false;
+    goToStage("input");
+  });
+
+  $("resetBtn").addEventListener("click", () => {
+    if(!confirm("确定要结束对话并清空所有内容重新开始吗？")) return;
+    state.messages = [];
+    state.profile = null;
+    $("chatBody").innerHTML = "";
+    $("chatlog").value = "";
+    $("personaName").value = "";
+    $("selfCall").value = "";
+    updateCharCount();
+    document.querySelector("#stageInput .panel-body").style.display = "block";
+    $("analyzingWrap").style.display = "none";
+    $("analyzeBtn").disabled = false;
+    goToStage("input");
+  });
+
+  /* ---------------- chat stage ---------------- */
+  function renderChatEmpty(){
+    const body = $("chatBody");
+    body.innerHTML = "";
+    addBubble("echo", "（对话已就绪，说点什么试试吧）");
+  }
+
+  function addBubble(who, text){
+    const body = $("chatBody");
+    const row = document.createElement("div");
+    row.className = "msg-row " + (who === "me" ? "me" : "echo");
+    const bub = document.createElement("div");
+    bub.className = "bubble";
+    bub.textContent = text;
+    row.appendChild(bub);
+    body.appendChild(row);
+    body.scrollTop = body.scrollHeight;
+    return row;
+  }
+
+  function addTypingIndicator(){
+    const body = $("chatBody");
+    const row = document.createElement("div");
+    row.className = "msg-row echo";
+    row.id = "typingRow";
+    const bub = document.createElement("div");
+    bub.className = "bubble typing-row";
+    bub.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+    row.appendChild(bub);
+    body.appendChild(row);
+    body.scrollTop = body.scrollHeight;
+  }
+  function removeTypingIndicator(){
+    const el = $("typingRow");
+    if(el) el.remove();
+  }
+
+  const chatInput = $("chatInput");
+  chatInput.addEventListener("input", () => {
+    chatInput.style.height = "auto";
+    chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + "px";
+  });
+  chatInput.addEventListener("keydown", (e) => {
+    if(e.key === "Enter" && !e.shiftKey){
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+  $("sendBtn").addEventListener("click", sendMessage);
+
+  async function sendMessage(){
+    const text = chatInput.value.trim();
+    if(!text) return;
+    chatInput.value = "";
+    chatInput.style.height = "auto";
+    addBubble("me", text);
+    state.messages.push({role:"user", content:text});
+    $("sendBtn").disabled = true;
+    addTypingIndicator();
+
+    const selfCallLine = state.selfCall
+      ? `用户希望被称呼为"${state.selfCall}"，请在合适的时候自然使用这个称呼，不要每句话都用。`
+      : `用户没有指定称呼，按聊天记录里"${state.personaName}"平时对Ta的称呼方式来称呼即可。`;
+
+    const sys = `你现在要完全代入并扮演"${state.personaName}"这个人，和用户像日常聊天一样对话。
+
+以下是根据你们真实聊天记录分析出的"${state.personaName}"说话风格画像（JSON）：
+${JSON.stringify(state.profile, null, 2)}
+
+原始聊天记录片段（仅供你学习语气、用词和习惯，不要逐字复述里面的具体内容）：
+"""${state.chatLog}"""
+
+规则：
+1. 完全按照"${state.personaName}"的语气、句子长度、用词习惯、标点和表情符号使用习惯来回复，越贴近本人越好。
+2. ${selfCallLine}
+3. 保持角色沉浸，不要主动说明自己是AI；如果用户明确问"你是不是AI/机器人/程序"，可以坦诚说明这是基于聊天记录模拟出来的风格，不是真人本人。
+4. 回复长度要贴近聊天记录里"${state.personaName}"平时发消息的长度，通常是简短自然的口语化短句，不要长篇大论，不要写成书面语或作文。
+5. 只输出"${state.personaName}"会说的那句话本身，不要加任何前缀、引号、解释或旁白。
+6. 可以根据上下文自然地延续话题、提问、回应情绪，像真实聊天一样有来有回。`;
+
+    try{
+      const reply = await callClaude(sys, state.messages, 1000);
+      removeTypingIndicator();
+      const cleaned = reply.trim().replace(/^["“]|["”]$/g, "");
+      addBubble("echo", cleaned);
+      state.messages.push({role:"assistant", content: cleaned});
+    }catch(err){
+      removeTypingIndicator();
+      addBubble("echo", "（消息发送失败：" + err.message + "，请重试）");
+    }finally{
+      $("sendBtn").disabled = false;
+      chatInput.focus();
+    }
+  }
+
+  updateCharCount();
+})();
+</script>
+</body>
+</html>
